@@ -1,6 +1,6 @@
-from django.urls import path
 from . import views
+from django.urls import path
 
 urlpatterns = [
-    path('ratings', views.ratings),
+    path('', views.form_view, name="home"),
 ]
