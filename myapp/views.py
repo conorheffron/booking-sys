@@ -1,21 +1,21 @@
 from django.shortcuts import render
-from myapp.forms import MenuForm
-from .models import Menu
+from myapp.forms import ReservationForm
+from .models import Reservation
 from django.http import JsonResponse
 
 def form_view(request):
-    form = MenuForm()
+    form = ReservationForm()
     
     if request.method == 'POST':
-        form = MenuForm(request.POST)
+        form = ReservationForm(request.POST)
         print(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
             
-            lf = Menu(
-                item_name = cd['item_name'],
-                category = cd['category'],
-                description = cd['description'],
+            lf = Reservation(
+                first_name = cd['first_name'],
+                reservation_date = cd['reservation_date'],
+                reservation_slot = cd['reservation_slot'],
             )
             
             lf.save()

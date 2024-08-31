@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Menu Items</title>
+    <title>Booking Reservations</title>
 </head>
 <body class="bg-light">
 <div class="container pt-4">
-    <h1>Menu Items</h1>
+    <h1>Booking Reservations</h1>
     <form method="POST" id="form">
         {% csrf_token %}
         {{ form.as_p }}
@@ -35,6 +35,7 @@
                 if (data.message === 'success') {
                     alert('Success!');
                     form.reset()
+
             }
         });
     }
