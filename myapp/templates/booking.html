@@ -9,18 +9,19 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Booking Reservations</title>
+    <title>Make a Reservation</title>
 </head>
 <body class="bg-light">
 <div class="container pt-4">
-    <h1>Booking Reservations</h1>
+    <h1>Make a Reservation</h1>
     <form method="POST" id="form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Reserve</button>
     </form>
 </div>
 
+{% include 'table.html' %}
 
 <script>
     const form = document.getElementById('form');
@@ -34,10 +35,14 @@
         .then(data=>{
                 if (data.message === 'success') {
                     alert('Success!');
-                    form.reset()
-
+                    console.log(data.reservations)
+                    form.reset();
             }
         });
+    }
+
+    function refresh(){
+        window.location.reload("Refresh")
     }
 
 </script>

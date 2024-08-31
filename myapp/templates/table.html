@@ -1,0 +1,18 @@
+<div id="bookings" class="container pt-5 table mt-3 table-sm table_col_padding">
+    <table>
+        <tr> 
+            <th>First Name</th>
+            <th>Booking Date</th>
+            <th>Booking time</th>
+    </tr>
+        {% for item in reservations %}
+    
+        <tr> 
+            <td>{{ item.first_name }}</td>
+            <td>{{ item.reservation_date }}</td>
+            <td>{{ item.reservation_slot }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <button type="button" class="btn btn-primary" onClick="refresh()">Refresh</button>
+</div>

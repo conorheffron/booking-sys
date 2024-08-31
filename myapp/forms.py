@@ -1,6 +1,6 @@
 from django import forms
 
-# ModelForm: MenuForm
+# ModelForm: ReservationForm
 class ReservationForm(forms.Form):
     first_name = forms.CharField(max_length = 20)
     reservation_date = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
