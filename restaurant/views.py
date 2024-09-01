@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from myapp.forms import ReservationForm
+from restaurant.forms import ReservationForm
 from .models import Reservation
 from django.http import JsonResponse
 import logging
