@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Make a Reservation</title>
+    <title>Rservations</title>
     <script>
         function refresh(){
             window.location.reload("Refresh")
@@ -17,21 +17,11 @@
     
     </script>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Little Lemon</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-link" href="/">Homepage</a>
-                <a class="nav-link" href="/reservations">Reservations</a>
-            </div>
-          </div>
-        </div>
-    </nav>
+<body class="bg-light">
+    <div class="container pt-4">
+        {% include 'navbar.html' %} 
+    </div>
+    
     <div id="bookings" class="container pt-5 table mt-3 table-sm table_col_padding">
         <table>
             <tr> 
