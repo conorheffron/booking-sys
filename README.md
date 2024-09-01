@@ -26,4 +26,4 @@ python3 manage.py test
 python3 manage.py runserver
 ```
 
-Frre to use icon image at: (lemon)[https://www.flaticon.com/free-animated-icon/lemon_14385026?term=lemon&page=1&position=5&origin=tag&related_id=14385026]
+Frre to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/lemon_14385026?term=lemon&page=1&position=5&origin=tag&related_id=14385026)
