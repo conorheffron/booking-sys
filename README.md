@@ -31,6 +31,15 @@ Frre to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/l
 
 ## Functionality Demo
 
+###  App Home Address
+```
+http://localhost:8000/
+
+or 
+
+http://127.0.0.1:8000/
+```
+
 ###  Make a Reservation Form
 ![reserve](./screenshots/reserve.png?raw=true "Make a Reservation")
 
@@ -43,6 +52,17 @@ Frre to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/l
 ###  View Current Bookings for Date Change in Booking Form
 ![bookings-by-date](./screenshots/bookings-by-date.png?raw=true "View Bookings By Date Change")
 
+###  Bookings By Date REST API End-point (used for view template above)
+```
+http://localhost:8000/bookings/2024-08-22/
+
+and
+
+http://localhost:8000/bookings/2024-09-01/
+```
+
+![postman](./screenshots/postman.png?raw=true "Postman GET Bookings Request")
+
 ###  Duplicate Booking Fail by Date & Time Value
 ![duplicate-booking-fail](./screenshots/duplicate-booking-fail.png?raw=true "Duplicate Booking Fail")
 
@@ -51,3 +71,7 @@ Frre to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/l
 
 ###  View All Bookings Page
 ![all-bookings](./screenshots/all-bookings.png?raw=true "View All Resrvations")
+
+```
+http://localhost:8000/reservations/
+```
