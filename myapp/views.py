@@ -15,6 +15,10 @@ def table_view(request, date):
                 'reservations': reservations
             })
 
+def reservations_view(request):
+    reservations =  Reservation.objects.all()
+    logger.info(reservations)
+    return render(request, 'reservations.html', {'reservations': reservations})
 
 def form_view(request):
     form = ReservationForm()
