@@ -48,22 +48,25 @@
                       .then(response => {
                         console.log(response);
                         bookings_by_date = response.reservations
-
-                        var k = '<tbody>'
-                        k+= '<tr>';
-                        k+= '<th>First Name</td>';
-                        k+= '<th>Rservation Date</td>';
-                        k+= '<th>Rservation Time</td>';
-                        k+= '</tr>';
-                        for(i = 0;i < bookings_by_date.length; i++){             
+                        if (bookings_by_date.length > 0) {
+                            var k = '<tbody>'
                             k+= '<tr>';
-                            k+= '<td>' + bookings_by_date[i]["first_name"] + '</td>';
-                            k+= '<td>' + bookings_by_date[i]["reservation_date"] + '</td>';
-                            k+= '<td>' + bookings_by_date[i]["reservation_slot"] + '</td>';
+                            k+= '<th>First Name</td>';
+                            k+= '<th>Rservation Date</td>';
+                            k+= '<th>Rservation Time</td>';
                             k+= '</tr>';
+                            for(i = 0;i < bookings_by_date.length; i++){             
+                                k+= '<tr>';
+                                k+= '<td>' + bookings_by_date[i]["first_name"] + '</td>';
+                                k+= '<td>' + bookings_by_date[i]["reservation_date"] + '</td>';
+                                k+= '<td>' + bookings_by_date[i]["reservation_slot"] + '</td>';
+                                k+= '</tr>';
+                            }
+                            k+='</tbody>';
+                            document.getElementById('tableData').innerHTML = k;
+                        } else {
+                            document.getElementById('tableData').innerHTML = '<tbody></tbody>';
                         }
-                        k+='</tbody>';
-                        document.getElementById('tableData').innerHTML = k;
                       });
                   } catch (e) {
                     console.log(e);
