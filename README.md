@@ -1,7 +1,7 @@
 # booking-sys
 
 ## Technologies
-python3, django admin/framework, django.test
+python3, django admin/framework, django.test, & MySQL
 
 ## Build
 ```
