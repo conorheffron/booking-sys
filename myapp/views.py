@@ -7,13 +7,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 def table_view(request, date):
-    logger.inf(date);
-    reservations =  Reservation.objects.all()
-    logger.info(reservations)
+    logger.info(f"the date is {date}")
+    reservations_by_date = Reservation.objects.filter(reservation_date=date);
+    logger.info(reservations_by_date)
+    data = list(reservations_by_date.values('first_name', 'reservation_date', 'reservation_slot'))
     return JsonResponse({
-                'message': 'success',
-                'reservations': reservations
-            })
+        'message': 'success',
+        'reservations': data
+    })
 
 def reservations_view(request):
     reservations =  Reservation.objects.all()
@@ -30,21 +31,26 @@ def form_view(request):
             cd = form.cleaned_data
 
             booking_date = cd['reservation_date']
+            booking_slot = cd['reservation_slot']
             
             lf = Reservation(
                 first_name = cd['first_name'],
                 reservation_date = booking_date,
-                reservation_slot = cd['reservation_slot'],
+                reservation_slot = booking_slot,
             )
 
-            lf.save()
+            
 
-            reservations_by_date = Reservation.objects.filter(reservation_date=booking_date)
+            reservations_by_date = Reservation.objects.filter(reservation_date=booking_date, reservation_slot=booking_slot)
             logger.info(reservations_by_date)
-            data = list(reservations_by_date.values('first_name', 'reservation_date', 'reservation_slot'))
+            if reservations_by_date.exists():
+                return JsonResponse({
+                'message': 'Booking Failed - Already Reserved'
+            })
+
+            lf.save()
             return JsonResponse({
-                'message': 'success',
-                'reservations': data
+                'message': 'Booking Complete'
             })
     reservations =  Reservation.objects.all()
     logger.info(reservations)

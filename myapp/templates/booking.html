@@ -10,24 +10,8 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <title>Make a Reservation</title>
-    <script>
-        const form = document.getElementById('form');
-        form.addEventListener("submit", submitHandler);
-
-        function submitHandler(e) {
-            e.preventDefault();
-
-            fetch(form.action, {method:'POST', body: new FormData(form)})
-            .then(response=>response.json())
-            .then(data=>{
-                    if (data.message === 'success') {
-                        alert('Success!');
-                        console.log(data.reservations)
-                        form.reset();
-                }
-            });
-        }
-    </script>
+    {% load static %}
+    <script src="{% static 'booking.js' %}"></script>   
 </head>
 <body class="bg-light">
     
@@ -43,5 +27,12 @@
             <button type="submit" class="btn btn-primary">Reserve</button>
         </form>
     </div>
+
+    <div id="bookings" class="container pt-5 table mt-3 table-sm table_col_padding">
+        <table>
+            <tbody id="tableData"></tbody>
+        </table>
+    </div>
+    
 </body>
 </html>
