@@ -1,5 +1,7 @@
 # booking-sys
 
+[![Django CI](https://github.com/conorheffron/booking-sys/actions/workflows/django.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/django.yml)
+
 ## Technologies
 python3, django admin/framework, django.test, & MySQL
 
