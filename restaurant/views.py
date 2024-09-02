@@ -9,18 +9,12 @@ logger = logging.getLogger(__name__)
 
 def table_view(request):
     date = request.GET.get("date", datetime.today().date())
-
-    logger.info(f"the date is {date}")
-    reservations_by_date = Reservation.objects.filter(reservation_date=date);
-    
-    data = list(reservations_by_date.values('first_name', 'reservation_date', 'reservation_slot'))
-    logger.info(f'Query set results: {data}')
-    return JsonResponse({
-        'message': 'success',
-        'reservations': data
-    })
+    return findBookingsByDate(date)
 
 def bookings_view(request, date):
+    return findBookingsByDate(date)
+
+def findBookingsByDate(date):
     logger.info(f"the date is {date}")
     reservations_by_date = Reservation.objects.filter(reservation_date=date);
     
