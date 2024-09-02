@@ -21,7 +21,7 @@ CREATE DATABASE reservations;
 ```
 python manage.py makemigrations
 python manage.py migrate
- python manage.py showmigrations
+python manage.py showmigrations
 ```
 
 ## Run All Tests
@@ -129,6 +129,33 @@ Running migrations:
   Applying restaurant.0001_initial... OK
   Applying restaurant.0002_reservation_delete_menu... OK
   Applying sessions.0001_initial... OK
+
+% python manage.py showmigrations
+admin
+ [ ] 0001_initial
+ [ ] 0002_logentry_remove_auto_add
+ [ ] 0003_logentry_add_action_flag_choices
+auth
+ [ ] 0001_initial
+ [ ] 0002_alter_permission_name_max_length
+ [ ] 0003_alter_user_email_max_length
+ [ ] 0004_alter_user_username_opts
+ [ ] 0005_alter_user_last_login_null
+ [ ] 0006_require_contenttypes_0002
+ [ ] 0007_alter_validators_add_error_messages
+ [ ] 0008_alter_user_username_max_length
+ [ ] 0009_alter_user_last_name_max_length
+ [ ] 0010_alter_group_name_max_length
+ [ ] 0011_update_proxy_permissions
+ [ ] 0012_alter_user_first_name_max_length
+contenttypes
+ [ ] 0001_initial
+ [ ] 0002_remove_content_type_name
+restaurant
+ [ ] 0001_initial
+ [ ] 0002_reservation_delete_menu
+sessions
+ [ ] 0001_initial
 
 % python manage.py test          
 Found 2 test(s).
