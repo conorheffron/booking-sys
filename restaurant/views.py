@@ -40,7 +40,6 @@ def form_view(request):
             )
 
             
-
             reservations_by_date = Reservation.objects.filter(reservation_date=booking_date, reservation_slot=booking_slot)
             logger.info(reservations_by_date)
             if reservations_by_date.exists():
