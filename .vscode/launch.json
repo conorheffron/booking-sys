@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "pythonPath": "/Users/conorheffron/.local/share/virtualenvs/littlelemon-PIHfCB-G/bin/python3", // path to your virtual environment's python
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "runserver",
+                "8000", // or any other port you wish to use
+            ],
+            "env": {
+                "PYTHONUNBUFFERED": "1",
+                "TEST_ENV": "This is test ENV."
+            },
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
