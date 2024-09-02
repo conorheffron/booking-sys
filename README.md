@@ -35,7 +35,9 @@ python3 manage.py runserver
 ```
 
 ## Alternatively, Debug Django Application
-Go to 'Run and Debug' View in VS code, select launch.json 'Python: Current File'
+- Go to 'Run and Debug' View in VS code
+- Select launch.json confirguration 'Python: Current File' & Run
+- Set breakpoints in views.py
 ![debug](./screenshots/debug.png?raw=true "Debug GET Bookings Request")
 
 Frre to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/lemon_14385026?term=lemon&page=1&position=5&origin=tag&related_id=14385026)
