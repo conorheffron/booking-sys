@@ -3,10 +3,12 @@ from restaurant.forms import ReservationForm
 from .models import Reservation
 from django.http import JsonResponse
 import logging
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-def table_view(request, date):
+def table_view(request):
+    date = request.GET.get("date", datetime.today().date())
     logger.info(f"the date is {date}")
     reservations_by_date = Reservation.objects.filter(reservation_date=date);
     

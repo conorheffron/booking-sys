@@ -33,7 +33,7 @@ window.onload = function() {
 
 function renderTable(booking_date) {
     try {
-        fetch(`/bookings/${booking_date}`)
+        fetch('/bookings?date=' + booking_date)
             .then(response => response.json())
             .then(response => {
             console.log(response);
