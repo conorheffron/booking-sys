@@ -4,42 +4,47 @@
 
 ## Technologies
 python3, django admin/framework, django.test, & MySQL Server
+python3, django admin/framework, django.test, & MySQL Server
 
 ## Build
-```
+```shell
 cd booking-sys
 pipenv shell
 pipenv install 
 ```
 
-## Create DB Schema on MySQL via Mac
-```
+## Create DB Schema on MySQL via Mac (mysql client for CLI)
+### Start MySQL server
+```shell
 brew services start mysql
-
 mysql -u root -p 
+```
 
+### Create `reservations` DB
+```sql
 CREATE DATABASE reservations;
-
 exit;
-
--- Restart/Stop MySQL server when needed
-brew services <restart or stop? mysql
 ```
 
-## Apply form/model changes to DB
+### Restart or Stop MySQL server as needed
+```shell
+brew services stop mysql
 ```
+
+## Apply model changes to DB
+```shell
 python manage.py makemigrations
 python manage.py migrate
 python manage.py showmigrations
 ```
 
 ## Run All Tests
-```
+```shell
 python3 manage.py test
 ```
 
 ## Run Django Application
-```
+```shell
 python3 manage.py runserver
 ```
 
@@ -47,6 +52,7 @@ python3 manage.py runserver
 - Go to 'Run and Debug' View in VS code
 - Select launch.json confirguration 'Python: Current File' & Run
 - Set breakpoints in views.py
+
 ![debug](./screenshots/debug.png?raw=true "Debug GET Bookings Request")
 
 Free to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/lemon_14385026?term=lemon&page=1&position=5&origin=tag&related_id=14385026)
@@ -55,15 +61,11 @@ Free to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/l
 ## Functionality Demo
 
 ###  App Home Address
-```
-http://localhost:8000/
-http://localhost:8000/book/
+- [http://localhost:8000/](http://localhost:8000/)
 
-or 
+  or 
 
-http://127.0.0.1:8000/
-http://127.0.0.1:8000/book/
-```
+- [http://localhost:8000/book/](http://localhost:8000/book/)
 
 ###  Make a Reservation Form
 ![reserve](./screenshots/reserve.png?raw=true "Make a Reservation")
@@ -78,22 +80,22 @@ http://127.0.0.1:8000/book/
 ![bookings-by-date](./screenshots/bookings-by-date.png?raw=true "View Bookings By Date Change")
 
 ###  Bookings By Date REST API End-point (used for view template above)
-Using request path variable:
-```
-http://localhost:8000/bookings/2024-08-22/
+Using `request path variable`:
 
-and
+- [http://localhost:8000/bookings/2024-08-22/](http://localhost:8000/bookings/2024-08-22/)
 
-http://localhost:8000/bookings/2024-09-01/
-```
-Or using request parameter 'date':
-```
-http://127.0.0.1:8000/bookings?date=2024-08-22
+  and
 
-and
+- [http://localhost:8000/bookings/2024-09-01/](http://localhost:8000/bookings/2024-09-01/)
 
-http://127.0.0.1:8000/bookings?date=2024-09-01
-```
+Or using `request parameter 'date'`:
+
+- [http://localhost:8000/bookings?date=2024-08-22](http://localhost:8000/bookings?date=2024-08-22)
+
+  and
+
+- [http://localhost:8000/bookings?date=2024-09-01](http://localhost:8000/bookings?date=2024-09-01)
+
 
 
 ![postman](./screenshots/postman.png?raw=true "Postman GET Bookings Request")
@@ -105,11 +107,10 @@ http://127.0.0.1:8000/bookings?date=2024-09-01
 ![dynamic-table-update](./screenshots/dynamic-table-update.png?raw=true "JSON Table Update")
 
 ###  View All Bookings Page
+- [http://localhost:8000/reservations/](http://localhost:8000/reservations/)
+
 ![all-bookings](./screenshots/all-bookings.png?raw=true "View All Resrvations")
 
-```
-http://localhost:8000/reservations/
-```
 
 ### Terminal Logs
 ```
