@@ -3,7 +3,7 @@
 [![Django CI](https://github.com/conorheffron/booking-sys/actions/workflows/django.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/django.yml)
 
 ## Technologies
-python3, django admin/framework, django.test, & MySQL
+python3, django admin/framework, django.test, & MySQL Server
 
 ## Build
 ```
@@ -12,11 +12,18 @@ pipenv shell
 pipenv install 
 ```
 
-## Create DB Schema
+## Create DB Schema on MySQL via Mac
 ```
+brew services start mysql
+
 mysql -u root -p 
 
 CREATE DATABASE reservations;
+
+exit;
+
+-- Restart/Stop MySQL server when needed
+brew services <restart or stop? mysql
 ```
 
 ## Apply form/model changes to DB
@@ -42,7 +49,7 @@ python3 manage.py runserver
 - Set breakpoints in views.py
 ![debug](./screenshots/debug.png?raw=true "Debug GET Bookings Request")
 
-Frre to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/lemon_14385026?term=lemon&page=1&position=5&origin=tag&related_id=14385026)
+Free to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/lemon_14385026?term=lemon&page=1&position=5&origin=tag&related_id=14385026)
 
 
 ## Functionality Demo
