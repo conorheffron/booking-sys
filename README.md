@@ -22,8 +22,8 @@ CREATE DATABASE reservations;
 
 exit;
 
--- Restart/Stop MySQL server when needed
-brew services <restart or stop? mysql
+-- Restart or Stop MySQL server when needed
+brew services <restart or stop> mysql
 ```
 
 ## Apply form/model changes to DB
