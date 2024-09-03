@@ -51,6 +51,7 @@ python3 manage.py runserver
 - Go to 'Run and Debug' View in VS code
 - Select launch.json confirguration 'Python: Current File' & Run
 - Set breakpoints in views.py
+
 ![debug](./screenshots/debug.png?raw=true "Debug GET Bookings Request")
 
 Free to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/lemon_14385026?term=lemon&page=1&position=5&origin=tag&related_id=14385026)
@@ -61,7 +62,7 @@ Free to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/l
 ###  App Home Address
 - [http://localhost:8000/](http://localhost:8000/)
 
-or 
+  or 
 
 - [http://localhost:8000/book/](http://localhost:8000/book/)
 
@@ -82,15 +83,15 @@ Using `request path variable`:
 
 - [http://localhost:8000/bookings/2024-08-22/](http://localhost:8000/bookings/2024-08-22/)
 
-and
+  and
 
 - [http://localhost:8000/bookings/2024-09-01/](http://localhost:8000/bookings/2024-09-01/)
 
-Or using `request parameter date`:
+Or using `request parameter 'date'`:
 
 - [http://localhost:8000/bookings?date=2024-08-22](http://localhost:8000/bookings?date=2024-08-22)
 
-and
+  and
 
 - [http://localhost:8000/bookings?date=2024-09-01](http://localhost:8000/bookings?date=2024-09-01)
 
@@ -106,6 +107,7 @@ and
 
 ###  View All Bookings Page
 - [http://localhost:8000/reservations/](http://localhost:8000/reservations/)
+
 ![all-bookings](./screenshots/all-bookings.png?raw=true "View All Resrvations")
 
 
