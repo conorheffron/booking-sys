@@ -6,27 +6,31 @@
 python3, django admin/framework, django.test, & MySQL Server
 
 ## Build
-```
+```shell
 cd booking-sys
 pipenv shell
 pipenv install 
 ```
 
-## Create DB Schema on MySQL via Mac
-```
+## Create DB Schema on MySQL via Mac (mysql client for CLI)
+### Start MySQL server
+```shell
 brew services start mysql
-
 mysql -u root -p 
-
-CREATE DATABASE reservations;
-
-exit;
-
--- Restart or Stop MySQL server when needed
-brew services <restart or stop> mysql
 ```
 
-## Apply form/model changes to DB
+### Create `reservations` DB
+```sql
+CREATE DATABASE reservations;
+exit;
+```
+
+### Restart or Stop MySQL server as needed
+```shell
+brew services stop mysql
+```
+
+## Apply model changes to DB
 ```
 python manage.py makemigrations
 python manage.py migrate
