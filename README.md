@@ -113,7 +113,7 @@ Or using `request parameter 'date'`:
 
 
 ### Terminal Logs
-```
+```shell
 % pipenv shell              
 Creating a virtualenv for this project...
 Pipfile: /.../workspace/littlelemon/Pipfile
@@ -123,6 +123,9 @@ Using /usr/local/bin/python3 (3.12.4) to create virtualenv...
   seeder FromAppData(download=False, pip=bundle, via=copy, app_data_dir=/.../Library/Application Support/virtualenv)
     added seed packages: pip==24.2
   activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
+
+% pipenv install
+Installing dependencies from Pipfile.lock (84d28c)...
 
 ✔ Successfully created virtual environment!
 Virtualenv location: /.../.local/share/virtualenvs/littlelemon-PIHfCB-G
