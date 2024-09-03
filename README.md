@@ -59,11 +59,11 @@ Free to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/l
 ## Functionality Demo
 
 ###  App Home Address
-[http://localhost:8000/](http://localhost:8000/)
+- [http://localhost:8000/](http://localhost:8000/)
 
 or 
 
-[http://localhost:8000/book/](http://localhost:8000/book/)
+- [http://localhost:8000/book/](http://localhost:8000/book/)
 
 ###  Make a Reservation Form
 ![reserve](./screenshots/reserve.png?raw=true "Make a Reservation")
@@ -78,21 +78,21 @@ or
 ![bookings-by-date](./screenshots/bookings-by-date.png?raw=true "View Bookings By Date Change")
 
 ###  Bookings By Date REST API End-point (used for view template above)
-Using request path variable:
+Using `request path variable`:
 
-[http://localhost:8000/bookings/2024-08-22/](http://localhost:8000/bookings/2024-08-22/)
+- [http://localhost:8000/bookings/2024-08-22/](http://localhost:8000/bookings/2024-08-22/)
 
 and
 
-[http://localhost:8000/bookings/2024-09-01/](http://localhost:8000/bookings/2024-09-01/)
+- [http://localhost:8000/bookings/2024-09-01/](http://localhost:8000/bookings/2024-09-01/)
 
 Or using `request parameter date`:
 
-[http://localhost:8000/bookings?date=2024-08-22](http://localhost:8000/bookings?date=2024-08-22)
+- [http://localhost:8000/bookings?date=2024-08-22](http://localhost:8000/bookings?date=2024-08-22)
 
 and
 
-[http://localhost:8000/bookings?date=2024-09-01](http://localhost:8000/bookings?date=2024-09-01)
+- [http://localhost:8000/bookings?date=2024-09-01](http://localhost:8000/bookings?date=2024-09-01)
 
 
 
@@ -105,9 +105,9 @@ and
 ![dynamic-table-update](./screenshots/dynamic-table-update.png?raw=true "JSON Table Update")
 
 ###  View All Bookings Page
+- [http://localhost:8000/reservations/](http://localhost:8000/reservations/)
 ![all-bookings](./screenshots/all-bookings.png?raw=true "View All Resrvations")
 
-[http://localhost:8000/reservations/](http://localhost:8000/reservations/)
 
 ### Terminal Logs
 ```
