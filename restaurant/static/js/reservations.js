@@ -19,7 +19,7 @@ function submitHandler(e) {
             alert(response.message);
             bookings_by_date = response.reservations
             console.log(bookings_by_date)
-            form.reset();
+            // form.reset();
             renderTableBookings(bookings_by_date)
         });
 }

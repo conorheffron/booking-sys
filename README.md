@@ -38,9 +38,15 @@ python manage.py migrate
 python manage.py showmigrations
 ```
 
-## Run All Tests
+## Run All Unit Tests
 ```shell
 python3 manage.py test
+```
+
+## Run Test Class or specific Test Case
+```shell
+python3 manage.py test restaurant.tests.RestaurantTests
+python3 manage.py test restaurant.tests.RestaurantTests.test_create_booking
 ```
 
 ## Run Django Application
