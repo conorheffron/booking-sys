@@ -119,6 +119,8 @@ Or using `request parameter 'date'`:
 
 
 ### Terminal Logs
+
+####  - MySQL
 ```sql
 % mysql -u root -p  
 Enter password: 
@@ -209,6 +211,7 @@ mysql> SELECT * FROM restaurant_reservation;
 3 rows in set (0.00 sec)
 ```
 
+####  - Bash for pip / python3
 ```shell
 % pipenv shell              
 Creating a virtualenv for this project...
@@ -220,16 +223,19 @@ Using /usr/local/bin/python3 (3.12.4) to create virtualenv...
     added seed packages: pip==24.2
   activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
 
+% pipenv install
+Installing dependencies from Pipfile.lock (84d28c)...
+
 ✔ Successfully created virtual environment!
 Virtualenv location: /.../.local/share/virtualenvs/littlelemon-PIHfCB-G
 Launching subshell in virtual environment...
  . /.../.local/share/virtualenvs/littlelemon-.../bin/activate
 zsh compinit: insecure directories, run compaudit for list.
 
-% python manage.py makemigrations
+% python3 manage.py makemigrations
 No changes detected
 
-% python manage.py migrate       
+% python3 manage.py migrate       
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, restaurant, sessions
 Running migrations:
@@ -254,7 +260,7 @@ Running migrations:
   Applying restaurant.0002_reservation_delete_menu... OK
   Applying sessions.0001_initial... OK
 
-% python manage.py showmigrations
+% python3 manage.py showmigrations
 admin
  [ ] 0001_initial
  [ ] 0002_logentry_remove_auto_add
@@ -281,7 +287,7 @@ restaurant
 sessions
  [ ] 0001_initial
 
-% python manage.py test          
+% python3 manage.py test          
 Found 2 test(s).
 Creating test database for alias 'default'...
 System check identified no issues (0 silenced).
