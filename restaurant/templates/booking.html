@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Make a Reservation</title>
+    <title>Make a Booking</title>
     {% load static %}
-    <script src="{% static 'booking.js' %}"></script>   
+    <script src="{% static 'js/reservations.js' %}"></script>   
+    <script src="{% static 'js/form.js' %}"></script>
 </head>
 <body class="bg-light">
     
@@ -28,7 +29,7 @@
         </form>
     </div>
 
-    <div id="bookings" class="container pt-5 table mt-3 table-sm table_col_padding">
+    <div id="reservations-by-date" class="container pt-5 table mt-3 table-sm table_col_padding">
         <table>
             <tbody id="tableData"></tbody>
         </table>

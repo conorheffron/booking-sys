@@ -9,13 +9,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Rservations</title>
-    <script>
-        function refresh(){
-            window.location.reload("Refresh")
-        }
-    
-    </script>
+    <title>Reservations</title>
+    {% load static %}
+    <script src="{% static 'js/reservations.js' %}"></script>   
 </head>
 <body class="bg-light">
     <div class="container pt-4">
@@ -32,8 +28,8 @@
             {% for item in reservations %}
             <tr> 
                 <td>{{ item.first_name }}</td>
-                <td>{{ item.reservation_date }}</td>
-                <td>{{ item.reservation_slot }}</td>
+                <td>{{ item.reservation_date|date:'Y-m-d' }}</td>
+                <td>{{ item.reservation_slot|time:'H:i:00' }}</td>
             </tr>
             {% endfor %}
         </table>
