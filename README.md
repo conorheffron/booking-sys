@@ -123,7 +123,6 @@ Or using `request parameter 'date'`:
 ####  - MySQL
 ```sql
 % mysql -u root -p  
-Enter password: 
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 1610
 Server version: 9.0.1 Homebrew
@@ -141,8 +140,7 @@ Reading table information for completion of table and column names
 You can turn off this feature to get a quicker startup with -A
 
 Database changed
-mysql> SHOW TABLES reservations;
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'reservations' at line 1
+
 mysql> SHOW TABLES;
 +----------------------------+
 | Tables_in_reservations     |
