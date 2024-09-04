@@ -17,11 +17,11 @@ pipenv install
 ### Start MySQL server
 ```shell
 brew services start mysql
-mysql -u root -p 
 ```
 
 ### Create `reservations` DB
 ```sql
+mysql -u root -p 
 CREATE DATABASE reservations;
 exit;
 ```
