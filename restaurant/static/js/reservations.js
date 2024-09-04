@@ -40,21 +40,25 @@ function renderTable(booking_date) {
 }
 
 function renderTableBookings(bookings) {
-    var k = '<tbody>'
-    k += '<tr>';
-    k += '<th>First Name</td>';
-    k += '<th>Reservation Date</td>';
-    k += '<th>Reservation Time</td>';
-    k += '</tr>';
-    for (i = 0; i < bookings.length; i++) {
-        k += '<tr>';
-        k += '<td>' + bookings[i]["first_name"] + '</td>';
-        k += '<td>' + bookings[i]["reservation_date"] + '</td>';
-        k += '<td>' + bookings[i]["reservation_slot"] + '</td>';
-        k += '</tr>';
+    if (bookings.length > 0) {
+        var dynamoT = '<tbody>'
+        dynamoT += '<tr>';
+        dynamoT += '<th>First Name</td>';
+        dynamoT += '<th>Reservation Date</td>';
+        dynamoT += '<th>Reservation Time</td>';
+        dynamoT += '</tr>';
+        for (i = 0; i < bookings.length; i++) {
+            dynamoT += '<tr>';
+            dynamoT += '<td>' + bookings[i]["first_name"] + '</td>';
+            dynamoT += '<td>' + bookings[i]["reservation_date"] + '</td>';
+            dynamoT += '<td>' + bookings[i]["reservation_slot"] + '</td>';
+            dynamoT += '</tr>';
+        }
+        dynamoT += '</tbody>';
+        document.getElementById('tableData').innerHTML = dynamoT;
+    } else {
+        document.getElementById('tableData').innerHTML = '<tbody id="tableData"></tbody>';
     }
-    k += '</tbody>';
-    document.getElementById('tableData').innerHTML = k;
 }
 
 function refresh(){
