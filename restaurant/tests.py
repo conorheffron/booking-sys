@@ -3,7 +3,7 @@ from .models import Reservation
 from .forms import ReservationForm
 from datetime import datetime
 
-class MenuItemTest(TestCase):
+class RestaurantTests(TestCase):
 
     def setUp(self):
         pass
