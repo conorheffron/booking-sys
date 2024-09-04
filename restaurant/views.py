@@ -15,51 +15,59 @@ def bookings_view(request, date):
     return findBookingsByDate(date)
 
 def findBookingsByDate(date):
-    logger.info(f"the date is {date}")
     reservations_by_date = Reservation.objects.filter(reservation_date=date);
     
     data = list(reservations_by_date.values('first_name', 'reservation_date', 'reservation_slot'))
-    logger.info(f'Query set results: {data}')
+    logger.info(f'GET by date ({date}) Query set results: {data}')
     return JsonResponse({
         'message': 'success',
         'reservations': data
     })
 
 def reservations_view(request):
-    reservations =  Reservation.objects.all()
-    logger.info(reservations)
-    return render(request, 'reservations.html', {'reservations': reservations})
+    data =  list(Reservation.objects.all().values('first_name', 'reservation_date', 'reservation_slot'))
+    logger.info(f'GET All Query set results: {data}')
+    return render(request, 'reservations.html', {'reservations': data})
 
 def form_view(request):
     form = ReservationForm()
     
+    #  POST request logic
     if request.method == 'POST':
         form = ReservationForm(request.POST)
         logger.info(request.POST)
         if form.is_valid():
+            # clean & extract form data
             cd = form.cleaned_data
 
             booking_date = cd['reservation_date']
             booking_slot = cd['reservation_slot']
-            
-            lf = Reservation(
-                first_name = cd['first_name'],
-                reservation_date = booking_date,
-                reservation_slot = booking_slot,
-            )
 
-            
+            # booking flow logic
             reservations_by_date = Reservation.objects.filter(reservation_date=booking_date, reservation_slot=booking_slot)
-            logger.info(reservations_by_date)
+            message = ''
             if reservations_by_date.exists():
-                return JsonResponse({
-                'message': 'Booking Failed - Already Reserved'
-            })
-
-            lf.save()
+                message = 'Booking Failed - Already Reserved'
+            else:
+                # map form object to model & save to DB
+                reservation = Reservation(
+                    first_name = cd['first_name'],
+                    reservation_date = booking_date,
+                    reservation_slot = booking_slot,
+                )
+                reservation.save()
+                message = 'Booking Complete'
+            
+            # POST response JSON
+            data = list(Reservation.objects.filter(reservation_date=booking_date).values('first_name', 'reservation_date', 'reservation_slot'))
+            logger.info(f'POST Query set results: {data}')
             return JsonResponse({
-                'message': 'Booking Complete'
-            })
-    reservations =  Reservation.objects.all()
-    logger.info(reservations)
-    return render(request, 'booking.html', {'form': form, 'reservations': reservations})
+                'message': message,
+                'reservations': data
+                })
+    else:
+        # GET Response logic
+        reservations =  Reservation.objects.all()
+        data = list(reservations.values_list('first_name', 'reservation_date', 'reservation_slot'))
+        logger.info(f'GET Query set results: {data}')
+        return render(request, 'booking.html', {'form': form, 'reservations': reservations})

@@ -17,11 +17,11 @@ pipenv install
 ### Start MySQL server
 ```shell
 brew services start mysql
-mysql -u root -p 
 ```
 
 ### Create `reservations` DB
 ```sql
+mysql -u root -p 
 CREATE DATABASE reservations;
 exit;
 ```
@@ -38,9 +38,15 @@ python manage.py migrate
 python manage.py showmigrations
 ```
 
-## Run All Tests
+## Run All Unit Tests
 ```shell
 python3 manage.py test
+```
+
+## Run Test Class or specific Test Case
+```shell
+python3 manage.py test restaurant.tests.RestaurantTests
+python3 manage.py test restaurant.tests.RestaurantTests.test_create_booking
 ```
 
 ## Run Django Application
@@ -113,6 +119,99 @@ Or using `request parameter 'date'`:
 
 
 ### Terminal Logs
+
+####  - MySQL
+```sql
+% mysql -u root -p  
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 1610
+Server version: 9.0.1 Homebrew
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> USE reservations;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> SHOW TABLES reservations;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'reservations' at line 1
+mysql> SHOW TABLES;
++----------------------------+
+| Tables_in_reservations     |
++----------------------------+
+| auth_group                 |
+| auth_group_permissions     |
+| auth_permission            |
+| auth_user                  |
+| auth_user_groups           |
+| auth_user_user_permissions |
+| django_admin_log           |
+| django_content_type        |
+| django_migrations          |
+| django_session             |
+| restaurant_reservation     |
++----------------------------+
+11 rows in set (0.00 sec)
+
+mysql> SELECT * FROM restaurant_reservation;
++----+------------+------------------+------------------+
+| id | first_name | reservation_date | reservation_slot |
++----+------------+------------------+------------------+
+| 48 | Test       | 2024-09-04       | 15:41:00.000000  |
+| 49 | Test       | 2024-09-04       | 15:42:00.000000  |
+| 50 | Test 2     | 2024-09-07       | 16:42:00.000000  |
++----+------------+------------------+------------------+
+3 rows in set (0.00 sec)
+
+mysql> DELETE FROM restaurant_reservation WHERE first_name='Test';
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> SELECT * FROM restaurant_reservation;
++----+------------+------------------+------------------+
+| id | first_name | reservation_date | reservation_slot |
++----+------------+------------------+------------------+
+| 50 | Test 2     | 2024-09-07       | 16:42:00.000000  |
++----+------------+------------------+------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DISTINCT first_name FROM restaurant_reservation;
++------------+
+| first_name |
++------------+
+| Test 2     |
++------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT DISTINCT first_name FROM restaurant_reservation;
++------------+
+| first_name |
++------------+
+| Test 2     |
+| Test 3     |
+| Test       |
++------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM restaurant_reservation;
++----+------------+------------------+------------------+
+| id | first_name | reservation_date | reservation_slot |
++----+------------+------------------+------------------+
+| 50 | Test 2     | 2024-09-07       | 16:42:00.000000  |
+| 51 | Test 3     | 2024-09-04       | 16:42:00.000000  |
+| 52 | Test       | 2024-09-26       | 20:54:00.000000  |
++----+------------+------------------+------------------+
+3 rows in set (0.00 sec)
+```
+
+####  - Bash for pip / python3
 ```shell
 % pipenv shell              
 Creating a virtualenv for this project...
@@ -133,10 +232,10 @@ Launching subshell in virtual environment...
  . /.../.local/share/virtualenvs/littlelemon-.../bin/activate
 zsh compinit: insecure directories, run compaudit for list.
 
-% python manage.py makemigrations
+% python3 manage.py makemigrations
 No changes detected
 
-% python manage.py migrate       
+% python3 manage.py migrate       
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, restaurant, sessions
 Running migrations:
@@ -161,7 +260,7 @@ Running migrations:
   Applying restaurant.0002_reservation_delete_menu... OK
   Applying sessions.0001_initial... OK
 
-% python manage.py showmigrations
+% python3 manage.py showmigrations
 admin
  [ ] 0001_initial
  [ ] 0002_logentry_remove_auto_add
@@ -188,7 +287,7 @@ restaurant
 sessions
  [ ] 0001_initial
 
-% python manage.py test          
+% python3 manage.py test          
 Found 2 test(s).
 Creating test database for alias 'default'...
 System check identified no issues (0 silenced).

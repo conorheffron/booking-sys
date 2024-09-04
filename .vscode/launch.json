@@ -20,6 +20,30 @@
             },
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "Django TEST test_create_booking",
+            "type": "python",
+            "request": "launch",
+            "pythonPath": "/Users/conorheffron/.local/share/virtualenvs/littlelemon-PIHfCB-G/bin/python3", // path to your virtual environment's python
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "test",
+                "restaurant.tests.RestaurantTests.test_create_booking",
+            ],
+            "django": true
+        },
+        {
+            "name": "Django Run All Tests",
+            "type": "python",
+            "request": "launch",
+            "pythonPath": "/Users/conorheffron/.local/share/virtualenvs/littlelemon-PIHfCB-G/bin/python3", // path to your virtual environment's python
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "test",
+                "restaurant.tests.RestaurantTests",
+            ],
+            "django": true
         }
     ]
 }
