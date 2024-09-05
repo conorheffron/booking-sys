@@ -1,6 +1,10 @@
 # booking-sys
 
+[![Build and deploy to Azure Web App - booking-sys](https://github.com/conorheffron/booking-sys/actions/workflows/main_booking-sys.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/main_booking-sys.yml)
+
 [![Django CI](https://github.com/conorheffron/booking-sys/actions/workflows/django.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/django.yml)
+
+[![Pylint](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml)
 
 ## Technologies
 python3, django admin/framework, django.test, & MySQL Server
