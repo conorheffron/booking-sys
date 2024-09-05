@@ -2,6 +2,8 @@
 
 [![Django CI](https://github.com/conorheffron/booking-sys/actions/workflows/django.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/django.yml)
 
+[![Pylint](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml)
+
 ## Technologies
 python3, django admin/framework, django.test, & MySQL Server
 python3, django admin/framework, django.test, & MySQL Server
