@@ -1,4 +1,4 @@
-name: Build and deploy Python app to Azure Web App
+name: Build and deploy to Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: booking-sys
