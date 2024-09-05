@@ -1,21 +1,30 @@
-from django.shortcuts import render
-from restaurant.forms import ReservationForm
+"""littlelemon Views Mapping & Logic
+"""
 from .models import Reservation
-from django.http import JsonResponse
-import logging
 from datetime import datetime
+from django.http import JsonResponse
+from django.shortcuts import render
+import logging
+from restaurant.forms import ReservationForm
+
 
 logger = logging.getLogger(__name__)
 
+
+# GET bookings by date request parameter
 def table_view(request):
     date = request.GET.get("date", datetime.today().date())
     return findBookingsByDate(date)
 
+
+# GET bookings by date request path variable
 def bookings_view(request, date):
     return findBookingsByDate(date)
 
+
+# GET bookings by date JSON response
 def findBookingsByDate(date):
-    reservations_by_date = Reservation.objects.filter(reservation_date=date);
+    reservations_by_date = Reservation.objects.filter(reservation_date=date)
     
     data = list(reservations_by_date.values('first_name', 'reservation_date', 'reservation_slot'))
     logger.info(f'GET by date ({date}) Query set results: {data}')
@@ -24,11 +33,15 @@ def findBookingsByDate(date):
         'reservations': data
     })
 
+
+# Resolve all reservations view 7 data request
 def reservations_view(request):
     data =  list(Reservation.objects.all().values('first_name', 'reservation_date', 'reservation_slot'))
     logger.info(f'GET All Query set results: {data}')
     return render(request, 'reservations.html', {'reservations': data})
 
+
+# Resolve make a reservation form submit
 def form_view(request):
     form = ReservationForm()
     
