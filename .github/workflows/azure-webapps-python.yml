@@ -75,7 +75,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: python-app
+          name: booking-sys
           path: .
 
       - name: 'Deploy to Azure Web App'
