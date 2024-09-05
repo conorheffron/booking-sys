@@ -1,11 +1,11 @@
 """littlelemon Views Mapping & Logic
 """
-from .models import Reservation
 from datetime import datetime
+import logging
 from django.http import JsonResponse
 from django.shortcuts import render
-import logging
 from restaurant.forms import ReservationForm
+from .models import Reservation
 
 
 logger = logging.getLogger(__name__)
