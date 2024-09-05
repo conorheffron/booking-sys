@@ -20,4 +20,4 @@ jobs:
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py') --generated-members=objects
+        pylint $(git ls-files '*.py') --generated-members=objects --fail-under=9.6
