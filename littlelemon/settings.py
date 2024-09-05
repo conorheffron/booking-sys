@@ -25,8 +25,11 @@ SECRET_KEY = "django-insecure-1_-nbup&d1%klv)v$joa4oh4t+ikzmv0a@5asp%g&84=q#6p1m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net", "169.254.129.4"]
+ALLOWED_HOSTS = ['booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
+                 '169.254.129.4']
 
+CSRF_TRUSTED_ORIGINS = ['https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
+                        'https://169.254.129.4']
 
 # Application definition
 
