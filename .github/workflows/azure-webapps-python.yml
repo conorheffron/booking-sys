@@ -20,7 +20,7 @@
 name: Build and deploy Python app to Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: your-app-name  # set this to the name of your Azure Web App
+  AZURE_WEBAPP_NAME: booking-sys  # set this to the name of your Azure Web App
   PYTHON_VERSION: '3.12'              # set this to the Python version to use
 
 on:
@@ -53,11 +53,11 @@ jobs:
         run: pip install -r requirements.txt
 
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
-
+      
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
         with:
-          name: python-app
+          name: booking-sys
           path: |
             .
             !venv/
