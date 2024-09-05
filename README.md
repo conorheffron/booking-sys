@@ -33,9 +33,9 @@ brew services stop mysql
 
 ## Apply model changes to DB
 ```shell
-python manage.py makemigrations
-python manage.py migrate
-python manage.py showmigrations
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py showmigrations
 ```
 
 ## Run All Unit Tests

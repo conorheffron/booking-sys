@@ -7,80 +7,95 @@ from django.shortcuts import render
 from restaurant.forms import ReservationForm
 from .models import Reservation
 
-
 logger = logging.getLogger(__name__)
 
-
-# GET bookings by date request parameter
 def table_view(request):
+    """GET bookings by date request parameter
+    Parameters
+    ----------
+    request : Requests https://requests.readthedocs.io/en/latest/
+    """
     date = request.GET.get("date", datetime.today().date())
-    return findBookingsByDate(date)
+    return find_bookings_by_date(date)
 
-
-# GET bookings by date request path variable
 def bookings_view(request, date):
-    return findBookingsByDate(date)
+    """GET bookings by date request path variable
+    Parameters
+    ----------
+    request : Requests
+    date: The date in format %y-%m-%d i.e. 2024-09-07
+    """
+    logger.info('Request information (%s)', request)
+    return find_bookings_by_date(date)
 
-
-# GET bookings by date JSON response
-def findBookingsByDate(date):
+def find_bookings_by_date(date):
+    """Bookings by date and return JSON response
+    Parameters
+    ----------
+    date: The date in format %y-%m-%d i.e. 2024-09-07
+    """
     reservations_by_date = Reservation.objects.filter(reservation_date=date)
-    
     data = list(reservations_by_date.values('first_name', 'reservation_date', 'reservation_slot'))
-    logger.info(f'GET by date ({date}) Query set results: {data}')
+    logger.info('GET by date (%s) Query set results: %s', date, data)
     return JsonResponse({
         'message': 'success',
         'reservations': data
     })
 
-
-# Resolve all reservations view 7 data request
 def reservations_view(request):
-    data =  list(Reservation.objects.all().values('first_name', 'reservation_date', 'reservation_slot'))
-    logger.info(f'GET All Query set results: {data}')
+    """Resolve all reservations view data request
+    Parameters
+    ----------
+    request : Requests
+    """
+    data =  list(Reservation.objects.all().values(
+        'first_name', 'reservation_date', 'reservation_slot'))
+    logger.info('GET All Query set results: %s', data)
     return render(request, 'reservations.html', {'reservations': data})
 
-
-# Resolve make a reservation form submit
 def form_view(request):
+    """Resolve make a reservation form submit
+    Parameters
+    ----------
+    request : Requests
+    """
     form = ReservationForm()
-    
     #  POST request logic
     if request.method == 'POST':
         form = ReservationForm(request.POST)
         logger.info(request.POST)
         if form.is_valid():
             # clean & extract form data
-            cd = form.cleaned_data
-
-            booking_date = cd['reservation_date']
-            booking_slot = cd['reservation_slot']
+            form_data = form.cleaned_data
+            booking_date = form_data['reservation_date']
+            booking_slot = form_data['reservation_slot']
 
             # booking flow logic
-            reservations_by_date = Reservation.objects.filter(reservation_date=booking_date, reservation_slot=booking_slot)
+            reservations_by_date = Reservation.objects.filter(
+                reservation_date=booking_date, reservation_slot=booking_slot)
             message = ''
             if reservations_by_date.exists():
                 message = 'Booking Failed - Already Reserved'
             else:
                 # map form object to model & save to DB
                 reservation = Reservation(
-                    first_name = cd['first_name'],
+                    first_name = form_data['first_name'],
                     reservation_date = booking_date,
                     reservation_slot = booking_slot,
                 )
                 reservation.save()
                 message = 'Booking Complete'
-            
             # POST response JSON
-            data = list(Reservation.objects.filter(reservation_date=booking_date).values('first_name', 'reservation_date', 'reservation_slot'))
-            logger.info(f'POST Query set results: {data}')
+            data = list(Reservation.objects.filter(reservation_date=booking_date).values(
+                'first_name', 'reservation_date', 'reservation_slot'))
+            logger.info('POST Query set results: %s', data)
             return JsonResponse({
                 'message': message,
                 'reservations': data
                 })
     else:
-        # GET Response logic
+        # Bookings view default logic
         reservations =  Reservation.objects.all()
         data = list(reservations.values_list('first_name', 'reservation_date', 'reservation_slot'))
-        logger.info(f'GET Query set results: {data}')
+        logger.info('GET Query set results: %s', data)
         return render(request, 'booking.html', {'form': form, 'reservations': reservations})
