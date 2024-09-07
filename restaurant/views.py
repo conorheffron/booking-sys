@@ -9,7 +9,7 @@ from .models import Reservation
 
 logger = logging.getLogger(__name__)
 
-def handler404(request):
+def handler404(request, exception):
     """Resolve bad request path
     Parameters
     ----------
