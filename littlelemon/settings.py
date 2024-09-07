@@ -150,12 +150,12 @@ LOGGING = {
     },
     'handlers': {
         'console':{
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
         'mail_admins': {
-            'level': 'ERROR',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
@@ -168,7 +168,7 @@ LOGGING = {
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
-            'level': 'ERROR',
+            'level': 'INFO',
             'propagate': True,
         },
         'django': {
