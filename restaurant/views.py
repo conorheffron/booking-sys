@@ -9,7 +9,6 @@ from restaurant.forms import ReservationForm
 from .models import Reservation
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 def handler404(request):
     """Resolve bad request path
