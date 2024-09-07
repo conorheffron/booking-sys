@@ -19,5 +19,5 @@ from django.views.static import serve
 
 urlpatterns = [
     path('', include('restaurant.urls')),
-    path('static/<path:path>/', serve, {'document_root': settings.STATIC_ROOT, })
+    path('/static/<path:path>/', serve, {'document_root': settings.STATIC_ROOT, })
 ]
