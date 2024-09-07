@@ -9,11 +9,21 @@ from .models import Reservation
 
 logger = logging.getLogger(__name__)
 
+def handler404(request):
+    """Resolve bad request path
+    Parameters
+    ----------
+    request : Requests https://requests.readthedocs.io/en/latest/
+    """
+    uri = request.get_full_path
+    logger.error('Bad Request URI path: %s', uri)
+    return render(request, 'error.html', {'uri': uri}, status=404)
+
 def table_view(request):
     """GET bookings by date request parameter
     Parameters
     ----------
-    request : Requests https://requests.readthedocs.io/en/latest/
+    request : Requests
     """
     date = request.GET.get("date", datetime.today().date())
     return find_bookings_by_date(date)
