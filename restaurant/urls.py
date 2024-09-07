@@ -2,7 +2,6 @@
 littlelemon Views Mapping & Logic
 """
 from django.urls import path, re_path
-from django.http import HttpResponse
 from restaurant import views
 
 handler404 = views.handler404

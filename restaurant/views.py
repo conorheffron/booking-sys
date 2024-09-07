@@ -4,7 +4,6 @@ from datetime import datetime
 import logging
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.template import RequestContext
 from restaurant.forms import ReservationForm
 from .models import Reservation
 
