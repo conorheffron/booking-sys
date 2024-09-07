@@ -24,10 +24,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-1_-nbup&d1%klv)v$joa4oh4t+ikzmv0a@5asp%g&84=q#6p1m"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = ['booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
-                 '169.254.129.4', 'localhost']
+if DEBUG is False:
+    ALLOWED_HOSTS = [
+        'booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4'
+    ]
+
+if DEBUG is True:
+    ALLOWED_HOSTS = ['127.0.0.1:8000', '*', 'localhost']
 
 CSRF_TRUSTED_ORIGINS = ['https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
                         'https://169.254.129.4']
@@ -135,25 +141,17 @@ LOGGING = {
     'formatters': {
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-    },
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
         }
     },
     'handlers': {
         'console':{
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'formatter': 'verbose'
         }
     },
     'root': {
         'handlers': ['console'],
         'level': 'INFO'
-    },
+    }
 }
