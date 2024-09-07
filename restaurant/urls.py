@@ -4,7 +4,6 @@ littlelemon Views Mapping & Logic
 from django.urls import path
 from restaurant import views
 
-
 urlpatterns = [
     path('', views.form_view, name="home"),
     path('book/', views.form_view, name="book"),
