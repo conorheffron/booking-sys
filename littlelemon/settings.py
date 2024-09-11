@@ -28,15 +28,11 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 if DEBUG is False:
-    ALLOWED_HOSTS = [
-        'booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4'
-    ]
-
-if DEBUG is True:
-    ALLOWED_HOSTS = ['127.0.0.1:8000', '*', 'localhost']
-
-CSRF_TRUSTED_ORIGINS = ['https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
-                        'https://169.254.129.4']
+    ALLOWED_HOSTS = ['booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4']
+    CSRF_TRUSTED_ORIGINS = ['https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
+                            'https://169.254.129.4']
+else:
+    ALLOWED_HOSTS = ['*']
 
 # Application definition
 
