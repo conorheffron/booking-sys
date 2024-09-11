@@ -14,7 +14,7 @@ python3, django admin/framework, django.test, & MySQL Server
 ```shell
 cd booking-sys
 pipenv shell
-pipenv install 
+pipenv install -r  requirements.txt
 ```
 
 ## Create DB Schema on MySQL via Mac (mysql client for CLI)
@@ -120,6 +120,9 @@ Or using `request parameter 'date'`:
 - [http://localhost:8000/reservations/](http://localhost:8000/reservations/)
 
 ![all-bookings](./screenshots/all-bookings.png?raw=true "View All Resrvations")
+
+###  Hanlder 404
+![handler404](./screenshots/handler404.png?raw=true "Handle Page Not Found Exception")
 
 
 ### Terminal Logs
