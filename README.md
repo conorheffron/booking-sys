@@ -10,7 +10,15 @@
 python3, django admin/framework, django.test, & MySQL Server
 python3, django admin/framework, django.test, & MySQL Server
 
-## Build
+### Buil & Run via Docker
+#### - Update 'DEBUG' in .env to True
+```shell
+docker image build -t booking-sys .
+docker compose up -d  
+docker compose down
+```
+
+## Build Steps for pip environment.
 ```shell
 cd booking-sys
 pipenv shell
@@ -220,10 +228,10 @@ mysql> SELECT * FROM restaurant_reservation;
 ```shell
 % pipenv shell              
 Creating a virtualenv for this project...
-Pipfile: /.../workspace/littlelemon/Pipfile
+Pipfile: /.../workspace/booking-sys/Pipfile
 Using /usr/local/bin/python3 (3.12.4) to create virtualenv...
 ⠙ Creating virtual environment...created virtual environment CPython3.12.4.final.0-64 in 795ms
-  creator CPython3macOsBrew(dest=/.../.local/share/virtualenvs/littlelemon-PIHfCB-G, clear=False, no_vcs_ignore=False, global=False)
+  creator CPython3macOsBrew(dest=/.../.local/share/virtualenvs/booking-sys-PIHfCB-G, clear=False, no_vcs_ignore=False, global=False)
   seeder FromAppData(download=False, pip=bundle, via=copy, app_data_dir=/.../Library/Application Support/virtualenv)
     added seed packages: pip==24.2
   activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
@@ -232,9 +240,9 @@ Using /usr/local/bin/python3 (3.12.4) to create virtualenv...
 Installing dependencies from Pipfile.lock (84d28c)...
 
 ✔ Successfully created virtual environment!
-Virtualenv location: /.../.local/share/virtualenvs/littlelemon-PIHfCB-G
+Virtualenv location: /.../.local/share/virtualenvs/booking-sys-PIHfCB-G
 Launching subshell in virtual environment...
- . /.../.local/share/virtualenvs/littlelemon-.../bin/activate
+ . /.../.local/share/virtualenvs/booking-sys-.../bin/activate
 zsh compinit: insecure directories, run compaudit for list.
 
 % python3 manage.py makemigrations
@@ -310,8 +318,7 @@ Performing system checks...
 
 System check identified no issues (0 silenced).
 September 01, 2024 - 20:28:22
-Django version 5.1, using settings 'littlelemon.settings'
+Django version 5.1, using settings 'booking-sys.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
-
