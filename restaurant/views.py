@@ -1,4 +1,4 @@
-"""littlelemon Views Mapping & Logic
+"""booking-sys Views Mapping & Logic
 """
 from datetime import datetime
 import logging

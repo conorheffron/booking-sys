@@ -1,5 +1,5 @@
 """
-littlelemon Views Mapping & Logic
+booking-sys Views Mapping & Logic
 """
 from django.urls import path
 from restaurant import views
