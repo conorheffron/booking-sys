@@ -1,8 +1,11 @@
 FROM python:3.12
 
+ARG DEBUG
+
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV DEBUG=${DEBUG}
 
 # Copy project files
 COPY . /
