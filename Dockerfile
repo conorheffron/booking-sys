@@ -1,20 +1,21 @@
 FROM python:3.12
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Set work directory
-WORKDIR /code
-
-# Install dependencies
-COPY requirements.txt /code/
-RUN pip install --no-cache-dir -r requirements.txt
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Copy project files
-COPY . /code/
+COPY . /
 
+# Set work directory
+WORKDIR /
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+RUN python manage.py makemigrations
+RUN python manage.py migrate
 
 EXPOSE 8000
 # For running our application
+
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
