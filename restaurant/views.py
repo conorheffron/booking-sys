@@ -10,7 +10,7 @@ from .models import Reservation
 
 logger = logging.getLogger(__name__)
 
-class Views(object):
+class Views():
     """Views class for Views Mapping & Logic
     """
 
@@ -90,19 +90,25 @@ class Views(object):
                     })
         else:
             # Bookings view default logic
-            reservations =  Reservation.objects.all()
-            data = list(reservations.values_list('first_name', 'reservation_date', 'reservation_slot'))
+            reservations = Reservation.objects.all()
+            data = list(reservations.values_list('first_name',
+                                                 'reservation_date',
+                                                 'reservation_slot'))
             logger.info('GET Query set results: %s', data)
-            return render(request, 'booking.html', {'form': form, 'reservations': reservations})
-        
+            return render(request, 'booking.html', {'form': form,
+                                                    'reservations': reservations})
+
     def __find_bookings_by_date(self, date):
-        """Bookings by date and return JSON response (private method)
+        """Bookings by date and return JSON 
+        response (private method)
         Parameters
         ----------
         date: The date in format %y-%m-%d i.e. 2024-09-07
         """
         reservations_by_date = Reservation.objects.filter(reservation_date=date)
-        data = list(reservations_by_date.values('first_name', 'reservation_date', 'reservation_slot'))
+        data = list(reservations_by_date.values('first_name',
+                                                'reservation_date',
+                                                'reservation_slot'))
         logger.info('GET by date (%s) Query set results: %s', date, data)
         return JsonResponse({
             'message': 'success',

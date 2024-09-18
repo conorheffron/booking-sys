@@ -8,7 +8,7 @@ from django.http import HttpResponse
 
 logger = logging.getLogger(__name__)
 
-class Handlers(object):
+class Handlers():
     """Handlers for HTTP Error codes like 404 not found, 401 forbidden etc.
     """
 

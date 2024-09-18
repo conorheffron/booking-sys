@@ -2,7 +2,6 @@
 Reservation Form Module
 """
 from datetime import datetime
-from time import time
 import pytz
 from django import forms
 
@@ -18,15 +17,15 @@ class ReservationForm(forms.Form):
     london_tz = pytz.timezone('Europe/London')
     london_time = tz_time.astimezone(london_tz)
 
-    first_name = forms.CharField(max_length=15, 
-                                 min_length=3, 
+    first_name = forms.CharField(max_length=15,
+                                 min_length=3,
                                  widget=forms.widgets.TextInput
                                  (attrs={'style': 'width:45%',
                                          'placeholder': 'Enter Name...'}), 
                                          label='')
 
     reservation_date = forms.DateField(label='', widget=forms.widgets.DateInput(
-        attrs={'type': 'date', 
+        attrs={'type': 'date',
                'format':['%d-%m-%Y'],
                'value': london_time.date(),
                'style': 'width:45%'}))
