@@ -1,18 +1,21 @@
-"""booking-sys Views Mapping & Logic
+"""booking-sys views Mapping & Logic
 """
 from datetime import datetime
 import logging
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.core.handlers.wsgi import WSGIRequest
 from restaurant.forms import ReservationForm
 from .models import Reservation
 
 logger = logging.getLogger(__name__)
 
 class Views(object):
+    """Views class for Views Mapping & Logic
+    """
 
     @classmethod
-    def table_view(cls, request):
+    def table_view(cls, request:WSGIRequest):
         """GET bookings by date request parameter
         Parameters
         ----------
@@ -22,7 +25,7 @@ class Views(object):
         return cls.__find_bookings_by_date(cls, date)
 
     @classmethod
-    def bookings_view(cls, request, date):
+    def bookings_view(cls, request:WSGIRequest, date):
         """GET bookings by date request path variable
         Parameters
         ----------
@@ -33,7 +36,7 @@ class Views(object):
         return cls.__find_bookings_by_date(cls, date)
 
     @classmethod
-    def reservations_view(cls, request):
+    def reservations_view(cls, request:WSGIRequest):
         """Resolve all reservations view data request
         Parameters
         ----------
@@ -45,7 +48,7 @@ class Views(object):
         return render(request, 'reservations.html', {'reservations': data})
 
     @classmethod
-    def form_view(cls, request):
+    def form_view(cls, request:WSGIRequest):
         """Resolve make a reservation form submit
         Parameters
         ----------
