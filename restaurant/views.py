@@ -12,28 +12,17 @@ logger = logging.getLogger(__name__)
 class Views(object):
 
     @classmethod
-    def handler404(self, request, exception):
-        """Resolve bad request path
-        Parameters
-        ----------
-        request : Requests https://requests.readthedocs.io/en/latest/
-        """
-        uri = request.get_full_path
-        logger.error('Bad Request URI path: %s', uri)
-        return render(request, 'error.html', {'uri': uri}, status=404)
-
-    @classmethod
-    def table_view(self, request):
+    def table_view(cls, request):
         """GET bookings by date request parameter
         Parameters
         ----------
         request : Requests
         """
         date = request.GET.get("date", datetime.today().date())
-        return self.__find_bookings_by_date(self, date)
+        return cls.__find_bookings_by_date(cls, date)
 
     @classmethod
-    def bookings_view(self, request, date):
+    def bookings_view(cls, request, date):
         """GET bookings by date request path variable
         Parameters
         ----------
@@ -41,10 +30,10 @@ class Views(object):
         date: The date in format %y-%m-%d i.e. 2024-09-07
         """
         logger.info('Request information (%s)', request)
-        return self.__find_bookings_by_date(self, date)
+        return cls.__find_bookings_by_date(cls, date)
 
     @classmethod
-    def reservations_view(self, request):
+    def reservations_view(cls, request):
         """Resolve all reservations view data request
         Parameters
         ----------
@@ -56,7 +45,7 @@ class Views(object):
         return render(request, 'reservations.html', {'reservations': data})
 
     @classmethod
-    def form_view(self, request):
+    def form_view(cls, request):
         """Resolve make a reservation form submit
         Parameters
         ----------
