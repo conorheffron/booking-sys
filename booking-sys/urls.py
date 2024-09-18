@@ -20,7 +20,7 @@ from django.conf.urls import handler404
 from django.views.static import serve
 from restaurant import views
 
-handler404 = views.handler404
+handler404 = views.Views.handler404
 
 urlpatterns = [
     path('admin/', admin.site.urls),
