@@ -4,6 +4,7 @@ Restaurant Tests Suite
 from datetime import datetime
 import json
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 from .models import Reservation
 from .forms import ReservationForm
 
@@ -90,6 +91,18 @@ class RestaurantTests(TestCase):
         # then
         self.assertContains(response, json.dumps({"message": "success", "reservations": []}),
                             status_code=200)
+
+    def test_bookings_by_date_request_param_fail(self):
+        """Restaurant Test case test_bookings_by_date_request_param_fail
+        Parameters
+        ----------
+        self : TestCase
+        """
+        # when / then
+        with self.assertRaisesMessage(ValidationError,
+                                 '“2024-0918” value has an invalid date format. ' +
+                                 'It must be in YYYY-MM-DD format.'):
+            self.client.get('/bookings?date=2024-0918')
 
     def test_bookings_by_date_path_var_success(self):
         """Restaurant Test case test_bookings_by_date_path_var_success
