@@ -43,12 +43,14 @@ function renderTableBookings(bookings) {
     if (bookings.length > 0) {
         var dynamoT = '<tbody>'
         dynamoT += '<tr>';
+        dynamoT += '<th>#</td>';
         dynamoT += '<th>Name</td>';
         dynamoT += '<th>Booking Date</td>';
         dynamoT += '<th>Booking Time</td>';
         dynamoT += '</tr>';
         for (i = 0; i < bookings.length; i++) {
             dynamoT += '<tr>';
+            dynamoT += '<td>' + bookings[i]["id"] + '</td>';
             dynamoT += '<td>' + bookings[i]["first_name"] + '</td>';
             dynamoT += '<td>' + bookings[i]["reservation_date"] + '</td>';
             dynamoT += '<td>' + bookings[i]["reservation_slot"] + '</td>';

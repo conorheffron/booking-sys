@@ -1,9 +1,8 @@
 """
 Reservation Form Module
 """
-from datetime import datetime
-import pytz
 from django import forms
+from .time_utils import TimeUtils
 
 class ReservationForm(forms.Form):
     """A Form to make a reservation/booking.
@@ -12,10 +11,7 @@ class ReservationForm(forms.Form):
         reservation_date  The booking date.
         reservation_slot The booking time slot (HH:MM:SS).
     """
-    tz = pytz.timezone('UTC')
-    tz_time = tz.localize(datetime.now())
-    london_tz = pytz.timezone('Europe/London')
-    london_time = tz_time.astimezone(london_tz)
+    london_time = TimeUtils().get_current_date_time()
 
     first_name = forms.CharField(max_length=15,
                                  min_length=3,
