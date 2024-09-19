@@ -22,12 +22,14 @@
         <h3>All Bookings</h3>
         <table>
             <tr> 
+                <th>#</th>
                 <th>First Name</th>
                 <th>Booking Date</th>
                 <th>Booking time</th>
             </tr>
             {% for item in reservations %}
             <tr> 
+                <td>{{ item.id }}</td>
                 <td>{{ item.first_name }}</td>
                 <td>{{ item.reservation_date|date:'Y-m-d' }}</td>
                 <td>{{ item.reservation_slot|time:'H:i:00' }}</td>

@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.core.handlers.wsgi import WSGIRequest
 from restaurant.forms import ReservationForm
 from .models import Reservation
+from .time_utils import TimeUtils
 
 logger = logging.getLogger(__name__)
 
@@ -42,8 +43,9 @@ class Views():
         ----------
         request : Requests
         """
-        data =  list(Reservation.objects.all().values(
-            'first_name', 'reservation_date', 'reservation_slot'))
+        data =  list(Reservation.objects.all()
+                     .order_by('-reservation_date', '-reservation_slot')
+                     .values('id', 'first_name', 'reservation_date', 'reservation_slot'))
         logger.info('GET All Query set results: %s', data)
         return render(request, 'reservations.html', {'reservations': data})
 
@@ -68,9 +70,17 @@ class Views():
                 # booking flow logic
                 reservations_by_date = Reservation.objects.filter(
                     reservation_date=booking_date, reservation_slot=booking_slot)
+                # get current date/ time for in-past validation
+                london_date_time = TimeUtils().get_current_date_time()
+
+                # build JSON response
                 message = ''
-                if reservations_by_date.exists():
-                    message = 'Booking Failed - Already Reserved'
+                if ((booking_date < london_date_time.date()) or
+                    (london_date_time.date() == booking_date
+                     and booking_slot <= london_date_time.time())):
+                    message = 'Booking Failed: Date/Time is in the past.'
+                elif reservations_by_date.exists():
+                    message = 'Booking Failed: Already Reserved.'
                 else:
                     # map form object to model & save to DB
                     reservation = Reservation(
@@ -79,10 +89,12 @@ class Views():
                         reservation_slot = booking_slot,
                     )
                     reservation.save()
-                    message = 'Booking Complete'
+                    message = f'Booking Complete: Confirmed for {booking_date} at {booking_slot}'
                 # POST response JSON
-                data = list(Reservation.objects.filter(reservation_date=booking_date).values(
-                    'first_name', 'reservation_date', 'reservation_slot'))
+                data = list(Reservation.objects
+                            .order_by('-reservation_slot')
+                            .filter(reservation_date=booking_date)
+                            .values('id', 'first_name', 'reservation_date', 'reservation_slot'))
                 logger.info('POST Query set results: %s', data)
                 return JsonResponse({
                     'message': message,
@@ -91,7 +103,8 @@ class Views():
         else:
             # Bookings view default logic
             reservations = Reservation.objects.all()
-            data = list(reservations.values_list('first_name',
+            data = list(reservations.values_list('id',
+                                                 'first_name',
                                                  'reservation_date',
                                                  'reservation_slot'))
             logger.info('GET Query set results: %s', data)
@@ -105,8 +118,11 @@ class Views():
         ----------
         date: The date in format %y-%m-%d i.e. 2024-09-07
         """
-        reservations_by_date = Reservation.objects.filter(reservation_date=date)
-        data = list(reservations_by_date.values('first_name',
+        reservations_by_date = Reservation.objects.order_by(
+            '-reservation_slot').filter(
+                reservation_date=date)
+        data = list(reservations_by_date.values('id',
+                                                'first_name',
                                                 'reservation_date',
                                                 'reservation_slot'))
         logger.info('GET by date (%s) Query set results: %s', date, data)

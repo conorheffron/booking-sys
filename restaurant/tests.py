@@ -1,12 +1,13 @@
 """
 Restaurant Tests Suite
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from .models import Reservation
 from .forms import ReservationForm
+from .time_utils import TimeUtils
 
 # Restaurant Tests
 class RestaurantTests(TestCase):
@@ -69,6 +70,7 @@ class RestaurantTests(TestCase):
         # then
         self.assertContains(response, '<h3>All Bookings</h3>\n        ' +
                             '<table>\n            <tr> \n' +
+                            '                <th>#</th>\n' +
                             '                <th>First Name</th>\n' +
                             '                <th>Booking Date</th>\n' +
                             '                <th>Booking time</th>\n' +
@@ -140,8 +142,9 @@ class RestaurantTests(TestCase):
         """
         # given
         test_name = 'Conor'
-        test_date = '2024-09-18'
-        test_time = '18:29'
+        current_date_time = TimeUtils().get_current_date_time() + timedelta(days=1)
+        test_date = current_date_time.strftime('%Y-%m-%d')
+        test_time = current_date_time.strftime('%H:%M')
 
         # when
         response = self.client.post('/book/', data={'first_name': test_name,
@@ -149,12 +152,38 @@ class RestaurantTests(TestCase):
                                                     'reservation_slot': test_time})
 
         # then
-        self.assertContains(response, json.dumps({"message": "Booking Complete",
-                                                  "reservations": [
-                                                      {"first_name": test_name,
-                                                       "reservation_date": test_date,
-                                                       "reservation_slot": test_time + ':00'}]}),
-                                                       status_code=200)
+        self.assertContains(response, json.dumps({"message":
+                                                  "Booking Complete: Confirmed for " +
+                                                  f"{test_date} at {test_time}:00",
+                                                  "reservations": [{
+                                                      "id": 1,
+                                                      "first_name": test_name,
+                                                      "reservation_date": test_date,
+                                                      "reservation_slot": test_time + ':00'}]}),
+                                                      status_code=200)
+
+    def test_booking_in_past_fail(self):
+        """Restaurant Test case test_booking_in_past_fail
+        Parameters
+        ----------
+        self : TestCase
+        """
+        # given
+        test_name = 'Sade'
+        current_date_time = TimeUtils().get_current_date_time() - timedelta(days=1)
+        test_date = current_date_time.strftime('%Y-%m-%d')
+        test_time = current_date_time.strftime('%H:%M')
+
+        # when
+        response = self.client.post('/book/', data={'first_name': test_name,
+                                                    'reservation_date': test_date,
+                                                    'reservation_slot': test_time})
+
+        # then
+        self.assertContains(response, json.dumps({"message":
+                                                  "Booking Failed: Date/Time is in the past.",
+                                                  "reservations": []}),
+                                                      status_code=200)
 
     def test_handler404_success(self):
         """Restaurant Test case test_handler404_success
