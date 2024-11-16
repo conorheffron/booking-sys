@@ -16,12 +16,23 @@ function submitHandler(e) {
     fetch(form.action, { method: 'POST', body: new FormData(form) })
         .then(response => response.json())
         .then(response => {
-            alert(response.message);
+            renderAlertMessage(response.message);
             bookings_by_date = response.reservations
             console.log(bookings_by_date)
             // form.reset();
             renderTableBookings(bookings_by_date)
         });
+}
+
+function renderAlertMessage(message) {
+    if (message.includes('Booking Failed')) {
+        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-danger" role="alert">' + message + '</div>'
+    } else if (message.includes('Booking Complete')) {
+        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-success" role="alert">' + message + '</div>'
+    } else {
+        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg"></div>'
+        console.log('Invalid message returned from server: ' + message)
+    }
 }
 
 function renderTable(booking_date) {
