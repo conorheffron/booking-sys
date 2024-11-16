@@ -9,7 +9,7 @@ class ReservationForm(forms.Form):
     Attributes:
         first_name  The first name against the reservation.
         reservation_date  The booking date.
-        reservation_slot The booking time slot (HH:MM:SS).
+        reservation_slot The booking time slot (HH:MM).
     """
     london_time = TimeUtils().get_current_date_time()
 

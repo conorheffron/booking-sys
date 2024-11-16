@@ -26,9 +26,11 @@ function submitHandler(e) {
 
 function renderAlertMessage(message) {
     if (message.includes('Booking Failed')) {
-        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-danger" role="alert">' + message + '</div>'
+        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-danger" role="alert" style="width:45%;">' 
+            + message + '</div>'
     } else if (message.includes('Booking Complete')) {
-        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-success" role="alert">' + message + '</div>'
+        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-success" role="alert" style="width:45%;">' 
+            + message + '</div>'
     } else {
         document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg"></div>'
         console.log('Invalid message returned from server: ' + message)
