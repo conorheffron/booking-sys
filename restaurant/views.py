@@ -1,6 +1,6 @@
 """booking-sys views Mapping & Logic
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -45,7 +45,9 @@ class Views():
         """
         # get current date/ time
         london_date_time = TimeUtils().get_current_date_time()
-        # get all active reservations (after current date/time)
+        # add 2 minute buffer before filtering out by current time value
+        london_date_time = london_date_time - timedelta(minutes=2)
+        # get all active reservations (after current date/time + 2mins)
         data =  list(Reservation.objects.filter(reservation_date__gte=london_date_time.date(),
                      reservation_slot__gte=london_date_time.strftime("%H:%M:%S"))
                      .order_by('-reservation_date', '-reservation_slot')
