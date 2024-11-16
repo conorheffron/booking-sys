@@ -46,7 +46,7 @@ class Views():
         london_date_time = TimeUtils().get_current_date_time()
         # get all active reservations (after current date)
         data =  list(Reservation.objects.filter(reservation_date__gte=london_date_time.date())
-                     .order_by('-reservation_date', '-reservation_slot')
+                     .order_by('reservation_date', 'reservation_slot')
                      .values('id', 'first_name', 'reservation_date', 'reservation_slot'))
         logger.info('GET All Query set results: %s', data)
         return render(request, 'reservations.html', {'reservations': data})
@@ -94,7 +94,7 @@ class Views():
                     message = f'Booking Complete: Confirmed for {booking_date} at {booking_slot}'
                 # POST response JSON
                 data = list(Reservation.objects
-                            .order_by('-reservation_slot')
+                            .order_by('reservation_slot')
                             .filter(reservation_date=booking_date)
                             .values('id', 'first_name', 'reservation_date', 'reservation_slot'))
                 logger.info('POST Query set results: %s', data)
@@ -121,7 +121,7 @@ class Views():
         date: The date in format %y-%m-%d i.e. 2024-09-07
         """
         reservations_by_date = Reservation.objects.order_by(
-            '-reservation_slot').filter(
+            'reservation_slot').filter(
                 reservation_date=date)
         data = list(reservations_by_date.values('id',
                                                 'first_name',
