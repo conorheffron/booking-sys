@@ -22,6 +22,7 @@
 
     <div id="bookings" class="container pt-5">
         <h3>Make a Reservation</h1>
+        <div id="form-out-msg"></div>
         <form method="POST" id="form">
             {% csrf_token %}
             {{ form.as_p }}
