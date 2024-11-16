@@ -68,7 +68,7 @@ class RestaurantTests(TestCase):
         response = self.client.get('/reservations/')
 
         # then
-        self.assertContains(response, '<h3>All Bookings</h3>\n        ' +
+        self.assertContains(response, '<h3>All Active Reservations</h3>\n        ' +
                             '<table>\n            <tr> \n' +
                             '                <th>#</th>\n' +
                             '                <th>First Name</th>\n' +

@@ -43,7 +43,11 @@ class Views():
         ----------
         request : Requests
         """
-        data =  list(Reservation.objects.all()
+        # get current date/ time
+        london_date_time = TimeUtils().get_current_date_time()
+        # get all active reservations (after current date/time)
+        data =  list(Reservation.objects.filter(reservation_date__gte=london_date_time.date(),
+                     reservation_slot__gte=london_date_time.strftime("%H:%M:%S"))
                      .order_by('-reservation_date', '-reservation_slot')
                      .values('id', 'first_name', 'reservation_date', 'reservation_slot'))
         logger.info('GET All Query set results: %s', data)
