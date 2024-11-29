@@ -16,12 +16,12 @@ mysqlclient==2.2.4
 pipenv==2024.0.1
 platformdirs==4.2.2
 pylint==3.2.7
-pylint-django==2.5.5
+pylint-django==2.6.1
 pylint-plugin-utils==0.8.2
 pytz==2024.2
 requests==2.32.3
 setuptools==75.1.0
-sqlparse==0.5.1
+sqlparse==0.5.2
 tomlkit==0.13.2
 urllib3==2.2.3
 virtualenv==20.26.3
