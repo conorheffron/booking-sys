@@ -1,7 +1,7 @@
 asgiref==3.8.1
 astroid==3.2.4
 certifi==2024.7.4
-charset-normalizer==3.3.2
+charset-normalizer==3.4.0
 defusedxml==0.7.1
 dill==0.3.8
 distlib==0.3.8
