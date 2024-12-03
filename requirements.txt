@@ -24,4 +24,4 @@ setuptools==75.6.0
 sqlparse==0.5.2
 tomlkit==0.13.2
 urllib3==2.2.3
-virtualenv==20.26.3
+virtualenv==20.28.0
