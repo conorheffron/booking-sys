@@ -14,7 +14,7 @@ isort==5.13.2
 mccabe==0.7.0
 mysqlclient==2.2.4
 pipenv==2024.4.0
-platformdirs==4.2.2
+platformdirs==4.3.6
 pylint==3.2.7
 pylint-django==2.6.1
 pylint-plugin-utils==0.8.2
