@@ -12,7 +12,7 @@ filelock==3.15.4
 idna==3.10
 isort==5.13.2
 mccabe==0.7.0
-mysqlclient==2.2.4
+mysqlclient==2.2.6
 pipenv==2024.4.0
 platformdirs==4.3.6
 pylint==3.2.7
