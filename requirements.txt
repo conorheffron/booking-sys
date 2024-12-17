@@ -21,7 +21,7 @@ pylint-plugin-utils==0.8.2
 pytz==2024.2
 requests==2.32.3
 setuptools==75.6.0
-sqlparse==0.5.2
+sqlparse==0.5.3
 tomlkit==0.13.2
 urllib3==2.2.3
 virtualenv==20.28.0
