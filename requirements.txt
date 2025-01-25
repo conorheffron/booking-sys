@@ -5,14 +5,14 @@ charset-normalizer==3.4.1
 defusedxml==0.7.1
 dill==0.3.9
 distlib==0.3.9
-Django==5.1.4
+Django==5.1.5
 djangorestframework==3.15.2
 djangorestframework-xml==2.0.0
 filelock==3.16.1
 idna==3.10
 isort==5.13.2
 mccabe==0.7.0
-mysqlclient==2.2.6
+mysqlclient==2.2.7
 pipenv==2024.4.0
 platformdirs==4.3.6
 pylint==3.2.7
@@ -20,8 +20,8 @@ pylint-django==2.6.1
 pylint-plugin-utils==0.8.2
 pytz==2024.2
 requests==2.32.3
-setuptools==75.6.0
+setuptools==75.8.0
 sqlparse==0.5.3
 tomlkit==0.13.2
 urllib3==2.3.0
-virtualenv==20.28.0
+virtualenv==20.29.1
