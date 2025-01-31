@@ -7,8 +7,7 @@
 [![Pylint](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml)
 
 ## Technologies
-python3, django admin/framework, django.test, & MySQL Server
-python3, django admin/framework, django.test, & MySQL Server
+python3, django 5, & MySQL Server
 
 ### Buil & Run via Docker
 #### - Update 'DEBUG' in .env to True
