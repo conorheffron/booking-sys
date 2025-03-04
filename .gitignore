@@ -1,1 +1,7 @@
 
+/static/admin
+/hr/static/admin
+/booking-sys/__pycache__
+/hr/__pycache__
+/hr/migrations/__pycache__
+/__pycache__

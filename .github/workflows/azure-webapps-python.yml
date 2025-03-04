@@ -2,7 +2,7 @@ name: Build and deploy to Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: booking-sys
-  PYTHON_VERSION: '3.12'
+  PYTHON_VERSION: '3.13'
 
 on:
   push:
