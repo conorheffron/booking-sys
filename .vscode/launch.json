@@ -29,7 +29,7 @@
             "program": "${workspaceFolder}/manage.py",
             "args": [
                 "test",
-                "restaurant.tests.RestaurantTests.test_create_booking",
+                "hr.tests.HrTests.test_create_booking",
             ],
             "django": true
         },
@@ -41,7 +41,7 @@
             "program": "${workspaceFolder}/manage.py",
             "args": [
                 "test",
-                "restaurant.tests.RestaurantTests",
+                "hr.tests.HrTests",
             ],
             "django": true
         }

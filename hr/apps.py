@@ -1,14 +1,14 @@
 """
-Restaurant apps module
+HR apps module
 """
 from django.apps import AppConfig
 
-# Restaurant configuration object
-class RestaurantConfig(AppConfig):
+# HR configuration object
+class HrConfig(AppConfig):
     """Reservation configurations.
     Attributes:
         default_auto_field
         name
     """
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'restaurant'
+    name = 'hr'

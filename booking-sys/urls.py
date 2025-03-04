@@ -17,12 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.views.static import serve
-from restaurant import handlers
+from hr import handlers
 
 handler404 = handlers.Handlers.handler404
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('restaurant.urls')),
+    path('', include('hr.urls')),
     path('static/<path:path>/', serve, {'document_root': settings.STATIC_ROOT, })
 ]

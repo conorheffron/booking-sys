@@ -4,15 +4,31 @@ import logging
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.core.handlers.wsgi import WSGIRequest
-from restaurant.forms import ReservationForm
+from django.http import HttpResponse
+from hr.forms import ReservationForm
+from hr import VERSION
 from .models import Reservation
 from .time_utils import TimeUtils
+
 
 logger = logging.getLogger(__name__)
 
 class Views():
     """Views class for Views Mapping & Logic
     """
+
+    @classmethod
+    def version(cls, request:WSGIRequest):
+        """GET Application Version for current deployment
+        Parameters
+        ----------
+        request : Requests
+        """
+        logger.info('Request information (%s)', request)
+        app_version = VERSION
+        logger.info('Application version (%s)', app_version)
+        return HttpResponse(str(app_version))
+
 
     @classmethod
     def table_view(cls, request:WSGIRequest):

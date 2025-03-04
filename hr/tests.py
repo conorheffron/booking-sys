@@ -1,5 +1,5 @@
 """
-Restaurant Tests Suite
+HR Tests Suite
 """
 from datetime import datetime, timedelta
 import json
@@ -9,13 +9,13 @@ from .models import Reservation
 from .forms import ReservationForm
 from .time_utils import TimeUtils
 
-# Restaurant Tests
-class RestaurantTests(TestCase):
-    """Restaurant Test cases
+# HR Tests
+class HrTests(TestCase):
+    """HR Test cases
     """
 
     def test_create_booking(self):
-        """Restaurant Test case test_create_booking
+        """HR Test case test_create_booking
         Parameters
         ----------
         self : TestCase
@@ -37,7 +37,7 @@ class RestaurantTests(TestCase):
 
 
     def test_populate_form(self):
-        """Restaurant Test case test_populate_form
+        """HR Test case test_populate_form
         Parameters
         ----------
         self : TestCase
@@ -59,7 +59,7 @@ class RestaurantTests(TestCase):
         self.assertEqual(result.__dict__['data']["reservation_slot"], booking_slot)
 
     def test_reservations_view_success(self):
-        """Restaurant Test case test_reservations_view_success
+        """HR Test case test_reservations_view_success
         Parameters
         ----------
         self : TestCase
@@ -82,7 +82,7 @@ class RestaurantTests(TestCase):
         self.assertTemplateUsed(response, 'reservations.html')
 
     def test_bookings_by_date_request_param_success(self):
-        """Restaurant Test case test_bookings_by_date_request_param_success
+        """HR Test case test_bookings_by_date_request_param_success
         Parameters
         ----------
         self : TestCase
@@ -95,7 +95,7 @@ class RestaurantTests(TestCase):
                             status_code=200)
 
     def test_bookings_by_date_request_param_fail(self):
-        """Restaurant Test case test_bookings_by_date_request_param_fail
+        """HR Test case test_bookings_by_date_request_param_fail
         Parameters
         ----------
         self : TestCase
@@ -107,7 +107,7 @@ class RestaurantTests(TestCase):
             self.client.get('/bookings?date=2024-0918')
 
     def test_bookings_by_date_path_var_success(self):
-        """Restaurant Test case test_bookings_by_date_path_var_success
+        """HR Test case test_bookings_by_date_path_var_success
         Parameters
         ----------
         self : TestCase
@@ -119,7 +119,7 @@ class RestaurantTests(TestCase):
         self.assertContains(response, '', status_code=200)
 
     def test_home_page_success(self):
-        """Restaurant Test case test_home_page_success
+        """HR Test case test_home_page_success
         Parameters
         ----------
         self : TestCase
@@ -135,7 +135,7 @@ class RestaurantTests(TestCase):
         self.assertTemplateUsed(response, 'booking.html')
 
     def test_booking_success(self):
-        """Restaurant Test case test_booking_success
+        """HR Test case test_booking_success
         Parameters
         ----------
         self : TestCase
@@ -163,7 +163,7 @@ class RestaurantTests(TestCase):
                                                       status_code=200)
 
     def test_booking_in_past_fail(self):
-        """Restaurant Test case test_booking_in_past_fail
+        """HR Test case test_booking_in_past_fail
         Parameters
         ----------
         self : TestCase
@@ -186,7 +186,7 @@ class RestaurantTests(TestCase):
                                                       status_code=200)
 
     def test_handler404_success(self):
-        """Restaurant Test case test_handler404_success
+        """HR Test case test_handler404_success
         Parameters
         ----------
         self : TestCase

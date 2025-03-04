@@ -1,3 +1,7 @@
+window.onload = function () {
+    renderVersion();
+};
+
 function dateChangeHandler(e) {
     e.preventDefault();
 
@@ -17,23 +21,23 @@ function submitHandler(e) {
         .then(response => response.json())
         .then(response => {
             renderAlertMessage(response.message);
-            bookings_by_date = response.reservations
-            console.log(bookings_by_date)
+            bookings_by_date = response.reservations;
+            console.log(bookings_by_date);
             // form.reset();
-            renderTableBookings(bookings_by_date)
+            renderTableBookings(bookings_by_date);
         });
 }
 
 function renderAlertMessage(message) {
     if (message.includes('Booking Failed')) {
-        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-danger" role="alert" style="width:45%;">' 
-            + message + '</div>'
+        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-danger" role="alert" style="width:45%;">'
+            + message + '</div>';
     } else if (message.includes('Booking Complete')) {
-        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-success" role="alert" style="width:45%;">' 
-            + message + '</div>'
+        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-success" role="alert" style="width:45%;">'
+            + message + '</div>';
     } else {
-        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg"></div>'
-        console.log('Invalid message returned from server: ' + message)
+        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg"></div>';
+        console.log('Invalid message returned from server: ' + message);
     }
 }
 
@@ -44,8 +48,8 @@ function renderTable(booking_date) {
             .then(response => response.json())
             .then(response => {
                 console.log(response);
-                bookings_by_date = response.reservations
-                renderTableBookings(bookings_by_date)
+                bookings_by_date = response.reservations;
+                renderTableBookings(bookings_by_date);
             });
     } catch (e) {
         console.log(e);
