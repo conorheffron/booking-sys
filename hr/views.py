@@ -4,11 +4,12 @@ import logging
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponse
 from hr.forms import ReservationForm
+from hr import VERSION
 from .models import Reservation
 from .time_utils import TimeUtils
-from hr import VERSION
-from django.http import HttpResponse
+
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +25,9 @@ class Views():
         request : Requests
         """
         logger.info('Request information (%s)', request)
-        appVersion = VERSION
-        logger.info('Application version (%s)', appVersion)
-        return HttpResponse(str(appVersion))
+        app_version = VERSION
+        logger.info('Application version (%s)', app_version)
+        return HttpResponse(str(app_version))
 
 
     @classmethod
