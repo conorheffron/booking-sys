@@ -15,6 +15,9 @@ WORKDIR /
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
+RUN python3 manage.py makemigrations
+RUN python3 manage.py migrate
+RUN python3 manage.py test
 
 EXPOSE 8000
 # For running our application
