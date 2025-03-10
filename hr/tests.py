@@ -3,16 +3,20 @@ HR Tests Suite
 """
 from datetime import datetime, timedelta
 import json
-from django.test import TestCase
+import re
+from django.test import TestCase, RequestFactory
 from django.core.exceptions import ValidationError
 from .models import Reservation
 from .forms import ReservationForm
 from .time_utils import TimeUtils
+from .views import Views
 
 # HR Tests
 class HrTests(TestCase):
     """HR Test cases
     """
+    def setUp(self):
+        self.factory = RequestFactory()
 
     def test_create_booking(self):
         """HR Test case test_create_booking
@@ -199,3 +203,47 @@ class HrTests(TestCase):
                             '</div>\n<body>', 
                             status_code=404 )
         self.assertTemplateUsed(response, 'error.html')
+
+    def test_version_success(self):
+        """HR Test case test_version_success
+        Parameters
+        ----------
+        self : TestCase
+        """
+        # given
+        request = self.factory.get('/version')
+
+        # when
+        response = Views.version(request)
+
+        # then
+        app_version = response.content.decode()
+        # status code check
+        self.assertEqual(response.status_code, 200)
+        # assert if pattern match is true
+        version_regex = r'\d\.\d\.\d'
+        pattern = re.compile(version_regex)
+        match = bool(pattern.match(app_version))
+        self.assertTrue(match)
+        # assert regular expression pattern match directly with django.test
+        self.assertRegex(app_version, version_regex)
+
+    def test_version_success_with_examples(self):
+        """HR Test case test_version_success_with_examples
+        Parameters
+        ----------
+        self : TestCase
+        """
+        # when
+        response = self.client.get('/version/')
+
+        # then
+        pattern = re.compile(r'\d\.\d\.\d')
+        # assert actual
+        match = bool(pattern.match(response.content.decode()))
+        self.assertTrue(match)
+        # assert sample values
+        self.assertTrue(bool(pattern.match('2.2.1')))
+        self.assertFalse(bool(pattern.match('v22.0.0')))
+        self.assertTrue(bool(pattern.match('2.2.11')))
+        self.assertFalse(bool(pattern.match('a.b.c')))
