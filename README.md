@@ -7,7 +7,7 @@
 [![Pylint](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml)
 
 ## Technologies
-python3, django admin/framework, django.test, & MySQL Server / Sqlite2
+python3, django 5 admin/framework, django.test, & MySQL Server / Sqlite2
 
 ### Buil & Run via Docker
 #### - Update 'DEBUG' in .env to True
@@ -17,7 +17,7 @@ docker compose up -d
 docker compose down
 ```
 
-## Generate requiremebts.txt
+## Generate requirements.txt
 ```shell
 pipenv run pip freeze > requirements.txt
 ```
@@ -49,8 +49,7 @@ brew services stop mysql
 
 ## Apply model changes to DB
 ```shell
-pipenv run python manage.py makemigrations
-**
+python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py showmigrations
 ```
