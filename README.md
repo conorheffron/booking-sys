@@ -7,7 +7,7 @@
 [![Pylint](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml)
 
 ## Technologies
-python3, django 5, & MySQL Server
+python3, django admin/framework, django.test, & MySQL Server / Sqlite2
 
 ### Buil & Run via Docker
 #### - Update 'DEBUG' in .env to True
@@ -15,6 +15,11 @@ python3, django 5, & MySQL Server
 docker image build -t booking-sys .
 docker compose up -d  
 docker compose down
+```
+
+## Generate requiremebts.txt
+```shell
+pipenv run pip freeze > requirements.txt
 ```
 
 ## Build Steps for pip environment.
@@ -44,9 +49,15 @@ brew services stop mysql
 
 ## Apply model changes to DB
 ```shell
-python3 manage.py makemigrations
+pipenv run python manage.py makemigrations
+**
 python3 manage.py migrate
 python3 manage.py showmigrations
+```
+
+## Run Pylint
+```shell
+ pipenv run pylint $(git ls-files '*.py') --generated-members=objects --fail-under=9
 ```
 
 ## Run All Unit Tests
@@ -56,8 +67,8 @@ python3 manage.py test
 
 ## Run Test Class or specific Test Case
 ```shell
-python3 manage.py test restaurant.tests.RestaurantTests
-python3 manage.py test restaurant.tests.RestaurantTests.test_create_booking
+python3 manage.py test hr.tests.HrTests
+python3 manage.py test hr.tests.HrTests.test_create_booking
 ```
 
 ## Run Django Application
@@ -120,7 +131,10 @@ Or using `request parameter 'date'`:
 ###  Duplicate Booking Fail by Date & Time Value
 ![duplicate-booking-fail](./screenshots/duplicate-booking-fail.png?raw=true "Duplicate Booking Fail")
 
-###  Dynamic JSON Table Update on Date Change (1st Sept --> 22nd August)
+###  Date/Time in the Past Booking Fail 
+![past-date-time-booking-fail](./screenshots/booking-date-in-past-fail.png?raw=true "Past Date/Time Booking Fail")
+
+###  Dynamic JSON Table Update on Date Change
 ![dynamic-table-update](./screenshots/dynamic-table-update.png?raw=true "JSON Table Update")
 
 ###  View All Bookings Page
@@ -169,11 +183,11 @@ mysql> SHOW TABLES;
 | django_content_type        |
 | django_migrations          |
 | django_session             |
-| restaurant_reservation     |
+| hr_reservation     |
 +----------------------------+
 11 rows in set (0.00 sec)
 
-mysql> SELECT * FROM restaurant_reservation;
+mysql> SELECT * FROM hr_reservation;
 +----+------------+------------------+------------------+
 | id | first_name | reservation_date | reservation_slot |
 +----+------------+------------------+------------------+
@@ -183,10 +197,10 @@ mysql> SELECT * FROM restaurant_reservation;
 +----+------------+------------------+------------------+
 3 rows in set (0.00 sec)
 
-mysql> DELETE FROM restaurant_reservation WHERE first_name='Test';
+mysql> DELETE FROM hr_reservation WHERE first_name='Test';
 Query OK, 2 rows affected (0.01 sec)
 
-mysql> SELECT * FROM restaurant_reservation;
+mysql> SELECT * FROM hr_reservation;
 +----+------------+------------------+------------------+
 | id | first_name | reservation_date | reservation_slot |
 +----+------------+------------------+------------------+
@@ -194,7 +208,7 @@ mysql> SELECT * FROM restaurant_reservation;
 +----+------------+------------------+------------------+
 1 row in set (0.00 sec)
 
-mysql> SELECT DISTINCT first_name FROM restaurant_reservation;
+mysql> SELECT DISTINCT first_name FROM hr_reservation;
 +------------+
 | first_name |
 +------------+
@@ -202,7 +216,7 @@ mysql> SELECT DISTINCT first_name FROM restaurant_reservation;
 +------------+
 1 row in set (0.01 sec)
 
-mysql> SELECT DISTINCT first_name FROM restaurant_reservation;
+mysql> SELECT DISTINCT first_name FROM hr_reservation;
 +------------+
 | first_name |
 +------------+
@@ -212,7 +226,7 @@ mysql> SELECT DISTINCT first_name FROM restaurant_reservation;
 +------------+
 3 rows in set (0.00 sec)
 
-mysql> SELECT * FROM restaurant_reservation;
+mysql> SELECT * FROM hr_reservation;
 +----+------------+------------------+------------------+
 | id | first_name | reservation_date | reservation_slot |
 +----+------------+------------------+------------------+
@@ -249,7 +263,7 @@ No changes detected
 
 % python3 manage.py migrate       
 Operations to perform:
-  Apply all migrations: admin, auth, contenttypes, restaurant, sessions
+  Apply all migrations: admin, auth, contenttypes, hr, sessions
 Running migrations:
   Applying contenttypes.0001_initial... OK
   Applying auth.0001_initial... OK
@@ -268,8 +282,8 @@ Running migrations:
   Applying auth.0010_alter_group_name_max_length... OK
   Applying auth.0011_update_proxy_permissions... OK
   Applying auth.0012_alter_user_first_name_max_length... OK
-  Applying restaurant.0001_initial... OK
-  Applying restaurant.0002_reservation_delete_menu... OK
+  Applying hr.0001_initial... OK
+  Applying hr.0002_reservation_delete_menu... OK
   Applying sessions.0001_initial... OK
 
 % python3 manage.py showmigrations
@@ -293,7 +307,7 @@ auth
 contenttypes
  [ ] 0001_initial
  [ ] 0002_remove_content_type_name
-restaurant
+hr
  [ ] 0001_initial
  [ ] 0002_reservation_delete_menu
 sessions
