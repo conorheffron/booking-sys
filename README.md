@@ -56,7 +56,7 @@ python3 manage.py showmigrations
 
 ## Run Pylint
 ```shell
- pipenv run pylint $(git ls-files '*.py') --generated-members=objects --fail-under=9
+pipenv run pylint $(git ls-files '*.py') --generated-members=objects --fail-under=9.2
 ```
 
 ## Run All Unit Tests
