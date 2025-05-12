@@ -8,7 +8,7 @@ distlib==0.3.9
 Django==5.1.9
 djangorestframework==3.15.2
 djangorestframework-xml==2.0.0
-filelock==3.17.0
+filelock==3.18.0
 idna==3.10
 isort==5.13.2
 mccabe==0.7.0
