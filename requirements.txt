@@ -20,7 +20,7 @@ pylint-django==2.6.1
 pylint-plugin-utils==0.8.2
 pytz==2025.1
 requests==2.32.3
-setuptools==76.0.0
+setuptools==78.1.1
 sqlparse==0.5.3
 tomlkit==0.13.2
 urllib3==2.4.0
