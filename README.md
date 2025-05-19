@@ -75,7 +75,7 @@ python3 manage.py test hr.tests.HrTests.test_create_booking
 python3 manage.py runserver
 ```
 
-## Sample Logs from VS Code Console via docker compose up
+## Sample Logs from VS Code Console via `docker compose up`
 ```shell
 Compose can now delegate builds to bake for better performance.
  To do so, set COMPOSE_BAKE=true.
