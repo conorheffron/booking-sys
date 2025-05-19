@@ -25,7 +25,7 @@ pipenv run pip freeze > requirements.txt
 ## Build Steps for pip environment.
 ```shell
 cd booking-sys
-pipenv shell
+sudo pipenv shell
 pipenv install -r  requirements.txt
 ```
 
@@ -73,6 +73,80 @@ python3 manage.py test hr.tests.HrTests.test_create_booking
 ## Run Django Application
 ```shell
 python3 manage.py runserver
+```
+
+## Sample Logs from VS Code Console via docker compose up
+```shell
+Compose can now delegate builds to bake for better performance.
+ To do so, set COMPOSE_BAKE=true.
+[+] Building 40.0s (12/12) FINISHED                                                                                                                                                docker:desktop-linux
+ => [web internal] load build definition from Dockerfile                                                                                                                                           0.0s
+ => => transferring dockerfile: 500B                                                                                                                                                               0.0s
+ => [web internal] load metadata for docker.io/library/python:3.13                                                                                                                                 0.8s
+ => [web internal] load .dockerignore                                                                                                                                                              0.0s
+ => => transferring context: 2B                                                                                                                                                                    0.0s
+ => [web internal] load build context                                                                                                                                                              0.3s
+ => => transferring context: 178.02kB                                                                                                                                                              0.3s
+ => CACHED [web 1/7] FROM docker.io/library/python:3.13@sha256:653b0cf8fc50366277a21657209ddd54edd125499d20f3520c6b277eb8c828d3                                                                    0.0s
+ => => resolve docker.io/library/python:3.13@sha256:653b0cf8fc50366277a21657209ddd54edd125499d20f3520c6b277eb8c828d3                                                                               0.0s
+ => [web 2/7] COPY . /                                                                                                                                                                             0.7s
+ => [web 3/7] RUN pip install --no-cache-dir -r requirements.txt                                                                                                                                  25.4s
+ => [web 4/7] RUN python3 manage.py makemigrations                                                                                                                                                 1.5s 
+ => [web 5/7] RUN python3 manage.py migrate                                                                                                                                                        1.4s 
+ => [web 6/7] RUN python3 manage.py test                                                                                                                                                           1.9s 
+ => [web] exporting to image                                                                                                                                                                       7.6s 
+ => => exporting layers                                                                                                                                                                            4.7s 
+ => => exporting manifest sha256:943441684d370b85fbff87df1c20a4c1a994992c64aa83af5f396d9c76841332                                                                                                  0.0s 
+ => => exporting config sha256:9339546d6634a21058ea22e3d7fef743b639919fdf252f07e596fe127e6ea3c7                                                                                                    0.0s 
+ => => exporting attestation manifest sha256:b33ad238937463924650e5c74133b8a7016d62497ff80d3e85e2f52dfe80f778                                                                                      0.0s 
+ => => exporting manifest list sha256:59d3cb23c1cd60b09b2433572d319257c0ce1644d5207050fdadaa3e2c680c2b                                                                                             0.0s
+ => => naming to docker.io/library/booking-sys-web:latest                                                                                                                                          0.0s
+ => => unpacking to docker.io/library/booking-sys-web:latest                                                                                                                                       2.8s
+ => [web] resolving provenance for metadata file                                                                                                                                                   0.0s
+[+] Running 3/3
+ ✔ web                          Built                                                                                                                                                              0.0s 
+ ✔ Network booking-sys_default  Created                                                                                                                                                            0.1s 
+ ✔ Container booking-sys-web-1  Created                                                                                                                                                            0.4s 
+Attaching to web-1
+web-1  | INFO 2025-05-19 20:15:55,580 autoreload 7 140309415111552 Watching for file changes with StatReloader
+web-1  | Performing system checks...
+web-1  | 
+web-1  | System check identified some issues:
+web-1  | 
+web-1  | WARNINGS:
+web-1  | ?: (staticfiles.W004) The directory '/staticfiles' in the STATICFILES_DIRS setting does not exist.
+web-1  | 
+web-1  | System check identified 1 issue (0 silenced).
+web-1  | May 19, 2025 - 20:15:55
+web-1  | Django version 5.2.1, using settings 'booking-sys.settings'
+web-1  | Starting development server at http://0.0.0.0:8000/
+web-1  | Quit the server with CONTROL-C.
+web-1  | 
+web-1  | WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+web-1  | For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+.
+.
+.
+web-1  | INFO 2025-05-19 20:16:07,210 views 7 140309358970560 GET Query set results: [(1, 'Conor Heffron', datetime.date(2025, 3, 9), datetime.time(2, 15)), (2, 'Sade Sings', datetime.date(2025, 3, 11), datetime.time(3, 1)), (3, 'Sade Song', datetime.date(2025, 3, 10), datetime.time(7, 0)), (4, 'Conor Heffron', datetime.date(2025, 3, 11), datetime.time(9, 0)), (5, 'Sade Sings', datetime.date(2025, 5, 9), datetime.time(22, 0)), (6, 'Sade Song', datetime.date(2025, 5, 23), datetime.time(20, 16)), (7, 'Conor', datetime.date(2025, 5, 22), datetime.time(22, 23)), (8, 'Sade Sings', datetime.date(2025, 5, 23), datetime.time(21, 34)), (9, 'Sade Sings', datetime.date(2025, 5, 20), datetime.time(21, 3)), (10, 'Halle Movie', datetime.date(2025, 5, 25), datetime.time(0, 21)), (11, 'Sade Sings', datetime.date(2025, 5, 19), datetime.time(22, 12))]
+web-1  | INFO 2025-05-19 20:16:07,231 basehttp 7 140309358970560 "GET / HTTP/1.1" 200 2842
+web-1  | INFO 2025-05-19 20:16:07,285 views 7 140309358970560 Request information (<WSGIRequest: GET '/version/'>)
+web-1  | INFO 2025-05-19 20:16:07,285 views 7 140309358970560 Application version (2.8.5)
+web-1  | INFO 2025-05-19 20:16:07,286 basehttp 7 140309358970560 "GET /version/ HTTP/1.1" 200 5
+web-1  | INFO 2025-05-19 20:16:07,297 views 7 140309348484800 GET by date (2025-05-19) Query set results: [{'id': 11, 'first_name': 'Sade Sings', 'reservation_date': datetime.date(2025, 5, 19), 'reservation_slot': datetime.time(22, 12)}]
+web-1  | INFO 2025-05-19 20:16:07,298 basehttp 7 140309348484800 "GET /bookings?date=2025-05-19 HTTP/1.1" 200 146
+web-1  | INFO 2025-05-19 20:16:16,748 views 7 140309348484800 GET by date (2025-05-19) Query set results: [{'id': 11, 'first_name': 'Sade Sings', 'reservation_date': datetime.date(2025, 5, 19), 'reservation_slot': datetime.time(22, 12)}]
+web-1  | INFO 2025-05-19 20:16:16,749 basehttp 7 140309348484800 "GET /bookings?date=2025-05-19 HTTP/1.1" 200 146
+web-1  | INFO 2025-05-19 20:16:23,378 views 7 140309348484800 GET by date (2025-05-26) Query set results: []
+web-1  | INFO 2025-05-19 20:16:23,379 basehttp 7 140309348484800 "GET /bookings?date=2025-05-26 HTTP/1.1" 200 42
+web-1  | INFO 2025-05-19 20:16:25,316 views 7 140309348484800 GET by date (2025-05-26) Query set results: []
+web-1  | INFO 2025-05-19 20:16:25,316 basehttp 7 140309348484800 "GET /bookings?date=2025-05-26 HTTP/1.1" 200 42
+web-1  | INFO 2025-05-19 20:16:25,449 views 7 140309348484800 GET by date (2025-05-26) Query set results: []
+web-1  | INFO 2025-05-19 20:16:25,449 basehttp 7 140309348484800 "GET /bookings?date=2025-05-26 HTTP/1.1" 200 42
+web-1  | INFO 2025-05-19 20:16:25,655 views 7 140309348484800 GET by date (2025-05-26) Query set results: []
+web-1  | INFO 2025-05-19 20:16:25,656 basehttp 7 140309348484800 "GET /bookings?date=2025-05-26 HTTP/1.1" 200 42
+web-1  | INFO 2025-05-19 20:16:27,579 views 7 140309348484800 <QueryDict: {'csrfmiddlewaretoken': ['D2xErQeoWoWLOFaXu4MIaRbmzHicXeGckJ6RVHMSblzbsPEL7b0Iwk9fWr30tOHU'], 'first_name': ['Cleopatra'], 'reservation_date': ['2025-05-26'], 'reservation_slot': ['22:00']}>
+web-1  | INFO 2025-05-19 20:16:27,604 views 7 140309348484800 POST Query set results: [{'id': 12, 'first_name': 'Cleopatra', 'reservation_date': datetime.date(2025, 5, 26), 'reservation_slot': datetime.time(22, 0)}]
+web-1  | INFO 2025-05-19 20:16:27,605 basehttp 7 140309348484800 "POST / HTTP/1.1" 200 192
 ```
 
 ## Alternatively, Debug Django Application
