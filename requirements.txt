@@ -1,9 +1,9 @@
 asgiref==3.8.1
 astroid==3.2.4
 certifi==2025.4.26
-charset-normalizer==3.4.1
+charset-normalizer==3.4.2
 defusedxml==0.7.1
-dill==0.3.9
+dill==0.4.0
 distlib==0.3.9
 Django==5.1.9
 djangorestframework==3.16.0
