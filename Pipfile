@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-setuptools = "==76.0.0"
+setuptools = "==78.1.1"
 asgiref = "==3.8.1"
 astroid = "==3.2.4"
 certifi = "==2025.4.26"
