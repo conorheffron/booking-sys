@@ -16,7 +16,7 @@ class ReservationForm(forms.Form):
     first_name = forms.CharField(max_length=15,
                                  min_length=3,
                                  widget=forms.widgets.TextInput
-                                 (attrs={'style': 'width:45%',
+                                 (attrs={'style': 'width:50%',
                                          'placeholder': 'Enter Name...'}), 
                                          label='')
 
@@ -24,10 +24,10 @@ class ReservationForm(forms.Form):
         attrs={'type': 'date',
                'format':['%d-%m-%Y'],
                'value': london_time.date(),
-               'style': 'width:45%'}))
+               'style': 'width:50%'}))
 
     reservation_slot = forms.TimeField(label='', widget=forms.widgets.TimeInput(
         attrs={'type': 'time',
                'format':['HH:mm'],
                'value': london_time.strftime('%H:%M'),
-               'style': 'width:45%'}))
+               'style': 'width:50%'}))
