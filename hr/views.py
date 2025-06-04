@@ -83,13 +83,14 @@ class Views():
                 # clean & extract form data
                 form_data = form.cleaned_data
                 booking_date = form_data['reservation_date']
-                booking_slot = form_data['reservation_slot']
+                time_utils = TimeUtils()
+                booking_slot = time_utils.convertStrToTimeFormat(form_data['reservation_slot'])
 
                 # booking flow logic
                 reservations_by_date = Reservation.objects.filter(
                     reservation_date=booking_date, reservation_slot=booking_slot)
                 # get current date/ time for in-past validation
-                london_date_time = TimeUtils().get_current_date_time()
+                london_date_time = time_utils.get_current_date_time()
 
                 # build JSON response
                 message = ''

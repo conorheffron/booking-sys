@@ -3,6 +3,7 @@ Reservation Form Module
 """
 from django import forms
 from .time_utils import TimeUtils
+from datetime import datetime, timedelta, time
 
 class ReservationForm(forms.Form):
     """A Form to make a reservation/booking.
@@ -11,7 +12,9 @@ class ReservationForm(forms.Form):
         reservation_date  The booking date.
         reservation_slot The booking time slot (HH:MM).
     """
-    london_time = TimeUtils().get_current_date_time()
+    time_utils = TimeUtils()
+    london_time = time_utils.get_current_date_time()
+    TIME_SLOTS = time_utils.generate_time_slots(time(9, 0), time(17, 0), 30)  # 9:00 AM to 7:00 PM, 30-minute intervals
 
     first_name = forms.CharField(max_length=15,
                                  min_length=3,
@@ -26,8 +29,4 @@ class ReservationForm(forms.Form):
                'value': london_time.date(),
                'style': 'width:50%'}))
 
-    reservation_slot = forms.TimeField(label='', widget=forms.widgets.TimeInput(
-        attrs={'type': 'time',
-               'format':['HH:mm'],
-               'value': london_time.strftime('%H:%M'),
-               'style': 'width:50%'}))
+    reservation_slot = forms.ChoiceField(choices=TIME_SLOTS, label="Select a Time Slot")
