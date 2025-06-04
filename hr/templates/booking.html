@@ -27,7 +27,13 @@
         <div id="form-out-msg"></div>
         <form method="POST" id="form">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form.first_name.label_tag }}<br />
+            {{ form.first_name }}<br /><br />
+            {{ form.reservation_date.label_tag }}<br />
+            {{ form.reservation_date }}<br /><br />
+            {{ form.reservation_slot.label_tag }}<br />
+            {{ form.reservation_slot }}
+            <br /><br />
             <button type="submit" class="btn btn-primary">Reserve</button>
         </form>
     </div>

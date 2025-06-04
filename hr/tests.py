@@ -49,7 +49,7 @@ class HrTests(TestCase):
         # given
         fname = "Conor"
         booking_date = '01/11/2020'
-        booking_slot = '01:01:01'
+        booking_slot = '11:30'
         form_data = {"first_name": fname,
                      "reservation_date": booking_date,
                      "reservation_slot": booking_slot}
@@ -148,7 +148,7 @@ class HrTests(TestCase):
         test_name = 'Conor'
         current_date_time = TimeUtils().get_current_date_time() + timedelta(days=1)
         test_date = current_date_time.strftime('%Y-%m-%d')
-        test_time = current_date_time.strftime('%H:%M')
+        test_time = '09:30'
 
         # when
         response = self.client.post('/book/', data={'first_name': test_name,
@@ -176,7 +176,7 @@ class HrTests(TestCase):
         test_name = 'Sade'
         current_date_time = TimeUtils().get_current_date_time() - timedelta(days=1)
         test_date = current_date_time.strftime('%Y-%m-%d')
-        test_time = current_date_time.strftime('%H:%M')
+        test_time = '14:00'
 
         # when
         response = self.client.post('/book/', data={'first_name': test_name,

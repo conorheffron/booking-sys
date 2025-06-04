@@ -84,7 +84,7 @@ class Views():
                 form_data = form.cleaned_data
                 booking_date = form_data['reservation_date']
                 time_utils = TimeUtils()
-                booking_slot = time_utils.convertStrToTimeFormat(form_data['reservation_slot'])
+                booking_slot = time_utils.convert_str_to_time(form_data['reservation_slot'])
 
                 # booking flow logic
                 reservations_by_date = Reservation.objects.filter(
