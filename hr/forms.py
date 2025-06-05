@@ -5,6 +5,29 @@ from datetime import time
 from django import forms
 from .time_utils import TimeUtils
 
+class EditReservationForm(forms.Form):
+    """
+    A Django form for editing an existing reservation's date and time slot.
+
+    Fields
+    ------
+    reservation_date : DateField
+        The new date for the reservation.
+    reservation_slot : TimeField
+        The new time slot for the reservation (HH:MM).
+
+    Usage
+    -----
+    Used in views to process user input when updating an existing reservation.
+    Validates that both date and time are provided and in the correct formats.
+    """
+    reservation_date = forms.DateField(label='', widget=forms.widgets.DateInput(
+        attrs={'type': 'date', 'style': 'width:50%'}
+    ))
+    reservation_slot = forms.TimeField(label='', widget=forms.widgets.TimeInput(
+        attrs={'type': 'time', 'style': 'width:50%'}
+    ))
+
 class ReservationForm(forms.Form):
     """A Form to make a reservation/booking.
     Attributes:

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ccf7fdea5eb7270a27c49d6afaa599c86aafc14eb5c33b36c3a38d298375e900"
+            "sha256": "afab64dc2e646c822b7e582f30a753e60bfe08875f891f551196569844005e6a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -213,6 +213,15 @@
             "markers": "python_version >= '3.6'",
             "version": "==3.10"
         },
+        "iniconfig": {
+            "hashes": [
+                "sha256:3abbd2e30b36733fee78f9c7f7308f2d0050e88f0087fd25c2645f63c773e1c7",
+                "sha256:9deba5723312380e77435581c6bf4935c94cbfab9b1ed33ef8d238ea168eb760"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.8'",
+            "version": "==2.1.0"
+        },
         "isort": {
             "hashes": [
                 "sha256:48fdfcb9face5d58a4f6dde2e72a1fb8dcaf8ab26f95ab49fab84c2ddefb0109",
@@ -273,6 +282,24 @@
             "markers": "python_version >= '3.9'",
             "version": "==4.3.8"
         },
+        "pluggy": {
+            "hashes": [
+                "sha256:7dcc130b76258d33b90f61b658791dede3486c3e6bfb003ee5c9bfb396dd22f3",
+                "sha256:e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==1.6.0"
+        },
+        "pygments": {
+            "hashes": [
+                "sha256:61c16d2a8576dc0649d9f39e089b5f02bcd27fba10d8fb4dcc28173f7a45151f",
+                "sha256:9ea1544ad55cecf4b8242fab6dd35a93bbce657034b0611ee383099054ab6d8c"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.8'",
+            "version": "==2.19.1"
+        },
         "pylint": {
             "hashes": [
                 "sha256:02f4aedeac91be69fb3b4bea997ce580a4ac68ce58b89eaefeaf06749df73f4b",
@@ -299,6 +326,15 @@
             "index": "pypi",
             "markers": "python_version >= '3.7' and python_version < '4.0'",
             "version": "==0.8.2"
+        },
+        "pytest": {
+            "hashes": [
+                "sha256:14d920b48472ea0dbf68e45b96cd1ffda4705f33307dcc86c676c1b5104838a6",
+                "sha256:f40f825768ad76c0977cbacdf1fd37c6f7a468e460ea6a0636078f8972d4517e"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==8.4.0"
         },
         "pytz": {
             "hashes": [
