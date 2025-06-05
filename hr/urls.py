@@ -10,5 +10,6 @@ urlpatterns = [
     path('reservations/', Views.reservations_view, name="reservations"),
     path('bookings/<str:date>/', Views.bookings_view, name='bookings_by_date'),
     path('version/', Views.version, name='version'),
-    path('bookings', Views.table_view, name='bookings_by_date')
+    path('bookings', Views.table_view, name='bookings_by_date'),
+    path('reservations/edit/<int:reservation_id>/', Views.edit_reservation, name='edit_reservation')
 ]
