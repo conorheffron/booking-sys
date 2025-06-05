@@ -2,10 +2,10 @@
 """
 import logging
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
-from hr.forms import ReservationForm
+from hr.forms import EditReservationForm, ReservationForm
 from hr import VERSION
 from .models import Reservation
 from .time_utils import TimeUtils
@@ -148,4 +148,59 @@ class Views():
         return JsonResponse({
             'message': 'success',
             'reservations': data
+        })
+
+    @classmethod
+    def edit_reservation(cls, request, reservation_id):
+        """
+        Handle the editing of an existing reservation.
+
+        This view allows users to update the reservation date and time slot for a given reservation.
+        On GET requests, it displays a form pre-filled with the current reservation details.
+        On POST requests, it validates and saves the new date and time slot, ensuring no double-booking occurs.
+        If the selected date and slot are already reserved by another booking, an error is displayed.
+
+        Parameters
+        ----------
+        request : HttpRequest
+            The HTTP request object.
+        reservation_id : int
+            The ID of the reservation to be edited.
+
+        Returns
+        -------
+        HttpResponse
+            Renders the edit reservation form on GET or invalid POST, or redirects to the reservations
+            list on successful update.
+        """
+        reservation = get_object_or_404(Reservation, pk=reservation_id)
+        if request.method == "POST":
+            form = EditReservationForm(request.POST)
+            if form.is_valid():
+                reservation_date = form.cleaned_data['reservation_date']
+                reservation_slot = form.cleaned_data['reservation_slot']
+
+                # Prevent double-book
+                if Reservation.objects.filter(
+                    reservation_date=reservation_date,
+                    reservation_slot=reservation_slot
+                ).exclude(id=reservation_id).exists():
+                    return render(request, "edit_reservation.html", {
+                        "form": form,
+                        "reservation": reservation,
+                        "error": "Booking Failed: Already Reserved."
+                    })
+
+                reservation.reservation_date = reservation_date
+                reservation.reservation_slot = reservation_slot
+                reservation.save()
+                return redirect("reservations")  # or return to reservations list
+        else:
+            form = EditReservationForm(initial={
+                "reservation_date": reservation.reservation_date,
+                "reservation_slot": reservation.reservation_slot
+            })
+        return render(request, "edit_reservation.html", {
+            "form": form,
+            "reservation": reservation
         })

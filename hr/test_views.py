@@ -1,22 +1,31 @@
 """
 HR Tests Suite
 """
-from datetime import datetime, timedelta
+import pytest
+from datetime import date, time, datetime, timedelta
 import json
 import re
+from django.urls import reverse
 from django.test import TestCase, RequestFactory
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import AnonymousUser
 from .models import Reservation
-from .forms import ReservationForm
+from .forms import ReservationForm, EditReservationForm
 from .time_utils import TimeUtils
 from .views import Views
 
 # HR Tests
+@pytest.mark.django_db
 class HrTests(TestCase):
     """HR Test cases
     """
     def setUp(self):
         self.factory = RequestFactory()
+        self.reservation = Reservation.objects.create(
+            first_name="Alice",
+            reservation_date=date.today() + timedelta(days=1),
+            reservation_slot=time(10, 0)
+        )
 
     def test_create_booking(self):
         """HR Test case test_create_booking
@@ -72,15 +81,25 @@ class HrTests(TestCase):
         response = self.client.get('/reservations/')
 
         # then
-        self.assertContains(response, '<h3>All Active Reservations</h3>\n        ' +
-                            '<table>\n            <tr> \n' +
-                            '                <th>#</th>\n' +
-                            '                <th>Name</th>\n' +
-                            '                <th>Booking Date</th>\n' +
-                            '                <th>Booking time</th>\n' +
-                            '            </tr>\n            \n' +
-                            '        </table>\n        <br />\n        <button type="button" ' +
-                            'class="btn btn-primary" onClick="refresh()">Refresh</button>\n    ' +
+        self.assertContains(response, '<h3>All Active Reservations</h3>\n        ' + 
+                                '<table>\n            ' + 
+                                    '<tr> \n                ' + 
+                                        '<th>#</th>\n                ' + 
+                                        '<th>Name</th>\n                ' + 
+                                        '<th>Booking Date</th>\n                ' + 
+                                        '<th>Booking time</th>\n            ' + 
+                                    '</tr>\n            \n            ' + 
+                                    '<tr> \n                ' + 
+                                        '<td>1</td>\n                ' + 
+                                        '<td>Alice</td>\n                ' + 
+                                        '<td>2025-06-06</td>\n                ' + 
+                                        '<td>10:00:00</td>\n                ' + 
+                                    '<td>\n                    ' + 
+                                        '<a href="/reservations/edit/1/" class="btn btn-sm btn-warning">Edit</a>\n                ' + 
+                                    '</td>\n            ' + 
+                                    '</tr>\n            \n        ' + 
+                                '</table>\n        <br />\n        ' + 
+                                '<button type="button" class="btn btn-primary" onClick="refresh()">Refresh</button>\n    ' + 
                             '</div>\n<body>', 
                             status_code=200)
         self.assertTemplateUsed(response, 'reservations.html')
@@ -160,10 +179,14 @@ class HrTests(TestCase):
                                                   "Booking Complete: Confirmed for " +
                                                   f"{test_date} at {test_time}:00",
                                                   "reservations": [{
-                                                      "id": 1,
+                                                      "id": 2,
                                                       "first_name": test_name,
                                                       "reservation_date": test_date,
-                                                      "reservation_slot": test_time + ':00'}]}),
+                                                      "reservation_slot": test_time + ':00'}, 
+                                                      {"id": 1, 
+                                                       "first_name": "Alice", 
+                                                       "reservation_date": "2025-06-06", 
+                                                       "reservation_slot": "10:00:00"}]}),
                                                       status_code=200)
 
     def test_booking_in_past_fail(self):
@@ -247,3 +270,66 @@ class HrTests(TestCase):
         self.assertFalse(bool(pattern.match('v22.0.0')))
         self.assertTrue(bool(pattern.match('2.2.11')))
         self.assertFalse(bool(pattern.match('a.b.c')))
+
+    def test_get_edit_reservation_form(self):
+        request = self.factory.get(
+            reverse("edit_reservation", args=[self.reservation.id])
+        )
+        response = Views.edit_reservation(request, self.reservation.id)
+        assert response.status_code == 200
+        assert b"Edit Reservation" in response.content or b"form" in response.content
+
+    def test_edit_reservation_success(self):
+        # Change reservation time/date to a new, available slot
+        new_date = date.today() + timedelta(days=2)
+        new_time = time(11, 0)
+        data = {
+            "reservation_date": new_date,
+            "reservation_slot": new_time.strftime("%H:%M"),
+        }
+        request = self.factory.post(
+            reverse("edit_reservation", args=[self.reservation.id]), data
+        )
+        response = Views.edit_reservation(request, self.reservation.id)
+        # Should redirect on success
+        assert response.status_code == 302
+        self.reservation.refresh_from_db()
+        assert self.reservation.reservation_date == new_date
+        assert self.reservation.reservation_slot.hour == new_time.hour
+
+    def test_edit_reservation_conflict(self):
+        # Create a conflicting reservation
+        conflict = Reservation.objects.create(
+            first_name="Bob",
+            reservation_date=date.today() + timedelta(days=3),
+            reservation_slot=time(12, 0)
+        )
+        data = {
+            "reservation_date": conflict.reservation_date,
+            "reservation_slot": conflict.reservation_slot.strftime("%H:%M"),
+        }
+        request = self.factory.post(
+            reverse("edit_reservation", args=[self.reservation.id]), data
+        )
+        response = Views.edit_reservation(request, self.reservation.id)
+        assert response.status_code == 200
+        assert b"Booking Failed: Already Reserved." in response.content
+
+    def test_edit_reservation_invalid_form(self):
+        # Send invalid data (missing reservation_date)
+        data = {
+            "reservation_slot": "13:00",
+        }
+        request = self.factory.post(
+            reverse("edit_reservation", args=[self.reservation.id]), data
+        )
+        response = Views.edit_reservation(request, self.reservation.id)
+        assert response.status_code == 200
+        assert b"form" in response.content
+        # Form should show errors
+        assert b"This field is required" in response.content or b"required" in response.content
+
+    def test_edit_reservation_not_found(self):
+        request = self.factory.get(reverse("edit_reservation", args=[9999]))
+        with pytest.raises(Exception):
+            Views.edit_reservation(request, 9999)

@@ -66,8 +66,8 @@ python3 manage.py test
 
 ## Run Test Class or specific Test Case
 ```shell
-python3 manage.py test hr.tests.HrTests
-python3 manage.py test hr.tests.HrTests.test_create_booking
+python3 manage.py test hr.test_views.HrTests
+python3 manage.py test hr.test_views.HrTests.test_create_booking
 ```
 
 ## Run Django Application
