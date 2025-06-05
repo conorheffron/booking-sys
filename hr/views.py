@@ -157,8 +157,10 @@ class Views():
 
         This view allows users to update the reservation date and time slot for a given reservation.
         On GET requests, it displays a form pre-filled with the current reservation details.
-        On POST requests, it validates and saves the new date and time slot, ensuring no double-booking occurs.
-        If the selected date and slot are already reserved by another booking, an error is displayed.
+        On POST requests, it validates and saves the new date and time slot, 
+        ensuring no double-booking occurs.
+        If the selected date and slot are already reserved by another booking, 
+        an error is displayed.
 
         Parameters
         ----------
@@ -170,7 +172,8 @@ class Views():
         Returns
         -------
         HttpResponse
-            Renders the edit reservation form on GET or invalid POST, or redirects to the reservations
+            Renders the edit reservation form on GET or invalid POST, 
+            or redirects to the reservations
             list on successful update.
         """
         reservation = get_object_or_404(Reservation, pk=reservation_id)

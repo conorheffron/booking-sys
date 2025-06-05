@@ -68,6 +68,8 @@ python3 manage.py test
 ```shell
 python3 manage.py test hr.test_views.HrTests
 python3 manage.py test hr.test_views.HrTests.test_create_booking
+python3 manage.py test hr.test_forms.TestEditReservationForm
+python3 manage.py test hr.test_forms.TestReservationForm
 ```
 
 ## Run Django Application
