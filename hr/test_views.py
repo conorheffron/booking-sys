@@ -188,7 +188,7 @@ class HrTests(TestCase):
                                                       "reservation_slot": test_time + ':00'},
                                                       {"id": 1,
                                                        "first_name": "Taylor",
-                                                       "reservation_date": "2025-06-06",
+                                                       "reservation_date": test_date,
                                                        "reservation_slot": "10:00:00"}]}),
                                                       status_code=200)
 
