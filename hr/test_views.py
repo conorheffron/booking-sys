@@ -21,7 +21,7 @@ class HrTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.reservation = Reservation.objects.create(
-            first_name="Alice",
+            first_name="Taylor",
             reservation_date=date.today() + timedelta(days=1),
             reservation_slot=time(10, 0)
         )
@@ -91,7 +91,7 @@ class HrTests(TestCase):
                                     '</tr>\n            \n            ' + 
                                     '<tr> \n                ' + 
                                         '<td>1</td>\n                ' + 
-                                        '<td>Alice</td>\n                ' + 
+                                        '<td>Taylor</td>\n                ' + 
                                         '<td>2025-06-06</td>\n                ' + 
                                         '<td>10:00:00</td>\n                ' + 
                                     '<td>\n                    ' + 
@@ -187,7 +187,7 @@ class HrTests(TestCase):
                                                       "reservation_date": test_date,
                                                       "reservation_slot": test_time + ':00'},
                                                       {"id": 1,
-                                                       "first_name": "Alice",
+                                                       "first_name": "Taylor",
                                                        "reservation_date": "2025-06-06",
                                                        "reservation_slot": "10:00:00"}]}),
                                                       status_code=200)

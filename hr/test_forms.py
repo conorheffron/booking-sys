@@ -78,12 +78,12 @@ class TestReservationForm(TestCase):
         tomorrow = (date.today() + timedelta(days=1)).isoformat()
         # Test using first available slot from TIME_SLOTS
         form = ReservationForm({
-            "first_name": "Alice",
+            "first_name": "Taylor",
             "reservation_date": tomorrow,
             "reservation_slot": ReservationForm.TIME_SLOTS[0][0],  # e.g. "09:00"
         })
         assert form.is_valid()
-        assert form.cleaned_data["first_name"] == "Alice"
+        assert form.cleaned_data["first_name"] == "Taylor"
         assert form.cleaned_data["reservation_date"] == date.fromisoformat(tomorrow)
         assert form.cleaned_data["reservation_slot"] == ReservationForm.TIME_SLOTS[0][0]
 
@@ -116,7 +116,7 @@ class TestReservationForm(TestCase):
         """
         tomorrow = (date.today() + timedelta(days=1)).isoformat()
         form = ReservationForm({
-            "first_name": "Alice",
+            "first_name": "Taylor",
             "reservation_date": tomorrow,
             "reservation_slot": "23:59",  # not in TIME_SLOTS
         })
