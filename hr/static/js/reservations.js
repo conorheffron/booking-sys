@@ -23,20 +23,18 @@ function submitHandler(e) {
             renderAlertMessage(response.message);
             bookings_by_date = response.reservations;
             console.log(bookings_by_date);
-            // form.reset();
             renderTableBookings(bookings_by_date);
         });
 }
 
 function renderAlertMessage(message) {
+    const target = document.getElementById('form-out-msg');
     if (message.includes('Booking Failed')) {
-        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-danger" role="alert" style="width:50%;">'
-            + message + '</div>';
+        target.innerHTML = '<div class="alert alert-danger w-100" role="alert">' + message + '</div>';
     } else if (message.includes('Booking Complete')) {
-        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-success" role="alert" style="width:50%;">'
-            + message + '</div>';
+        target.innerHTML = '<div class="alert alert-success w-100" role="alert">' + message + '</div>';
     } else {
-        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg"></div>';
+        target.innerHTML = '';
         console.log('Invalid message returned from server: ' + message);
     }
 }
@@ -49,14 +47,14 @@ function renderTable(booking_date) {
             .then(response => {
                 console.log(response);
                 bookings_by_date = response.reservations;
-                renderTableBookings(bookings_by_date);
+                renderTableBookings(bookings_by_date, booking_date);
             });
     } catch (e) {
         console.log(e);
     }
 }
 
-function renderTableBookings(bookings) {
+function renderTableBookings(bookings, booking_date) {
     if (bookings.length > 0) {
         var dynamoT = '<tbody>'
         dynamoT += '<tr>';
@@ -76,7 +74,11 @@ function renderTableBookings(bookings) {
         dynamoT += '</tbody>';
         document.getElementById('tableData').innerHTML = dynamoT;
     } else {
-        document.getElementById('tableData').innerHTML = '<tbody id="tableData"></tbody>';
+        document.getElementById('tableData').innerHTML =
+        '<tbody id="tableData"><tr>' +
+            '<td colspan="4" style="text-align:center;">' +
+            'No data available for the date selected <code>'
+            + booking_date + '</code>.</td></tr></tbody>';
     }
 }
 
