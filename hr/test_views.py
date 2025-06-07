@@ -76,6 +76,10 @@ class HrTests(TestCase):
         ----------
         self : TestCase
         """
+        # given
+        current_date_time = TimeUtils().get_current_date_time() + timedelta(days=1)
+        test_date = current_date_time.strftime('%Y-%m-%d')
+        
         # when
         response = self.client.get('/reservations/')
 
@@ -92,7 +96,7 @@ class HrTests(TestCase):
                                     '<tr> \n                ' + 
                                         '<td>1</td>\n                ' + 
                                         '<td>Taylor</td>\n                ' + 
-                                        '<td>2025-06-06</td>\n                ' + 
+                                        '<td>' + test_date + '</td>\n                ' + 
                                         '<td>10:00:00</td>\n                ' + 
                                     '<td>\n                    ' + 
                                         '<a href="/reservations/edit/1/" ' + 
