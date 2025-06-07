@@ -47,14 +47,14 @@ function renderTable(booking_date) {
             .then(response => {
                 console.log(response);
                 bookings_by_date = response.reservations;
-                renderTableBookings(bookings_by_date);
+                renderTableBookings(bookings_by_date, booking_date);
             });
     } catch (e) {
         console.log(e);
     }
 }
 
-function renderTableBookings(bookings) {
+function renderTableBookings(bookings, booking_date) {
     if (bookings.length > 0) {
         var dynamoT = '<tbody>'
         dynamoT += '<tr>';
@@ -74,7 +74,11 @@ function renderTableBookings(bookings) {
         dynamoT += '</tbody>';
         document.getElementById('tableData').innerHTML = dynamoT;
     } else {
-        document.getElementById('tableData').innerHTML = '<tbody id="tableData"></tbody>';
+        document.getElementById('tableData').innerHTML =
+        '<tbody id="tableData"><tr>' +
+            '<td colspan="4" style="text-align:center;">' +
+            'No data available for the date selected <code>'
+            + booking_date + '</code>.</td></tr></tbody>';
     }
 }
 
