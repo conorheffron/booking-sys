@@ -79,12 +79,12 @@ class HrTests(TestCase):
         # given
         current_date_time = TimeUtils().get_current_date_time() + timedelta(days=1)
         test_date = current_date_time.strftime('%Y-%m-%d')
-        
+
         # when
         response = self.client.get('/reservations/')
 
         # then
-        self.assertContains(response, '<h3>All Active Reservations</h3>' + 
+        self.assertContains(response, '<h3>All Active Reservations</h3>' +
                                 '\n        ' + 
                                 '<table>\n            ' + 
                                     '<tr> \n                ' + 
@@ -184,25 +184,10 @@ class HrTests(TestCase):
                                                     'reservation_slot': test_time})
 
         # then
-<<<<<<< Updated upstream
-        self.assertContains(response, json.dumps({"message":
-                                                  "Booking Complete: Confirmed for " +
-                                                  f"{test_date} at {test_time}:00",
-                                                  "reservations": [{
-                                                      "id": 2,
-                                                      "first_name": test_name,
-                                                      "reservation_date": test_date,
-                                                      "reservation_slot": test_time + ':00'},
-                                                      {"id": 1,
-                                                      "first_name": 'Taylor',
-                                                      "reservation_date": test_date,
-                                                      "reservation_slot": '10:00'}]}),
-=======
-        self.assertContains(response, json.dumps({"message": "Booking Complete: Confirmed for 2025-06-08 at 09:30:00", 
+        self.assertContains(response, json.dumps({"message": "Booking Complete: Confirmed for 2025-06-08 at 09:30:00",
                                                   "reservations": [
                                                       {"id": 2, "first_name": test_name, "reservation_date": test_date, "reservation_slot": test_time + ":00"},
                                                       {"id": 1, "first_name": test_name2, "reservation_date": test_date, "reservation_slot": test_time2 + ":00"}]}),
->>>>>>> Stashed changes
                                                       status_code=200)
 
     def test_booking_in_past_fail(self):
