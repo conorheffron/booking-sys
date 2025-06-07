@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap CSS -->
+   <!-- Bootstrap CSS (Latest v4 CDN) -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
@@ -20,28 +20,45 @@
         {% include 'navbar.html' %} 
     </div>
     
-    <div id="bookings" class="container pt-5 table mt-3 table-sm table_col_padding">
-        <h3>All Active Reservations</h3>
-        <table>
-            <tr> 
-                <th>#</th>
-                <th>Name</th>
-                <th>Booking Date</th>
-                <th>Booking time</th>
-            </tr>
-            {% for item in reservations %}
-            <tr> 
-                <td>{{ item.id }}</td>
-                <td>{{ item.first_name }}</td>
-                <td>{{ item.reservation_date|date:'Y-m-d' }}</td>
-                <td>{{ item.reservation_slot|time:'H:i:00' }}</td>
-                <td>
-                    <a href="{% url 'edit_reservation' item.id %}" class="btn btn-sm btn-warning">Edit</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-        <br />
-        <button type="button" class="btn btn-primary" onClick="refresh()">Refresh</button>
+    <div class="container pt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-10 main-content-bg">
+                <div class="card shadow-sm">
+                    <div class="card-body" style="background: transparent;">
+                        <h3 class="card-title mb-4 text-center">All Active Reservations</h3>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered table-hover align-middle">
+                                <thead class="thead-light">
+                                    <tr> 
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Booking Date</th>
+                                        <th>Booking Time</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in reservations %}
+                                    <tr> 
+                                        <td>{{ item.id }}</td>
+                                        <td>{{ item.first_name }}</td>
+                                        <td>{{ item.reservation_date|date:'Y-m-d' }}</td>
+                                        <td>{{ item.reservation_slot|time:'H:i:00' }}</td>
+                                        <td>
+                                            <a href="{% url 'edit_reservation' item.id %}" class="btn btn-sm btn-warning">Edit</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-4">
+                            <button type="button" class="btn btn-primary" onClick="refresh()">Refresh</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-<body>
+</body>
+</html>

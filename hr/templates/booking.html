@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS (Latest v4 CDN) -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
@@ -23,27 +23,55 @@
     </div>
 
     <div id="bookings" class="container pt-5">
-        <h3>Make a Reservation</h1>
-        <div id="form-out-msg"></div>
-        <form method="POST" id="form">
-            {% csrf_token %}
-            {{ form.first_name.label_tag }}<br />
-            {{ form.first_name }}<br /><br />
-            {{ form.reservation_date.label_tag }}<br />
-            {{ form.reservation_date }}<br /><br />
-            {{ form.reservation_slot.label_tag }}<br />
-            {{ form.reservation_slot }}
-            <br /><br />
-            <button type="submit" class="btn btn-primary">Reserve</button>
-        </form>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 main-content-bg">
+                <div class="card shadow-sm" style="background: transparent; border: none;">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4 text-center">Make a Reservation</h3>
+                        <form method="POST" id="form">
+                            <div id="form-out-msg" class="w-100"></div>
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ form.first_name.label_tag }}
+                                <div>
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{ form.reservation_date.label_tag }}
+                                <div>
+                                    {{ form.reservation_date }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{ form.reservation_slot.label_tag }}
+                                <div>
+                                    {{ form.reservation_slot }}
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Reserve</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="reservations-by-date" class="container pt-5 table mt-3 table-sm table_col_padding">
-        <h3>Bookings by Date</h3>
-        <table>
-            <tbody id="tableData"></tbody>
-        </table>
+    <div id="reservations-by-date" class="container pt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8 main-content-bg">
+                <div class="card shadow-sm" style="background: transparent; border: none;">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4 text-center">Bookings by Date</h3>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered table-hover">
+                                <tbody id="tableData"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    
 </body>
 </html>
