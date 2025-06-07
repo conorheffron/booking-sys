@@ -22,10 +22,10 @@ class EditReservationForm(forms.Form):
     Validates that both date and time are provided and in the correct formats.
     """
     reservation_date = forms.DateField(label='', widget=forms.widgets.DateInput(
-        attrs={'type': 'date', 'style': 'width:50%'}
+        attrs={'type': 'date', 'class': 'form-control'}
     ))
     reservation_slot = forms.TimeField(label='', widget=forms.widgets.TimeInput(
-        attrs={'type': 'time', 'style': 'width:50%'}
+        attrs={'type': 'time', 'class': 'form-control'}
     ))
 
 class ReservationForm(forms.Form):
@@ -39,18 +39,17 @@ class ReservationForm(forms.Form):
     london_time = time_utils.get_current_date_time()
     # Time slots generated from 9:00 AM to 7:00 PM in 30-minute intervals
     TIME_SLOTS = time_utils.generate_time_slots(time(9, 0), time(19, 0), 30)
-    first_name = forms.CharField(max_length=15,
+    first_name = forms.CharField(max_length=200,
                                  min_length=3,
                                  widget=forms.widgets.TextInput
-                                 (attrs={'style': 'width:50%',
-                                         'placeholder': 'Enter Name...'}), 
-                                         label='')
+                                 (attrs={'placeholder': 'Enter Name...', 'class': 'form-control'}), 
+                                         label='Full Name')
 
     reservation_date = forms.DateField(label='Pick Date', widget=forms.widgets.DateInput(
         attrs={'type': 'date',
                'format':['%d-%m-%Y'],
                'value': london_time.date(),
-               'style': 'width:50%'}))
+               'class': 'form-control'}))
 
     reservation_slot = forms.ChoiceField(label='Select Time Slot', choices=TIME_SLOTS,
-        widget=forms.Select(attrs={'type': 'time', 'style': 'width: 50%;'}))
+        widget=forms.Select(attrs={'type': 'time', 'class': 'form-control'}))

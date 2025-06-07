@@ -23,20 +23,18 @@ function submitHandler(e) {
             renderAlertMessage(response.message);
             bookings_by_date = response.reservations;
             console.log(bookings_by_date);
-            // form.reset();
             renderTableBookings(bookings_by_date);
         });
 }
 
 function renderAlertMessage(message) {
+    const target = document.getElementById('form-out-msg');
     if (message.includes('Booking Failed')) {
-        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-danger" role="alert" style="width:50%;">'
-            + message + '</div>';
+        target.innerHTML = '<div class="alert alert-danger w-100" role="alert">' + message + '</div>';
     } else if (message.includes('Booking Complete')) {
-        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg" class="alert alert-success" role="alert" style="width:50%;">'
-            + message + '</div>';
+        target.innerHTML = '<div class="alert alert-success w-100" role="alert">' + message + '</div>';
     } else {
-        document.getElementById('form-out-msg').innerHTML = '<div id="form-out-msg"></div>';
+        target.innerHTML = '';
         console.log('Invalid message returned from server: ' + message);
     }
 }
