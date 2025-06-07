@@ -84,30 +84,53 @@ class HrTests(TestCase):
         response = self.client.get('/reservations/')
 
         # then
-        self.assertContains(response, '<h3>All Active Reservations</h3>' +
-                                '\n        ' + 
-                                '<table>\n            ' + 
-                                    '<tr> \n                ' + 
-                                        '<th>#</th>\n                ' + 
-                                        '<th>Name</th>\n                ' + 
-                                        '<th>Booking Date</th>\n                ' + 
-                                        '<th>Booking time</th>\n            ' + 
-                                    '</tr>\n            \n            ' + 
-                                    '<tr> \n                ' + 
-                                        '<td>1</td>\n                ' + 
-                                        '<td>Taylor</td>\n                ' + 
-                                        '<td>' + test_date + '</td>\n                ' + 
-                                        '<td>10:00:00</td>\n                ' + 
-                                    '<td>\n                    ' + 
-                                        '<a href="/reservations/edit/1/" ' + 
-                                        'class="btn btn-sm btn-warning">' + 
-                                        'Edit</a>\n                ' + 
-                                    '</td>\n            ' + 
-                                    '</tr>\n            \n        ' + 
-                                '</table>\n        <br />\n        ' + 
-                                '<button type="button" class="btn btn-primary" ' + 
-                                        'onClick="refresh()">Refresh</button>\n    ' + 
-                            '</div>\n<body>', 
+        self.assertContains(response,
+                            '<h3 class="card-title mb-4 text-center">' +
+                            'All Active Reservations</h3>\n' +
+                            '                        ' + 
+                            '<div class="table-responsive">\n' + 
+                            '                            ' + 
+                            '<table ' +
+                            'class="table table-sm table-bordered table-hover align-middle">\n' + 
+                            '                                ' + 
+                            '<thead class="thead-light">\n' + 
+                            '                                    ' + 
+                            '<tr> \n                                        ' + 
+                                '<th>#</th>\n                                        ' + 
+                                '<th>Name</th>\n                                        ' + 
+                                '<th>Booking Date</th>\n                                        ' + 
+                                '<th>Booking Time</th>\n                                        ' + 
+                                '<th>Actions</th>\n                                    ' + 
+                            '</tr>\n                                ' + 
+                            '</thead>\n                                ' + 
+                            '<tbody>\n                                ' + 
+                            '\n                                    ' + 
+                            '<tr> \n                                        ' + 
+                                '<td>1</td>\n                                        ' + 
+                                '<td>Taylor</td>\n                                        ' + 
+                                '<td>' + test_date + '</td>\n' +
+                                '                                        ' + 
+                                '<td>10:00:00</td>\n                                        ' + 
+                            '<td>\n                                            ' + 
+                            '<a href="/reservations/edit/1/" ' +
+                            'class="btn btn-sm btn-warning">Edit</a>' + 
+                            '\n                                        ' + 
+                            '</td>\n                                    ' + 
+                            '</tr>\n                                ' + 
+                            '\n                                ' + 
+                            '</tbody>\n                            ' + 
+                            '</table>\n                        ' + 
+                            '</div>\n                        ' + 
+                            '<div class="text-center mt-4">\n' + 
+                            '                            ' + 
+                            '<button type="button" class="btn btn-primary" onClick="refresh()">' + 
+                            'Refresh</button>\n                        ' + 
+                            '</div>\n                    ' + 
+                            '</div>\n                ' + 
+                            '</div>\n            ' + 
+                            '</div>\n        ' + 
+                            '</div>\n    ' + 
+                            '</div>\n</body>\n</html>\n', 
                             status_code=200)
         self.assertTemplateUsed(response, 'reservations.html')
 
@@ -158,9 +181,26 @@ class HrTests(TestCase):
         response = self.client.get('/book/')
 
         # then
-        self.assertContains(response, '\n        <h3>Bookings by Date</h3>\n        <table>\n' +
-                            '            <tbody id="tableData"></tbody>\n        </table>\n    ' +
-                            '</div>\n    \n</body>\n</html>', 
+        self.assertContains(response,
+                            '<h3 class="card-title mb-4 text-center">' +
+                            'Bookings by Date</h3>\n' +
+                            '                        ' + 
+                            '<div class="table-responsive">\n' + 
+                            '                            ' + 
+                            '<table class="table table-sm table-bordered table-hover">' + 
+                            '\n                                ' + 
+                                '<tbody id="tableData"></tbody>\n' + 
+                            '                            ' + 
+                            '</table>\n' + 
+                            '                        ' + 
+                            '</div>\n                    ' + 
+                            '</div>\n                ' + 
+                            '</div>\n            ' + 
+                            '</div>\n        ' + 
+                            '</div>\n   ' + 
+                            ' </div>\n' + 
+                            '</body>\n' + 
+                            '</html>', 
                             status_code=200 )
         self.assertTemplateUsed(response, 'booking.html')
 
@@ -184,11 +224,21 @@ class HrTests(TestCase):
                                                     'reservation_slot': test_time})
 
         # then
-        self.assertContains(response, json.dumps({"message": "Booking Complete: Confirmed for 2025-06-08 at 09:30:00",
-                                                  "reservations": [
-                                                      {"id": 2, "first_name": test_name, "reservation_date": test_date, "reservation_slot": test_time + ":00"},
-                                                      {"id": 1, "first_name": test_name2, "reservation_date": test_date, "reservation_slot": test_time2 + ":00"}]}),
-                                                      status_code=200)
+        self.assertContains(response, json.dumps({
+            "message": "Booking Complete: Confirmed for 2025-06-08 at 09:30:00",
+            "reservations": [
+                {
+                    "id": 2, 
+                    "first_name": test_name, 
+                    "reservation_date": test_date, 
+                    "reservation_slot": test_time + ":00"},
+                {
+                    "id": 1, 
+                    "first_name": test_name2, 
+                    "reservation_date": test_date, 
+                    "reservation_slot": test_time2 + ":00"
+                    }]}),
+                status_code=200)
 
     def test_booking_in_past_fail(self):
         """HR Test case test_booking_in_past_fail
@@ -223,8 +273,29 @@ class HrTests(TestCase):
         response = self.client.get('/reservations/invalid')
 
         # then
-        self.assertContains(response, '<h1>Page Not Found: /reservations/invalid</h1>\n    ' +
-                            '</div>\n<body>', 
+        self.assertContains(response, '<div class="row justify-content-center">\n' +
+                            '            ' + 
+                            '<div class="col-md-8 col-lg-6">\n' + 
+                            '                ' + 
+                            '<div class="card text-center shadow-sm">\n' + 
+                            '                    ' + 
+                            '<div class="card-body">\n' + 
+                            '                        ' + 
+                            '<h1 class="display-4 text-danger mb-4">Page Not Found</h1>\n' + 
+                            '                        ' + 
+                            '<p class="lead">' + 
+                                'The requested URL <code>/reservations/invalid</code>' +
+                            ' was not found on this server.' + 
+                            '</p>\n                        ' + 
+                            '<a href="/" class="btn btn-primary mt-3">Return Home</a>\n' + 
+                            '                    ' + 
+                            '</div>\n                ' + 
+                            '</div>\n            ' + 
+                            '</div>\n        ' + 
+                            '</div>\n    ' + 
+                            '</div>\n' + 
+                            '</body>\n' + 
+                            '</html>\n', 
                             status_code=404 )
         self.assertTemplateUsed(response, 'error.html')
 

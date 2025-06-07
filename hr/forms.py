@@ -42,7 +42,7 @@ class ReservationForm(forms.Form):
     first_name = forms.CharField(max_length=200,
                                  min_length=3,
                                  widget=forms.widgets.TextInput
-                                 (attrs={'placeholder': 'Enter Name...', 'class': 'form-control'}), 
+                                 (attrs={'placeholder': 'Enter Name...', 'class': 'form-control'}),
                                          label='Full Name')
 
     reservation_date = forms.DateField(label='Pick Date', widget=forms.widgets.DateInput(
