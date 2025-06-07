@@ -190,7 +190,7 @@ class HrTests(TestCase):
                                                       "first_name": test_name,
                                                       "reservation_date": test_date,
                                                       "reservation_slot": test_time + ':00'},
-                                                      {id": 1,
+                                                      {"id": 1,
                                                       "first_name": 'Taylor',
                                                       "reservation_date": test_date,
                                                       "reservation_slot": '10:00'}]}),
