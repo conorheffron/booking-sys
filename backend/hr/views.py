@@ -1,6 +1,7 @@
 """booking-sys views Mapping & Logic
 """
 import logging
+from datetime import datetime, date as dt_date
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
@@ -9,9 +10,18 @@ from hr.forms import EditReservationForm, ReservationForm
 from hr import VERSION
 from .models import Reservation
 from .time_utils import TimeUtils
+from django.views.decorators.http import require_http_methods
 
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 logger = logging.getLogger(__name__)
+
+from django.views.generic import View
+
+class FrontendAppView(View):
+    def get(self, request):
+        return render(request, "index.html")
 
 class Views():
     """Views class for Views Mapping & Logic
@@ -137,14 +147,22 @@ class Views():
         ----------
         date: The date in format %y-%m-%d i.e. 2024-09-07
         """
-        reservations_by_date = Reservation.objects.order_by(
-            'reservation_slot').filter(
-                reservation_date=date)
-        data = list(reservations_by_date.values('id',
-                                                'first_name',
-                                                'reservation_date',
-                                                'reservation_slot'))
-        logger.info('GET by date (%s) Query set results: %s', date, data)
+        today = dt_date.today()
+        queryset = None
+
+        try:
+            # Try to parse provided date
+            query_date = datetime.strptime(date, "%Y-%m-%d").date()
+            # If successful, filter by that date
+            queryset = Reservation.objects.order_by('reservation_slot').filter(reservation_date=query_date)
+            logger.info('GET by date (%s) Query set results: %s', query_date, list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot')))
+        except (TypeError, ValueError):
+            # If date is None or invalid, show all bookings after today
+            queryset = Reservation.objects.order_by('reservation_slot').filter(reservation_date__gt=today)
+            logger.info('GET by future date (after %s) Query set results: %s', today, list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot')))
+
+        data = list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot'))
+
         return JsonResponse({
             'message': 'success',
             'reservations': data
@@ -207,3 +225,115 @@ class Views():
             "form": form,
             "reservation": reservation
         })
+
+    @csrf_exempt
+    def bookingsById(request, reservation_id):
+        """
+        GET: Return booking info by id as JSON
+        PUT: Update booking info by id from JSON body
+        """
+        reservation = get_object_or_404(Reservation, pk=reservation_id)
+
+        if request.method == "GET":
+            data = {
+                "id": reservation.id,
+                "first_name": reservation.first_name,
+                "reservation_date": str(reservation.reservation_date),
+                "reservation_slot": reservation.reservation_slot,
+            }
+            return JsonResponse(data, status=200)
+
+        elif request.method == "PUT":
+            try:
+                body = json.loads(request.body.decode("utf-8"))
+            except Exception:
+                return JsonResponse({"error": "Invalid JSON body"}, status=400)
+
+            reservation_date = body.get("reservation_date")
+            reservation_slot = body.get("reservation_slot")
+            first_name = body.get("first_name")
+
+            # Validate input
+            if not reservation_date or not reservation_slot or not first_name:
+                return JsonResponse({"error": "All fields are required."}, status=400)
+
+            # Convert "02:00 PM" to "14:00"
+            try:
+                from datetime import datetime
+                slot_time = datetime.strptime(reservation_slot, "%I:%M %p").time()
+            except Exception:
+                return JsonResponse({"error": "Invalid time format for reservation_slot."}, status=400)
+
+            # Prevent double-booking (exclude current reservation)
+            if Reservation.objects.filter(
+                reservation_date=reservation_date,
+                reservation_slot=slot_time
+            ).exclude(pk=reservation_id).exists():
+                return JsonResponse({"error": "Booking Failed: Already Reserved."}, status=400)
+
+            reservation.first_name = first_name
+            reservation.reservation_date = reservation_date
+            reservation.reservation_slot = slot_time
+            reservation.save()
+
+            data = {
+                "id": reservation.id,
+                "first_name": reservation.first_name,
+                "reservation_date": str(reservation.reservation_date),
+                "reservation_slot": reservation.reservation_slot.strftime("%I:%M %p"),  # return in 12hr format
+                "success": True
+            }
+            return JsonResponse(data, status=200)
+        else:
+            return JsonResponse({"error": "Method not allowed."}, status=405)
+        
+
+    @csrf_exempt
+    def save_reservation(request):
+        """
+        Handle saving (creating or updating) a reservation via PUT.
+        """
+        if request.method != "PUT":
+            return JsonResponse({"error": "Method not allowed."}, status=405)
+
+        try:
+            body = json.loads(request.body.decode("utf-8"))
+        except Exception:
+            return JsonResponse({"error": "Invalid JSON body"}, status=400)
+
+        first_name = body.get("first_name")
+        reservation_date = body.get("reservation_date")
+        reservation_slot = body.get("reservation_slot")
+
+        if not first_name or not reservation_date or not reservation_slot:
+            return JsonResponse({"error": "All fields are required."}, status=400)
+
+        # Convert time string like "02:00 PM" to time object
+        try:
+            slot_time = datetime.strptime(reservation_slot, "%I:%M %p").time()
+        except Exception:
+            return JsonResponse({"error": "reservation_slot must be in format HH:MM AM/PM"}, status=400)
+
+        # Prevent double booking
+        if Reservation.objects.filter(
+            reservation_date=reservation_date,
+            reservation_slot=slot_time
+        ).exists():
+            return JsonResponse({"error": "Booking Failed: Already Reserved."}, status=400)
+
+        # Save reservation
+        reservation = Reservation.objects.create(
+            first_name=first_name,
+            reservation_date=reservation_date,
+            reservation_slot=slot_time
+        )
+
+        data = {
+            "id": reservation.id,
+            "first_name": reservation.first_name,
+            "reservation_date": str(reservation.reservation_date),
+            "reservation_slot": reservation.reservation_slot.strftime("%I:%M %p"),
+            "success": True
+        }
+        return JsonResponse(data, status=201)
+    

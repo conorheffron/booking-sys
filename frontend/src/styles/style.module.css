@@ -1,0 +1,38 @@
+/* Migrated from hr/static/css/style.css */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  background: #222;
+  color: #fff;
+  padding: 1rem 2rem;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+input, select {
+  margin-bottom: 1rem;
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 0.5rem;
+  display: block;
+}

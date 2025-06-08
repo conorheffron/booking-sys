@@ -1,0 +1,118 @@
+body, body *:not(button):not(.btn):not(.navbar-brand):not(.navbar-brand *):not(#appVersion):not(#appVersion *) {
+  color: #0056b3 !important;
+}
+
+.main-content-bg {
+    background-color: #fffbea !important; /* Light yellow */
+    border-radius: 0.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    margin-top: 2rem;
+}
+
+/* App Version stylish effects */
+#appVersion {
+  color: #007bff !important;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: 
+    color 0.3s cubic-bezier(.4,2,.6,1), 
+    background 0.3s cubic-bezier(.4,2,.6,1), 
+    box-shadow 0.3s cubic-bezier(.4,2,.6,1), 
+    transform 0.3s cubic-bezier(.4,2,.6,1);
+  background: linear-gradient(90deg, #e3f2fd 0%, #f8fafc 100%);
+  border-radius: 1.5em;
+  padding: 0.2em 1em;
+  box-shadow: 0 1px 8px 0 rgba(0,123,255,0.18);
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+#appVersion:hover, #appVersion:focus {
+  color: #fff !important;
+  background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+  box-shadow: 0 4px 24px 0 rgba(0,123,255,0.38), 0 1.5px 3px 0 rgba(0,0,0,0.07);
+  transform: scale(1.1) rotate(-2deg);
+  text-shadow: 0 2px 12px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+/* General background for main content */
+.main-content-bg {
+  background: #fff;
+  border-radius: 1.2rem;
+  padding: 2rem 2rem 2rem 2rem;
+  box-shadow: 0 0.125rem 1.25rem rgba(0, 0, 0, 0.09);
+}
+
+/* Booking System brand text */
+.navbar-brand .font-weight-bold {
+  font-weight: bold;
+  font-size: 1.35rem;
+}
+
+/* Navbar tweaks */
+.navbar {
+  margin-bottom: 2rem;
+}
+
+/* Card shadow and transparency */
+.card {
+  border: none;
+  background: rgba(255,255,255,0.95);
+}
+
+/* Table styles */
+.table th, .table td {
+  vertical-align: middle !important;
+}
+.table thead th {
+  background-color: #f0e6f6;
+  color: #333;
+}
+
+/* Button tweaks */
+.btn-primary {
+  background-color: #8C52FF;
+  border: none;
+}
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #5e2ca5;
+}
+.btn-warning {
+  background-color: #ffb347;
+  border: none;
+  color: #333;
+}
+.btn-warning:hover, .btn-warning:focus {
+  background-color: #f4a236;
+  color: #222;
+}
+
+/* Responsive tweaks */
+@media (max-width: 767px) {
+  .main-content-bg {
+    padding: 1rem;
+  }
+  .card-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* Error page specific */
+.card-title.text-danger {
+  color: #b30021 !important;
+}
+
+body, body *:not(button):not(.btn):not(.navbar-brand):not(.navbar-brand *):not(#appVersion):not(#appVersion *) {
+  color: #0056b3 !important;
+}
+
+.main-content-bg {
+    background-color: #fffbea !important; /* Light yellow */
+    border-radius: 0.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    margin-top: 2rem;
+}

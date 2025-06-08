@@ -15,6 +15,14 @@ python3, django 5 admin/framework, django.test, & MySQL Server / Sqlite2
 docker image build -t booking-sys .
 docker compose up -d  
 docker compose down
+
+
+docker build -t fullstack-dev .
+docker run -p 8000:8000 -p 5173:5173 fullstack-dev
+
+# dont need to expose API, can reach within container
+docker build -t booking-sys .
+docker run -p 5173:5173 booking-sys
 ```
 
 ## Generate requirements.txt

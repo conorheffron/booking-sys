@@ -1,25 +1,31 @@
-FROM python:3.13
+FROM python:3.11-slim AS backend
 
-ARG DEBUG
+WORKDIR /app
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV DEBUG=${DEBUG}
+# Install MySQL and build tools for mysqlclient, plus Node.js for frontend
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      default-libmysqlclient-dev build-essential pkg-config curl && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy project files
-COPY . /
+# Python dependencies
+COPY backend/requirements.txt ./backend/
+RUN pip install --upgrade pip && pip install -r backend/requirements.txt
 
-# Set work directory
-WORKDIR /
+# Node dependencies
+COPY frontend/package*.json ./frontend/
+RUN cd frontend && npm install
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-RUN python3 manage.py makemigrations
-RUN python3 manage.py migrate
-RUN python3 manage.py test
+# Copy all source code
+COPY backend/ ./backend/
+COPY frontend/ ./frontend/
 
-EXPOSE 8000
-# For running our application
+# Entrypoint script to run backend, then frontend
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+EXPOSE 5173
+
+ENTRYPOINT ["/entrypoint.sh"]
