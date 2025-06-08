@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-1_-nbup&d1%klv)v$joa4oh4t+ikzmv0a@5asp%g&84=q#6p1m
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-TEMPLATE_DEBUG = False
+TEMPLATE_DEBUG = True
 
 if DEBUG is False:
     ALLOWED_HOSTS = ['booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4']
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     'hr',
 ]
 
@@ -54,14 +55,22 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = "booking-sys.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        'DIRS': [BASE_DIR / 'backend/hr/templates'], 
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -123,8 +132,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'hr/static')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles'), ]
+STATICFILES_DIRS = [
+    BASE_DIR / "backend/hr/static",
+]
+
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'hr/static')
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles'), ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
