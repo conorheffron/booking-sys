@@ -2,7 +2,6 @@
 """
 import logging
 from datetime import datetime, date as dt_date
-from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
@@ -13,19 +12,7 @@ from .models import Reservation
 from .time_utils import TimeUtils
 import json
 
-
-from django.views.generic import TemplateView
-from django.conf import settings
-from django.views.static import serve as static_serve
-import os
-
 logger = logging.getLogger(__name__)
-
-from django.views.generic import View
-
-# class FrontendAppView(View):
-#     def get(self, request):
-#         return render(request, "index.html")
 
 class Views():
     """Views class for Views Mapping & Logic
@@ -53,34 +40,6 @@ class Views():
         """
         date = request.GET.get("date", TimeUtils.get_current_date_time().date())
         return cls.__find_bookings_by_date(cls, date)
-
-    def __find_bookings_by_date(self, date):
-        """Bookings by date and return JSON 
-        response (private method)
-        Parameters
-        ----------
-        date: The date in format %y-%m-%d i.e. 2024-09-07
-        """
-        today = dt_date.today()
-        queryset = None
-
-        try:
-            # Try to parse provided date
-            query_date = datetime.strptime(date, "%Y-%m-%d").date()
-            # If successful, filter by that date
-            queryset = Reservation.objects.order_by('reservation_slot').filter(reservation_date=query_date)
-            logger.info('GET by date (%s) Query set results: %s', query_date, list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot')))
-        except (TypeError, ValueError):
-            # If date is None or invalid, show all bookings after today
-            queryset = Reservation.objects.order_by('reservation_slot').filter(reservation_date__gt=today)
-            logger.info('GET by future date (after %s) Query set results: %s', today, list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot')))
-
-        data = list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot'))
-
-        return JsonResponse({
-            'message': 'success',
-            'reservations': data
-        })
 
     @classmethod
     def edit_reservation(cls, request, reservation_id):
@@ -140,8 +99,8 @@ class Views():
             "reservation": reservation
         })
 
-    @csrf_exempt
-    def bookingsById(request, reservation_id):
+    @classmethod
+    def bookingsById(cls, request, reservation_id):
         """
         GET: Return booking info by id as JSON
         PUT: Update booking info by id from JSON body
@@ -202,8 +161,8 @@ class Views():
             return JsonResponse({"error": "Method not allowed."}, status=405)
         
 
-    @csrf_exempt
-    def save_reservation(request):
+    @classmethod
+    def save_reservation(cls, request):
         """
         Handle saving (creating or updating) a reservation via PUT.
         """
@@ -251,3 +210,30 @@ class Views():
         }
         return JsonResponse(data, status=201)
     
+    def __find_bookings_by_date(self, date):
+        """Bookings by date and return JSON 
+        response (private method)
+        Parameters
+        ----------
+        date: The date in format %y-%m-%d i.e. 2024-09-07
+        """
+        today = dt_date.today()
+        queryset = None
+
+        try:
+            # Try to parse provided date
+            query_date = datetime.strptime(date, "%Y-%m-%d").date()
+            # If successful, filter by that date
+            queryset = Reservation.objects.order_by('reservation_slot').filter(reservation_date=query_date)
+            logger.info('GET by date (%s) Query set results: %s', query_date, list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot')))
+        except (TypeError, ValueError):
+            # If date is None or invalid, show all bookings after today
+            queryset = Reservation.objects.order_by('reservation_slot').filter(reservation_date__gt=today)
+            logger.info('GET by future date (after %s) Query set results: %s', today, list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot')))
+
+        data = list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot'))
+
+        return JsonResponse({
+            'message': 'success',
+            'reservations': data
+        })
