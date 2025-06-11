@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { getCSRFToken } from '../components/Utils';
 
 interface Reservation {
   id: number;
@@ -53,7 +54,10 @@ export const EditReservationPage: React.FC = () => {
     try {
       const response = await fetch(`/api/bookingsById/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken(),
+        },
         body: JSON.stringify({
           first_name: name,
           reservation_date: date,
@@ -63,14 +67,12 @@ export const EditReservationPage: React.FC = () => {
       if (!response.ok) {
         const data = await response.json();
         setError(data.detail || data.error || 'Failed to update reservation');
-        // Stay on edit view, don't change form values
         return;
       }
       setSuccessMsg('Reservation updated successfully!');
       setTimeout(() => navigate('/reservations'), 1200); // Redirect after success
     } catch (err: any) {
       setError(err.message || 'Failed to update reservation');
-      // Stay on edit view, don't change form values
     }
   };
 

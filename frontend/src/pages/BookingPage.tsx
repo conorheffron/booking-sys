@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '../components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { getCSRFToken } from '../components/Utils';
 
 interface BookingFormData {
   first_name: string;
@@ -75,7 +76,8 @@ export const BookingPage: React.FC = () => {
       // Use PUT and the new reservation endpoint
       const response = await fetch('/api/reservations', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 
+          'X-CSRFToken': getCSRFToken(), },
         body: JSON.stringify(form),
       });
       if (!response.ok) {
