@@ -30,13 +30,21 @@ TEMPLATE_DEBUG = False
 if DEBUG is False:
     ALLOWED_HOSTS = ['booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4']
     CSRF_TRUSTED_ORIGINS = ['https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
-                            'https://169.254.129.4']
+                            'https://169.254.129.4' ]
+    CORS_ALLOWED_ORIGINS = ['https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
+                            'https://169.254.129.4' ]
+    CORS_ORIGIN_WHITELIST = ['https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
+                            'https://169.254.129.4' ]
 else:
-    ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = ['http://localhost:8000']
+    CSRF_TRUSTED_ORIGINS = [ 'http://localhost:5173' ]
+    CORS_ALLOWED_ORIGINS = [ 'http://localhost:5173' ]
+    CORS_ORIGIN_WHITELIST = [ 'http://localhost:5173' ]
 
 # Application definition
 
 INSTALLED_APPS = [
+    "compressor",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,7 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
-    'hr',
+    "hr",
 ]
 
 MIDDLEWARE = [
@@ -57,10 +65,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -127,18 +131,22 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "backend/hr/static",
-]
+STATIC_ROOT = os.path.join(BASE_DIR, 'hr', 'static')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles'), ]
 
-# STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'hr/static')
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles'), ]
+APPEND_SLASH = False
+
+MEDIA_URL = '/media/'
+
+ADMIN_MEDIA_PREFIX = '/static/admin/'
+
+STATICFILES_FINDERS = ( 'django.contrib.staticfiles.finders.FileSystemFinder',
+                       'django.contrib.staticfiles.finders.AppDirectoriesFinder',''
+                       'compressor.finders.CompressorFinder', )
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
