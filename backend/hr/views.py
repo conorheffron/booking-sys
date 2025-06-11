@@ -2,6 +2,7 @@
 """
 import logging
 from datetime import datetime, date as dt_date
+import json
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
@@ -10,7 +11,6 @@ from hr.forms import EditReservationForm
 from hr import VERSION
 from .models import Reservation
 from .time_utils import TimeUtils
-import json
 
 logger = logging.getLogger(__name__)
 
@@ -27,13 +27,13 @@ class Views():
         return HttpResponse(str(app_version))
 
     @classmethod
-    def tableView(cls, request:WSGIRequest):
+    def table_view(cls, request:WSGIRequest):
         """GET bookings by date request parameter"""
         date = request.GET.get("date", TimeUtils.get_current_date_time().date())
-        return cls._findBookingsByDate(cls, date)
+        return cls._find_bookings_by_date(cls, date)
 
     @classmethod
-    def editReservation(cls, request, reservation_id):
+    def edit_reservation(cls, request, reservation_id):
         """
         Handle the editing of an existing reservation.
         """
@@ -70,7 +70,7 @@ class Views():
         })
 
     @classmethod
-    def bookingsById(cls, request, reservation_id):
+    def bookings_by_id(cls, request, reservation_id):
         """
         GET: Return booking info by id as JSON
         PUT: Update booking info by id from JSON body
@@ -85,7 +85,6 @@ class Views():
                 "reservation_slot": reservation.reservation_slot,
             }
             return JsonResponse(data, status=200)
-
         elif request.method == "PUT":
             try:
                 body = json.loads(request.body.decode("utf-8"))
@@ -107,7 +106,7 @@ class Views():
                 return JsonResponse(
                     {
                         "error": "Invalid time format for reservation_slot."
-                        }, 
+                        },
                         status=400)
 
             # Prevent double-booking (exclude current reservation)
@@ -132,9 +131,9 @@ class Views():
             return JsonResponse(data, status=200)
         else:
             return JsonResponse({"error": "Method not allowed."}, status=405)
-        
+
     @classmethod
-    def saveReservation(cls, request):
+    def save_reservation(cls, request):
         """
         Handle saving (creating or updating) a reservation via PUT.
         """
@@ -157,7 +156,7 @@ class Views():
         try:
             slot_time = datetime.strptime(reservation_slot, "%I:%M %p").time()
         except Exception:
-            return JsonResponse({"error": "reservation_slot must be in format HH:MM AM/PM"}, 
+            return JsonResponse({"error": "reservation_slot must be in format HH:MM AM/PM"},
                                 status=400)
 
         # Prevent double booking
@@ -182,9 +181,9 @@ class Views():
             "success": True
         }
         return JsonResponse(data, status=201)
-    
+
     @classmethod
-    def _findBookingsByDate(cls, date):
+    def _find_bookings_by_date(cls, date):
         """Bookings by date and return JSON response (private method)"""
         today = dt_date.today()
         queryset = None
@@ -193,17 +192,22 @@ class Views():
             query_date = datetime.strptime(date, "%Y-%m-%d").date()
             queryset = Reservation.objects.order_by('reservation_slot').filter(
                 reservation_date=query_date)
-            logger.info('GET by date (%s) Query set results: %s', 
-                        query_date, 
-                        list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot')))
+            logger.info('GET by date (%s) Query set results: %s',
+                        query_date,
+                        list(queryset.values('id',
+                                             'first_name',
+                                             'reservation_date',
+                                             'reservation_slot')))
         except (TypeError, ValueError):
-            queryset = Reservation.objects.order_by('reservation_slot').filter(reservation_date__gt=today)
-            logger.info('GET by future date (after %s) Query set results: %s', 
-                        today, 
-                        list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot')))
-
+            queryset = Reservation.objects.order_by('reservation_slot').filter(
+                reservation_date__gt=today)
+            logger.info('GET by future date (after %s) Query set results: %s',
+                        today,
+                        list(queryset.values('id',
+                                             'first_name',
+                                             'reservation_date',
+                                             'reservation_slot')))
         data = list(queryset.values('id', 'first_name', 'reservation_date', 'reservation_slot'))
-
         return JsonResponse({
             'message': 'success',
             'reservations': data
