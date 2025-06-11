@@ -27,6 +27,6 @@ pytz==2025.2
 requests==2.32.4
 setuptools==80.9.0
 sqlparse==0.5.3
-tomlkit==0.13.2
+tomlkit==0.13.3
 urllib3==2.4.0
 virtualenv==20.31.2
