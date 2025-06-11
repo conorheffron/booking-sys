@@ -14,26 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path, include
-from hr.views import FrontendAppView
+from django.urls import path, include
 from django.conf import settings
 from django.views.static import serve
+from django.conf.urls.static import static
 from hr import handlers
+from hr.views import Views
 
 handler404 = handlers.Handlers.handler404
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('hr.urls')),
-    # path('api/', include('api.urls')),  # your API URLs
-    # path('static/<path:path>/', serve, {'document_root': settings.STATIC_ROOT, })
-    re_path(r'^(?!api/).*$', FrontendAppView.as_view()),  # everything else to frontend
-]
-
-# from django.urls import path, re_path, include
-# from .views import FrontendAppView
-
-# urlpatterns = [
-#     path('api/', include('api.urls')),  # your API URLs
-#     re_path(r'^(?!api/).*$', FrontendAppView.as_view()),  # everything else to frontend
-# ]
+    path('admin', admin.site.urls),
+    path('api/', include('hr.urls')),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
