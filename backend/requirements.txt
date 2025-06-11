@@ -5,7 +5,7 @@ charset-normalizer==3.4.2
 defusedxml==0.7.1
 dill==0.4.0
 distlib==0.3.9
-Django==5.2.1
+Django==5.2.2
 django-appconf==1.1.0
 django-compressor==4.5.1
 django-cors-headers==4.7.0
@@ -30,8 +30,9 @@ pytz==2025.2
 rcssmin==1.1.2
 requests==2.32.3
 rjsmin==1.2.2
+requests==2.32.4
 setuptools==80.9.0
 sqlparse==0.5.3
-tomlkit==0.13.2
+tomlkit==0.13.3
 urllib3==2.4.0
 virtualenv==20.31.2
