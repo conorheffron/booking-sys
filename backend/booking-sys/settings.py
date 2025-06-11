@@ -16,7 +16,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -28,23 +27,19 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 TEMPLATE_DEBUG = False
 
 if DEBUG is False:
-    ALLOWED_HOSTS = ['booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4']
-    CSRF_TRUSTED_ORIGINS = ['https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
-                            'https://169.254.129.4' ]
-    CORS_ALLOWED_ORIGINS = ['https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
-                            'https://169.254.129.4' ]
-    CORS_ORIGIN_WHITELIST = ['https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
-                            'https://169.254.129.4' ]
+    ALLOWED_HOSTS = [ 'booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4' ]
+    CSRF_TRUSTED_ORIGINS = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net' ]
+    CORS_ALLOWED_ORIGINS = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net' ]
+    CORS_ORIGIN_WHITELIST = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net' ]
     CORS_ALLOW_ALL_ORIGINS = False
 else:
-    ALLOWED_HOSTS = ['*']
-    CSRF_TRUSTED_ORIGINS = [ '*' ]
-    CORS_ALLOWED_ORIGINS = [ '*' ]
-    CORS_ORIGIN_WHITELIST = [ '*' ]
-    CORS_ALLOW_ALL_ORIGINS = True
+    ALLOWED_HOSTS = [ 'localhost:8000', 'localhost' ]
+    CORS_ALLOWED_ORIGINS = [ 'http://localhost:5173' ]
+    CSRF_TRUSTED_ORIGINS = [ 'http://localhost:5173' ]
+    CORS_ORIGIN_WHITELIST = [ 'http://localhost:5173' ]
+    CORS_ALLOW_ALL_ORIGINS = False
 
 # Application definition
-
 INSTALLED_APPS = [
     "compressor",
     "django.contrib.admin",
