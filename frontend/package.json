@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
+    "test": "jest",
     "serve": "vite preview --port 5000"
   },
   "dependencies": {
@@ -17,9 +18,13 @@
     "react-router-dom": "^7.6.2"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^30.0.0",
+    "ts-jest": "^29.3.4",
     "typescript": "^5.3.3",
     "vite": "^5.4.19"
   }
