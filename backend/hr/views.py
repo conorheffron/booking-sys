@@ -182,8 +182,7 @@ class Views():
         }
         return JsonResponse(data, status=201)
 
-    @classmethod
-    def _find_bookings_by_date(cls, date):
+    def _find_bookings_by_date(self, date):
         """Bookings by date and return JSON response (private method)"""
         today = dt_date.today()
         queryset = None
