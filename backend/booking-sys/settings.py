@@ -35,11 +35,13 @@ if DEBUG is False:
                             'https://169.254.129.4' ]
     CORS_ORIGIN_WHITELIST = ['https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
                             'https://169.254.129.4' ]
+    CORS_ALLOW_ALL_ORIGINS = False
 else:
-    ALLOWED_HOSTS = ['http://localhost:8000']
-    CSRF_TRUSTED_ORIGINS = [ 'http://localhost:5173' ]
-    CORS_ALLOWED_ORIGINS = [ 'http://localhost:5173' ]
-    CORS_ORIGIN_WHITELIST = [ 'http://localhost:5173' ]
+    ALLOWED_HOSTS = ['*']
+    CSRF_TRUSTED_ORIGINS = [ '*' ]
+    CORS_ALLOWED_ORIGINS = [ '*' ]
+    CORS_ORIGIN_WHITELIST = [ '*' ]
+    CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
