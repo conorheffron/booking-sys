@@ -8,74 +8,35 @@ from hr.views import Views
 
 @pytest.mark.django_db
 class ViewsApiTests(TestCase):
+    """HR Tests ViewsApiTests
+    Parameters
+    ----------
+    TestCase : Inherits TestCase functions
+    """
+
     def setUp(self):
+        """HR Tests setUp"""
         self.factory = RequestFactory()
         self.reservation = Reservation.objects.create(
             first_name="Taylor",
             reservation_date=date.today() + timedelta(days=1),
-            reservation_slot="12:00:00")
+            reservation_slot="12:00:00"
+        )
 
-    def test_version_success(self):
-        """HR Test case test_version_success
-        Parameters
-        ----------
-        self : TestCase
-        """
-        # given
+    def testVersionSuccess(self):
+        """HR Test case testVersionSuccess"""
         request = self.factory.get('/version')
-
-        # when
         response = Views.version(request)
-
-        # then
         app_version = response.content.decode()
-        # status code check
         self.assertEqual(response.status_code, 200)
-        # assert if pattern match is true
         version_regex = r'\d\.\d\.\d'
         pattern = re.compile(version_regex)
         match = bool(pattern.match(app_version))
         self.assertTrue(match)
-        # assert regular expression pattern match directly with django.test
         self.assertRegex(app_version, version_regex)
 
-    # def test_handler404_success(self):
-    #     """HR Test case test_handler404_success
-    #     Parameters
-    #     ----------
-    #     self : TestCase
-    #     """
-    #     # when
-    #     response = self.client.get('/api/invalid')
-
-    #     # then
-    #     self.assertContains(response, '<div class="row justify-content-center">\n' +
-    #                         '            ' + 
-    #                         '<div class="col-md-8 col-lg-6">\n' + 
-    #                         '                ' + 
-    #                         '<div class="card text-center shadow-sm">\n' + 
-    #                         '                    ' + 
-    #                         '<div class="card-body">\n' + 
-    #                         '                        ' + 
-    #                         '<h1 class="display-4 text-danger mb-4">Page Not Found</h1>\n' + 
-    #                         '                        ' + 
-    #                         '<p class="lead">' + 
-    #                             'The requested URL <code>/reservations/invalid</code>' +
-    #                         ' was not found on this server.' + 
-    #                         '</p>\n                        ' + 
-    #                         '<a href="/" class="btn btn-primary mt-3">Return Home</a>\n' + 
-    #                         '                    ' + 
-    #                         '</div>\n                ' + 
-    #                         '</div>\n            ' + 
-    #                         '</div>\n        ' + 
-    #                         '</div>\n    ' + 
-    #                         '</div>\n' + 
-    #                         '</body>\n' + 
-    #                         '</html>\n', 
-    #                         status_code=404 )
-    #     self.assertTemplateUsed(response, 'error.html')
-
-    def test_bookingsById_get_success(self):
+    def testBookingsByIdGetSuccess(self):
+        """HR Test case testBookingsByIdGetSuccess"""
         request = self.factory.get(f"/api/reservations/{self.reservation.id}/")
         response = Views.bookingsById(request, self.reservation.id)
         assert response.status_code == 200
@@ -83,13 +44,14 @@ class ViewsApiTests(TestCase):
         assert data["first_name"] == "Taylor"
         assert data["id"] == self.reservation.id
 
-    def test_bookingsById_get_404(self):
+    def testBookingsByIdGet404(self):
+        """HR Test case testBookingsByIdGet404"""
         request = self.factory.get("/api/reservations/9999/")
         with pytest.raises(Exception):
             Views.bookingsById(request, 9999)
 
-    def test_bookingsById_put_success(self):
-        # Update the reservation with valid data
+    def testBookingsByIdPutSuccess(self):
+        """HR Test case testBookingsByIdPutSuccess"""
         payload = {
             "first_name": "Bob",
             "reservation_date": str(self.reservation.reservation_date),
@@ -107,8 +69,8 @@ class ViewsApiTests(TestCase):
         assert data["reservation_slot"] == "01:30 PM"
         assert data["success"] is True
 
-    def test_bookingsById_put_missing_fields(self):
-        # Missing first_name
+    def testBookingsByIdPutMissingFields(self):
+        """HR Test case testBookingsByIdPutMissingFields"""
         payload = {
             "reservation_date": str(self.reservation.reservation_date),
             "reservation_slot": "01:30 PM"
@@ -123,7 +85,8 @@ class ViewsApiTests(TestCase):
         data = json.loads(response.content.decode())
         assert "All fields are required." in data["error"]
 
-    def test_bookingsById_put_invalid_time_format(self):
+    def testBookingsByIdPutInvalidTimeFormat(self):
+        """HR Test case testBookingsByIdPutInvalidTimeFormat"""
         payload = {
             "first_name": "Charlie",
             "reservation_date": str(self.reservation.reservation_date),
@@ -139,8 +102,8 @@ class ViewsApiTests(TestCase):
         data = json.loads(response.content.decode())
         assert "Invalid time format" in data["error"]
 
-    def test_bookingsById_put_conflict(self):
-        # Create another reservation on a different slot
+    def testBookingsByIdPutConflict(self):
+        """HR Test case testBookingsByIdPutConflict"""
         Reservation.objects.create(
             first_name="Eve",
             reservation_date=self.reservation.reservation_date,
@@ -161,14 +124,16 @@ class ViewsApiTests(TestCase):
         data = json.loads(response.content.decode())
         assert "Already Reserved" in data["error"]
 
-    def test_bookingsById_method_not_allowed(self):
+    def testBookingsByIdMethodNotAllowed(self):
+        """HR Test case testBookingsByIdMethodNotAllowed"""
         request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
         response = Views.bookingsById(request, self.reservation.id)
         assert response.status_code == 405
         data = json.loads(response.content.decode())
         assert "Method not allowed" in data["error"]
 
-    def test_bookingsById_invalid_json(self):
+    def testBookingsByIdInvalidJson(self):
+        """HR Test case testBookingsByIdInvalidJson"""
         request = self.factory.put(
             f"/api/reservations/{self.reservation.id}/",
             data="not a json",
@@ -178,7 +143,8 @@ class ViewsApiTests(TestCase):
         assert response.status_code == 400
         assert "Invalid JSON body" in json.loads(response.content.decode())["error"]
 
-    def test_save_reservation_success(self):
+    def testSaveReservationSuccess(self):
+        """HR Test case testSaveReservationSuccess"""
         payload = {
             "first_name": "TestGuy",
             "reservation_date": str(date.today() + timedelta(days=3)),
@@ -189,14 +155,14 @@ class ViewsApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.save_reservation(request)
+        response = Views.saveReservation(request)
         assert response.status_code == 201
         data = json.loads(response.content.decode())
         assert data["first_name"] == "TestGuy"
         assert data["success"] is True
 
-    def test_save_reservation_duplicate(self):
-        # Create a reservation so that the next one conflicts
+    def testSaveReservationDuplicate(self):
+        """HR Test case testSaveReservationDuplicate"""
         slot_time = "03:00 PM"
         res_date = str(date.today() + timedelta(days=2))
         Reservation.objects.create(
@@ -214,28 +180,31 @@ class ViewsApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.save_reservation(request)
+        response = Views.saveReservation(request)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
         assert "Already Reserved" in data["error"]
 
-    def test_save_reservation_bad_method(self):
+    def testSaveReservationBadMethod(self):
+        """HR Test case testSaveReservationBadMethod"""
         request = self.factory.get("/api/save_reservation/")
-        response = Views.save_reservation(request)
+        response = Views.saveReservation(request)
         assert response.status_code == 405
         assert "Method not allowed" in json.loads(response.content.decode())["error"]
 
-    def test_save_reservation_invalid_json(self):
+    def testSaveReservationInvalidJson(self):
+        """HR Test case testSaveReservationInvalidJson"""
         request = self.factory.put(
             "/api/save_reservation/",
             data="bad json",
             content_type="application/json"
         )
-        response = Views.save_reservation(request)
+        response = Views.saveReservation(request)
         assert response.status_code == 400
         assert "Invalid JSON body" in json.loads(response.content.decode())["error"]
 
-    def test_save_reservation_missing_fields(self):
+    def testSaveReservationMissingFields(self):
+        """HR Test case testSaveReservationMissingFields"""
         payload = {
             "first_name": "MissingFields"
             # missing date and slot
@@ -245,11 +214,12 @@ class ViewsApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.save_reservation(request)
+        response = Views.saveReservation(request)
         assert response.status_code == 400
         assert "All fields are required" in json.loads(response.content.decode())["error"]
 
-    def test_save_reservation_invalid_time(self):
+    def testSaveReservationInvalidTime(self):
+        """HR Test case testSaveReservationInvalidTime"""
         payload = {
             "first_name": "Test",
             "reservation_date": str(date.today() + timedelta(days=1)),
@@ -260,6 +230,6 @@ class ViewsApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.save_reservation(request)
+        response = Views.saveReservation(request)
         assert response.status_code == 400
         assert "reservation_slot must be in format" in json.loads(response.content.decode())["error"]
