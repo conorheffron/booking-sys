@@ -87,7 +87,7 @@ class HrTests(TestCase):
         self.assertContains(response,
                             '<td>1</td>\n                                        '
                             '<td>Taylor</td>\n                                        '
-                            '<td>2025-06-08</td>\n                                        '
+                            '<td>' + test_date + '</td>\n                                        '
                             '<td>10:00:00</td>', 
                             status_code=200)
         self.assertTemplateUsed(response, 'reservations.html')
