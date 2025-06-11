@@ -87,7 +87,7 @@ class HrTests(TestCase):
         self.assertContains(response,
                             '<td>1</td>\n                                        '
                             '<td>Taylor</td>\n                                        '
-                            '<td>2025-06-08</td>\n                                        '
+                            '<td>' + test_date + '</td>\n                                        '
                             '<td>10:00:00</td>', 
                             status_code=200)
         self.assertTemplateUsed(response, 'reservations.html')
@@ -187,7 +187,13 @@ class HrTests(TestCase):
                     "id": 2, 
                     "first_name": test_name, 
                     "reservation_date": test_date, 
-                    "reservation_slot": test_time + ":00"}]}),
+                    "reservation_slot": test_time + ":00"},
+                {
+                    "id": 1, 
+                    "first_name": "Taylor", 
+                    "reservation_date": test_date, 
+                    "reservation_slot": "10:00:00"
+                }]}),
                 status_code=200)
 
     def test_booking_in_past_fail(self):
