@@ -5,9 +5,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://0.0.0.0:8000',
-      '/admin': 'http://0.0.0.0:8000',
-      '/static/admin': 'http://0.0.0.0:8000',
+      '/api': 'http://172.205.101.70:8000',
+      '/admin': 'http://172.205.101.70:8000',
+      '/static/admin': 'http://172.205.101.70:8000',
     },
   },
 });
