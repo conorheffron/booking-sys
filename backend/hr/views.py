@@ -247,8 +247,10 @@ class Views():
 
         try:
             query_date = datetime.strptime(date, "%Y-%m-%d").date()
-            queryset = Reservation.objects.order_by('reservation_slot').filter(
-                reservation_date=query_date)
+            # Order by reservation_date DESC, reservation_slot DESC for most recent to top
+            queryset = Reservation.objects.filter(
+                reservation_date=query_date
+            ).order_by('-reservation_date', '-reservation_slot')
             logger.info('GET by date (%s) Query set results: %s',
                         query_date,
                         list(queryset.values('id',
@@ -256,8 +258,9 @@ class Views():
                                              'reservation_date',
                                              'reservation_slot')))
         except (TypeError, ValueError):
-            queryset = Reservation.objects.order_by('reservation_slot').filter(
-                reservation_date__gt=today)
+            queryset = Reservation.objects.filter(
+                reservation_date__gt=today
+            ).order_by('-reservation_date', '-reservation_slot')
             logger.info('GET by future date (after %s) Query set results: %s',
                         today,
                         list(queryset.values('id',
