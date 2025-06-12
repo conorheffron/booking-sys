@@ -13,8 +13,21 @@ python3, django 5 admin/framework, django.test, & MySQL Server / Sqlite2
 #### - Update 'DEBUG' in .env to True
 ```shell
 docker image build -t booking-sys .
-docker compose up -d  
+docker compose up -d
 docker compose down
+```
+
+##### Expose API & UI
+```shell
+docker build -t booking-sys .
+docker run -p 8000:8000 -p 5173:5173 booking-sys
+```
+
+##### Expose UI only oustide container
+```shell
+# dont need to expose API, can reach within container
+docker build -t booking-sys .
+docker run -p 5173:5173 booking-sys
 ```
 
 ## Generate requirements.txt
@@ -24,7 +37,7 @@ pipenv run pip freeze > requirements.txt
 
 ## Build Steps for pip environment.
 ```shell
-cd booking-sys
+cd booking-sys/backend/
 sudo pipenv shell
 pipenv install -r  requirements.txt
 ```
@@ -66,8 +79,8 @@ python3 manage.py test
 
 ## Run Test Class or specific Test Case
 ```shell
-python3 manage.py test hr.test_views.HrTests
-python3 manage.py test hr.test_views.HrTests.test_create_booking
+python3 manage.py test hr.test_views.ViewsApiTests
+python3 manage.py test hr.test_views.ViewsApiTests.test_version_success
 python3 manage.py test hr.test_forms.TestEditReservationForm
 python3 manage.py test hr.test_forms.TestReservationForm
 ```
