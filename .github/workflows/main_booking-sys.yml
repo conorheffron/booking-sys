@@ -42,7 +42,7 @@ jobs:
 
       - name: Build and Push Docker image to ACR
         run: |
-          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/booking-sys:${{ github.sha }} -f booking-sys/Dockerfile booking-sys
+          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/booking-sys:${{ github.sha }} -f Dockerfile booking-sys
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/booking-sys:${{ github.sha }}
 
       - name: Deploy to Azure Web App
