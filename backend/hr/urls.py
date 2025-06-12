@@ -5,6 +5,8 @@ from django.urls import path
 from hr.views import Views
 
 urlpatterns = [
+    path('csrf/', Views.csrf),
+
     path('version/', Views.version, name='version'),
 
     path('bookings/<str:date>', Views.table_view, name='bookings_by_date_api'),
@@ -16,3 +18,4 @@ urlpatterns = [
     path('reservations', Views.save_reservation, name='save_reservation'),
     path('reservations/edit/<int:reservation_id>/', Views.edit_reservation, name='edit_reservation')
 ]
+

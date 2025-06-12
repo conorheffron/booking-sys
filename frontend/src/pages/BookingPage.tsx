@@ -71,7 +71,7 @@ export const BookingPage: React.FC = () => {
       const response = await fetch('/api/reservations', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 
-          'X-CSRFToken': getCSRFToken(), },
+          'X-CSRFToken': await getCSRFToken(), },
         body: JSON.stringify(form),
       });
       if (!response.ok) {

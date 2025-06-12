@@ -50,7 +50,7 @@ export const EditReservationPage: React.FC = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': getCSRFToken(),
+          'X-CSRFToken': await getCSRFToken(),
         },
         body: JSON.stringify({
           first_name: name,

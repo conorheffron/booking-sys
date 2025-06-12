@@ -10,7 +10,10 @@ export function getSlots(): string[] {
   return slots;
 }
 
-export function getCSRFToken(): string {
-  const match = document.cookie.match(/csrftoken=([^;]+)/);
-  return match ? match[1] : '';
-}
+export async function getCSRFToken() {
+    const response = await fetch('/api/csrf/', {
+        credentials: 'include', // Ensures cookies are sent
+    });
+    const data = await response.json();
+    return data.csrfToken;
+};

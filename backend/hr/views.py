@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 from hr.forms import EditReservationForm
 from hr import VERSION
 from .models import Reservation
@@ -17,6 +18,10 @@ logger = logging.getLogger(__name__)
 class Views():
     """Views class for Views Mapping & Logic
     """
+
+    @ensure_csrf_cookie
+    def csrf(request):
+        return JsonResponse({'csrfToken': request.META.get('CSRF_COOKIE', '')})
 
     @classmethod
     def version(cls, request:WSGIRequest):
