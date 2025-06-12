@@ -16,7 +16,7 @@ RUN pip install --upgrade pip && pip install -r backend/requirements.txt
 
 # Node dependencies
 COPY frontend/package*.json ./frontend/
-RUN cd frontend && npm install
+RUN cd ./frontend/ && npm install
 
 # Copy all source code
 COPY backend/ ./backend/
