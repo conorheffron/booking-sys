@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getCSRFToken } from '../components/Utils';
+import { getCSRFToken, getSlots } from '../components/Utils';
 
 interface Reservation {
   id: number;
@@ -10,6 +10,8 @@ interface Reservation {
   reservation_date: string;
   reservation_slot: string;
 }
+
+const slots = getSlots();
 
 export const EditReservationPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,14 +22,6 @@ export const EditReservationPage: React.FC = () => {
   const [date, setDate] = useState('');
   const [slot, setSlot] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-
-  // Hardcoded slots
-  const slots = [
-    '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
-    '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM',
-    '04:30 PM', '05:00 PM', '05:30 PM', '06:00 PM',
-    '06:30 PM', '07:00 PM'
-  ];
 
   // Fetch reservation by ID
   useEffect(() => {

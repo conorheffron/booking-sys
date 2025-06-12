@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '../components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getCSRFToken } from '../components/Utils';
+import { getCSRFToken, getSlots } from '../components/Utils';
 
 interface BookingFormData {
   first_name: string;
   reservation_date: string;
   reservation_slot: string;
 }
+
+const slots = getSlots();
 
 interface Booking extends BookingFormData {}
 
@@ -22,14 +24,6 @@ export const BookingPage: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<string>('');
-
-  // Hardcoded slots
-  const slots = [
-    '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
-    '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM',
-    '04:30 PM', '05:00 PM', '05:30 PM', '06:00 PM',
-    '06:30 PM', '07:00 PM'
-  ];
 
   // Fetch bookings for the selected form date
   const fetchBookings = async (date: string) => {
