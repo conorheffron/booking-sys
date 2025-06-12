@@ -7,7 +7,6 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
 from hr.forms import EditReservationForm
 from hr import VERSION
 from .models import Reservation
@@ -19,8 +18,8 @@ class Views():
     """Views class for Views Mapping & Logic
     """
 
-    @ensure_csrf_cookie
-    def csrf(self, request):
+    @classmethod
+    def csrf(cls, request:WSGIRequest):
         """GET CSRF Token / Cookie Value from incoming requests"""
         return JsonResponse({'csrfToken': request.META.get('CSRF_COOKIE', '')})
 
