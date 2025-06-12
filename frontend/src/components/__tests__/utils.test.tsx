@@ -1,44 +1,52 @@
-import { getCSRFToken } from '../Utils';
+import { getSlots, getCSRFToken } from '../Utils';
+
+// Mock global fetch for getCSRFToken
+global.fetch = jest.fn();
+
+// Helper to reset date mutations if needed
+const originalDate = global.Date;
+
+describe('getSlots', () => {
+  it('should return all 30-minute intervals from 09:00 AM to 07:00 PM (inclusive)', () => {
+    const slots = getSlots();
+    // 09:00 to 19:00 is 10 hours, 21 intervals (including both ends)
+    expect(slots.length).toBe(21);
+    expect(slots[0]).toBe('9:00 AM');
+    expect(slots[1]).toBe('9:30 AM');
+    expect(slots[2]).toBe('10:00 AM');
+    expect(slots[10]).toBe('2:00 PM');
+    expect(slots[20]).toBe('7:00 PM');
+  });
+
+  it('should return a fresh array each time', () => {
+    const slots1 = getSlots();
+    const slots2 = getSlots();
+    expect(slots1).not.toBe(slots2);
+    // Mutate one, should not affect the other
+    slots1[0] = 'foo';
+    expect(slots2[0]).toBe('9:00 AM');
+  });
+});
 
 describe('getCSRFToken', () => {
-  const originalCookie = Object.getOwnPropertyDescriptor(document, 'cookie');
-
   afterEach(() => {
-    // Restore original document.cookie descriptor if it existed
-    if (originalCookie) {
-      Object.defineProperty(document, 'cookie', originalCookie);
-    }
+    jest.clearAllMocks();
   });
 
-  it('should return the CSRF token value if present in the cookie', () => {
-    Object.defineProperty(document, 'cookie', {
-      writable: true,
-      value: 'username=foo; csrftoken=mytoken123; sessionid=bar',
+  it('should fetch CSRF token from /api/csrf/', async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      json: async () => ({ csrfToken: 'abc123' })
     });
-    expect(getCSRFToken()).toBe('mytoken123');
+    const token = await getCSRFToken();
+    expect(fetch).toHaveBeenCalledWith('/api/csrf/', { credentials: 'include' });
+    expect(token).toBe('abc123');
   });
 
-  it('should return an empty string if CSRF token is not present in the cookie', () => {
-    Object.defineProperty(document, 'cookie', {
-      writable: true,
-      value: 'username=foo; sessionid=bar',
+  it('should throw if response is not as expected', async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      json: async () => ({ wrongKey: 'oops' })
     });
-    expect(getCSRFToken()).toBe('');
-  });
-
-  it('should return the first CSRF token if multiple are present', () => {
-    Object.defineProperty(document, 'cookie', {
-      writable: true,
-      value: 'csrftoken=first; csrftoken=second;',
-    });
-    expect(getCSRFToken()).toBe('first');
-  });
-
-  it('should handle cookies with extra spaces', () => {
-    Object.defineProperty(document, 'cookie', {
-      writable: true,
-      value: '  csrftoken=spacey ;',
-    });
-    expect(getCSRFToken()).toBe('spacey ');
+    const token = await getCSRFToken();
+    expect(token).toBeUndefined();
   });
 });

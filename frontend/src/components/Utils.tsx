@@ -1,13 +1,21 @@
-// Hardcoded slots
-const slots = [
-  '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
-  '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM',
-  '04:30 PM', '05:00 PM', '05:30 PM', '06:00 PM',
-  '06:30 PM', '07:00 PM'
-];
-  
+// Generate all 30-minute intervals between 09:00 AM and 07:00 PM
+const slots: string[] = [];
+let start = new Date();
+start.setHours(9, 0, 0, 0); // 9:00 AM
+const end = new Date();
+end.setHours(19, 0, 0, 0); // 7:00 PM
+
+while (start <= end) {
+  // Format time as "hh:mm AM/PM"
+  const hours = start.getHours() % 12 === 0 ? 12 : start.getHours() % 12;
+  const minutes = start.getMinutes().toString().padStart(2, '0');
+  const ampm = start.getHours() < 12 ? 'AM' : 'PM';
+  slots.push(`${hours}:${minutes} ${ampm}`);
+  start.setMinutes(start.getMinutes() + 30);
+}
+
 export function getSlots(): string[] {
-  return slots;
+  return [...slots];
 }
 
 export async function getCSRFToken() {
