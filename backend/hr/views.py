@@ -1,7 +1,7 @@
 """booking-sys views Mapping & Logic
 """
 import logging
-from datetime import datetime, date as dt_date
+from datetime import datetime, date as dt_date, time as dt_time
 import json
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -41,8 +41,21 @@ class Views():
     def edit_reservation(cls, request, reservation_id):
         """
         Handle the editing of an existing reservation.
+        Do not allow editing of past bookings.
         """
         reservation = get_object_or_404(Reservation, pk=reservation_id)
+
+        # Block editing of past bookings
+        now = datetime.now()
+        # Combine date and time for comparison
+        reservation_datetime = datetime.combine(reservation.reservation_date, reservation.reservation_slot)
+        if reservation_datetime < now:
+            return render(request, "edit_reservation.html", {
+                "form": None,
+                "reservation": reservation,
+                "error": "Editing past bookings is not allowed."
+            })
+
         if request.method == "POST":
             form = EditReservationForm(request.POST)
             if form.is_valid():
@@ -58,6 +71,15 @@ class Views():
                         "form": form,
                         "reservation": reservation,
                         "error": "Booking Failed: Already Reserved."
+                    })
+
+                # Prevent editing to a past date/time
+                new_datetime = datetime.combine(reservation_date, reservation_slot)
+                if new_datetime < now:
+                    return render(request, "edit_reservation.html", {
+                        "form": form,
+                        "reservation": reservation,
+                        "error": "You cannot update a reservation to a past date/time."
                     })
 
                 reservation.reservation_date = reservation_date
@@ -79,6 +101,8 @@ class Views():
         """
         GET: Return booking info by id as JSON
         PUT: Update booking info by id from JSON body
+        - Do not allow editing of past bookings
+        - Do not allow updating to a past date/time
         """
         reservation = get_object_or_404(Reservation, pk=reservation_id)
 
@@ -87,10 +111,15 @@ class Views():
                 "id": reservation.id,
                 "first_name": reservation.first_name,
                 "reservation_date": str(reservation.reservation_date),
-                "reservation_slot": reservation.reservation_slot,
+                "reservation_slot": reservation.reservation_slot.strftime("%I:%M %p") if isinstance(reservation.reservation_slot, dt_time) else str(reservation.reservation_slot),
             }
             return JsonResponse(data, status=200)
         elif request.method == "PUT":
+            now = datetime.now()
+            # Block editing of past bookings
+            original_datetime = datetime.combine(reservation.reservation_date, reservation.reservation_slot)
+            if original_datetime < now:
+                return JsonResponse({"error": "Editing past bookings is not allowed."}, status=400)
             try:
                 body = json.loads(request.body.decode("utf-8"))
             except Exception:
@@ -121,6 +150,17 @@ class Views():
             ).exclude(pk=reservation_id).exists():
                 return JsonResponse({"error": "Booking Failed: Already Reserved."}, status=400)
 
+            # Prevent updating reservation to a past date/time
+            try:
+                new_datetime = datetime.combine(
+                    datetime.strptime(reservation_date, "%Y-%m-%d").date(),
+                    slot_time
+                )
+            except Exception:
+                return JsonResponse({"error": "Invalid reservation_date or reservation_slot."}, status=400)
+            if new_datetime < now:
+                return JsonResponse({"error": "Cannot update reservation to a past date/time."}, status=400)
+
             reservation.first_name = first_name
             reservation.reservation_date = reservation_date
             reservation.reservation_slot = slot_time
@@ -141,6 +181,7 @@ class Views():
     def save_reservation(cls, request):
         """
         Handle saving (creating or updating) a reservation via PUT.
+        Do not allow new reservations for past date/time.
         """
         if request.method != "PUT":
             return JsonResponse({"error": "Method not allowed."}, status=405)
@@ -163,6 +204,18 @@ class Views():
         except Exception:
             return JsonResponse({"error": "reservation_slot must be in format HH:MM AM/PM"},
                                 status=400)
+
+        # Prevent reservation for past date/time
+        try:
+            reservation_datetime = datetime.combine(
+                datetime.strptime(reservation_date, "%Y-%m-%d").date(),
+                slot_time
+            )
+        except Exception:
+            return JsonResponse({"error": "Invalid reservation_date or reservation_slot."}, status=400)
+        now = datetime.now()
+        if reservation_datetime < now:
+            return JsonResponse({"error": "Cannot make a reservation for a past date/time."}, status=400)
 
         # Prevent double booking
         if Reservation.objects.filter(
