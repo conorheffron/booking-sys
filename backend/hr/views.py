@@ -20,7 +20,8 @@ class Views():
     """
 
     @ensure_csrf_cookie
-    def csrf(request):
+    def csrf(self, request):
+        """GET CSRF Token / Cookie Value from incoming requests"""
         return JsonResponse({'csrfToken': request.META.get('CSRF_COOKIE', '')})
 
     @classmethod

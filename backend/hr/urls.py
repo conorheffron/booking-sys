@@ -18,4 +18,3 @@ urlpatterns = [
     path('reservations', Views.save_reservation, name='save_reservation'),
     path('reservations/edit/<int:reservation_id>/', Views.edit_reservation, name='edit_reservation')
 ]
-

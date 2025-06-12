@@ -33,7 +33,7 @@ if DEBUG is False:
     CORS_ORIGIN_WHITELIST = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net' ]
     CORS_ALLOW_ALL_ORIGINS = False
     CSRF_COOKIE_SECURE = True  # Set to True in production with HTTPS
-    CSRF_COOKIE_SAMESITE = 'Strict'  
+    CSRF_COOKIE_SAMESITE = 'Strict'
 else:
     ALLOWED_HOSTS = [ 'localhost:8000', '0.0.0.0', 'localhost', '127.0.0.1' ]
     CORS_ALLOWED_ORIGINS = [ 'http://localhost:5173', 'http://127.0.0.1:5173' ]
@@ -41,7 +41,7 @@ else:
     CORS_ORIGIN_WHITELIST = [ 'http://localhost:5173', 'http://127.0.0.1:5173' ]
     CORS_ALLOW_ALL_ORIGINS = False
     CSRF_COOKIE_SECURE = False
-    CSRF_COOKIE_SAMESITE = 'Lax'  
+    CSRF_COOKIE_SAMESITE = 'Lax'
 
 # Application definition
 INSTALLED_APPS = [
