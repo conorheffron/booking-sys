@@ -11,16 +11,16 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Python dependencies
-COPY backend/requirements.txt ./backend/
-RUN pip install --upgrade pip && pip install -r backend/requirements.txt
+COPY backend/requirements.txt /app/backend/
+RUN pip install --upgrade pip && pip install -r /app/backend/requirements.txt
 
 # Node dependencies
-COPY frontend/package*.json ./frontend/
-RUN cd /app/frontend/ && npm install
+COPY frontend/package*.json /app/frontend/
+RUN npm --prefix /app/frontend install
 
 # Copy all source code
-COPY backend/ ./backend/
-COPY frontend/ ./frontend/
+COPY backend/ /app/backend/
+COPY frontend/ /app/frontend/
 
 # Entrypoint script to run backend, then frontend
 COPY entrypoint.sh /entrypoint.sh
