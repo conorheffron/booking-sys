@@ -28,9 +28,9 @@ TEMPLATE_DEBUG = False
 
 if DEBUG is False:
     ALLOWED_HOSTS = [ '0.0.0.0:8000', '0.0.0.0', 'booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.130.3' ]
-    CSRF_TRUSTED_ORIGINS = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4', '169.254.129.4:5173' ]
-    CORS_ALLOWED_ORIGINS = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4', '169.254.129.4:5173' ]
-    CORS_ORIGIN_WHITELIST = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4', '169.254.129.4:5173' ]
+    CSRF_TRUSTED_ORIGINS = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://169.254.129.4', 'http://169.254.129.4:5173' ]
+    CORS_ALLOWED_ORIGINS = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://169.254.129.4', 'http://169.254.129.4:5173' ]
+    CORS_ORIGIN_WHITELIST = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://169.254.129.4', 'http://169.254.129.4:5173' ]
     CORS_ALLOW_ALL_ORIGINS = False
     CSRF_COOKIE_SECURE = True  # Set to True in production with HTTPS
     CSRF_COOKIE_SAMESITE = 'Strict'
