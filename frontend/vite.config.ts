@@ -5,9 +5,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
-      '/admin': 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
-      '/static/admin': 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net',
+      '/api': 'http://0.0.0.0:8000',
+      '/admin': 'http://0.0.0.0:8000',
+      '/static/admin': 'http://0.0.0.0:8000',
     },
   },
 });
