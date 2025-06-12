@@ -27,7 +27,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 TEMPLATE_DEBUG = False
 
 if DEBUG is False:
-    ALLOWED_HOSTS = [ '0.0.0.0:8000', '0.0.0.0', 'booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.130.3', '169.254.130.3:8000' ]
+    ALLOWED_HOSTS = [ '0.0.0.0:8000', '0.0.0.0', 'booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.130.3' ]
     CSRF_TRUSTED_ORIGINS = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4', '169.254.129.4:5173' ]
     CORS_ALLOWED_ORIGINS = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4', '169.254.129.4:5173' ]
     CORS_ORIGIN_WHITELIST = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', '169.254.129.4', '169.254.129.4:5173' ]
