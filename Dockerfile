@@ -1,7 +1,5 @@
 FROM python:3.13-slim AS backend
 
-WORKDIR /app
-
 # Install MySQL and build tools for mysqlclient, plus Node.js for frontend
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -11,16 +9,16 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Python dependencies
-COPY backend/requirements.txt /app/backend/
-RUN pip install --upgrade pip && pip install -r /app/backend/requirements.txt
+COPY backend/requirements.txt /backend/
+RUN pip install --upgrade pip && pip install -r /backend/requirements.txt
 
 # Node dependencies
-COPY frontend/package*.json /app/frontend/
-RUN npm --prefix /app/frontend install
+COPY frontend/package*.json /frontend/
+RUN npm --prefix /frontend install
 
 # Copy all source code
-COPY backend/ /app/backend/
-COPY frontend/ /app/frontend/
+COPY backend/ /backend/
+COPY frontend/ /frontend/
 
 # Entrypoint script to run backend, then frontend
 COPY entrypoint.sh /entrypoint.sh
