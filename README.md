@@ -79,8 +79,8 @@ python3 manage.py test
 
 ## Run Test Class or specific Test Case
 ```shell
-python3 manage.py test hr.test_views.ViewsApiTests
-python3 manage.py test hr.test_views.ViewsApiTests.test_version_success
+python3 manage.py test hr.test_apis.ApiTests
+python3 manage.py test hr.test_apis.ApiTests.test_version_success
 python3 manage.py test hr.test_forms.TestEditReservationForm
 python3 manage.py test hr.test_forms.TestReservationForm
 ```

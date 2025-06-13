@@ -14,9 +14,15 @@ const slots = getSlots();
 interface Booking extends BookingFormData {}
 
 export const BookingPage: React.FC = () => {
+  // Get today's date in YYYY-MM-DD format
+  const getToday = () => {
+    const d = new Date();
+    return d.toISOString().split('T')[0];
+  };
+
   const [form, setForm] = useState<BookingFormData>({
     first_name: '',
-    reservation_date: '',
+    reservation_date: getToday(), // Default to today
     reservation_slot: '',
   });
   const [formOutMsg, setFormOutMsg] = useState<string>('');
@@ -59,6 +65,12 @@ export const BookingPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.reservation_date]);
 
+  // On initial mount, ensure bookings for today's date are fetched
+  useEffect(() => {
+    fetchBookings(getToday());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -81,12 +93,7 @@ export const BookingPage: React.FC = () => {
       }
       setFormOutType('success');
       setFormOutMsg('Reservation submitted!');
-      // Reset only name and slot, keep reservation_date
-      setForm({
-        first_name: '',
-        reservation_date: form.reservation_date,
-        reservation_slot: '',
-      });
+      // Do not reset form values
       // Refetch bookings for the selected date
       fetchBookings(form.reservation_date);
       // Do not auto-clear message

@@ -20,6 +20,9 @@ RUN npm --prefix /frontend install
 COPY backend/ /backend/
 COPY frontend/ /frontend/
 
+# Collect Django static files
+RUN cd backend && python manage.py collectstatic --noinput
+
 # Entrypoint script to run backend, then frontend
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

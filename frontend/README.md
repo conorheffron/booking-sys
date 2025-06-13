@@ -59,3 +59,41 @@ If needed, copy `.env.example` to `.env` and update any environment variables.
 ---
 
 Feel free to open issues or pull requests for improvements!
+
+----
+```shell
+(base) frontend % npm test 
+
+> booking-sys-frontend@1.0.0 test
+> jest
+
+ PASS  src/components/__tests__/utils.test.tsx
+ PASS  ./test.tsx
+
+Test Suites: 2 passed, 2 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        0.897 s, estimated 1 s
+Ran all test suites.
+```
+
+```shell
+
+(base) frontend % npm test -- frontend/src/components/__tests__/utils.test.ts
+
+> booking-sys-frontend@1.0.0 test
+> jest frontend/src/components/__tests__/utils.test.ts
+
+ PASS  src/components/__tests__/utils.test.tsx
+  getCSRFToken
+    ✓ should return the CSRF token value if present in the cookie (2 ms)
+    ✓ should return an empty string if CSRF token is not present in the cookie (1 ms)
+    ✓ should return the first CSRF token if multiple are present (1 ms)
+    ✓ should handle cookies with extra spaces (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        0.84 s, estimated 1 s
+Ran all test suites matching /frontend\/src\/components\/__tests__\/utils.test.ts/i.
+```

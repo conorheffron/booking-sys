@@ -30,7 +30,7 @@
             "program": "${workspaceFolder}/backend/manage.py",
             "args": [
                 "test",
-                "hr.test_views.ViewsApiTests",
+                "hr.test_apis.ApiTests",
             ],
             "django": true
         }
