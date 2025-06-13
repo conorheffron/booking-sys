@@ -8,35 +8,30 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write
+
     steps:
-      - name: Azure login
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure
         uses: azure/login@v2
         with:
-          auth-type: IDENTITY
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true
 
-      # Azure CLI Action only supports linux self-hosted runners for now.
-      # If you want to execute the Azure CLI script on a windows self-hosted runner, you can execute it directly in `run`.
-      - name: Azure CLI script
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az account show
-
-      - name: Azure PowerShell script
-        uses: azure/powershell@v2
-        with:
-          azPSVersion: "latest"
-          inlineScript: |
-            Get-AzContext
-
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Set WEBSITES_PORT app setting (5173)
+        run: |
+          az webapp config appsettings set \
+            --name booking-sys \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --settings WEBSITES_PORT=5173
 
       - name: Log in to Azure Container Registry
         uses: azure/docker-login@v1
@@ -47,7 +42,7 @@ jobs:
 
       - name: Build and Push Docker image to ACR
         run: |
-          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/booking-sys:${{ github.sha }} -f Dockerfile .
+          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/booking-sys:${{ github.sha }} -f booking-sys/Dockerfile booking-sys
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/booking-sys:${{ github.sha }}
 
       - name: Deploy to Azure Web App
