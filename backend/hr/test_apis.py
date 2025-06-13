@@ -8,8 +8,8 @@ from hr.models import Reservation
 from hr.views import Views
 
 @pytest.mark.django_db
-class ViewsApiTests(TestCase):
-    """HR Tests ViewsApiTests
+class ApiTests(TestCase):
+    """HR Tests ApiTests
     Parameters
     ----------
     TestCase : Inherits TestCase functions

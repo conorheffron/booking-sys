@@ -35,12 +35,12 @@ if DEBUG is False:
     CSRF_COOKIE_SECURE = True  # Set to True in production with HTTPS
     CSRF_COOKIE_SAMESITE = 'Strict'
 else:
-    ALLOWED_HOSTS = [ 'localhost:8000', '0.0.0.0', 'localhost', '127.0.0.1' ]
-    CORS_ALLOWED_ORIGINS = [ 'http://localhost:5173', 'http://127.0.0.1:5173' ]
-    CSRF_TRUSTED_ORIGINS = [ 'http://localhost:5173', 'http://127.0.0.1:5173' ]
-    CORS_ORIGIN_WHITELIST = [ 'http://localhost:5173', 'http://127.0.0.1:5173' ]
+    ALLOWED_HOSTS = [ 'localhost:8000', '0.0.0.0', 'localhost' ]
+    CORS_ALLOWED_ORIGINS = [ 'http://localhost:5173', 'http://0.0.0.0:5173' ]
+    CSRF_TRUSTED_ORIGINS = [ 'http://localhost:5173', 'http://0.0.0.0:5173' ]
+    CORS_ORIGIN_WHITELIST = [ 'http://localhost:5173', 'http://0.0.0.0:5173' ]
     CORS_ALLOW_ALL_ORIGINS = False
-    CSRF_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_SAMESITE = 'Lax'
 
 # Application definition
@@ -124,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Dublin"
 
 USE_I18N = True
 
