@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://bookingsys.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_37497a4fe64f472591654c02e29ac829 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_96e15f3b47c341fe96dcd9c176e80cf0 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_ef1cc9ea0c014ddf8b0bebfed4c766d3 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_45a4fb0c92794f9bb5b3bb3163c523b2 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: bookingsys.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_37497a4fe64f472591654c02e29ac829 }}/booking-sys:${{ github.sha }}
+        tags: bookingsys.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_ef1cc9ea0c014ddf8b0bebfed4c766d3 }}/booking-sys:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'booking-sys'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_753b96e56d314263a241ad57418fceb3 }}
-        images: 'bookingsys.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_37497a4fe64f472591654c02e29ac829 }}/booking-sys:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_46c834b6172049feb69ea328adadd0ef }}
+        images: 'bookingsys.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_ef1cc9ea0c014ddf8b0bebfed4c766d3 }}/booking-sys:${{ github.sha }}'
