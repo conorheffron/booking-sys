@@ -64,7 +64,7 @@ If needed, copy `.env.example` to `.env` and update any environment variables.
 
 Feel free to open issues or pull requests for improvements!
 
-----
+## Frontend Tests
 ```shell
 (base) frontend % npm test 
 
