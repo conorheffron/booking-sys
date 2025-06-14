@@ -1,5 +1,9 @@
 # Booking System Frontend
 
+[![Build and deploy container app to Azure Web App - booking-sys](https://github.com/conorheffron/booking-sys/actions/workflows/main_booking-sys.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/main_booking-sys.yml)
+
+[![Node.js CI](https://github.com/conorheffron/booking-sys/actions/workflows/node.js.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/node.js.yml)
+
 This is the React + TypeScript frontend for the Booking System, migrated from traditional static assets and templates.
 
 ## Prerequisites
