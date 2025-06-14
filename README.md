@@ -185,11 +185,7 @@ Free to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/l
 ## Functionality Demo
 
 ###  App Home Address
-- [http://localhost:8000/](http://localhost:8000/)
-
-  or 
-
-- [http://localhost:8000/book/](http://localhost:8000/book/)
+- [http://localhost:5173/](http://localhost:5173/)
 
 ###  Make a Reservation Form
 ![reserve](./screenshots/reserve.png?raw=true "Make a Reservation")
@@ -206,19 +202,19 @@ Free to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/l
 ###  Bookings By Date REST API End-point (used for view template above)
 Using `request path variable`:
 
-- [http://localhost:8000/bookings/2024-08-22/](http://localhost:8000/bookings/2024-08-22/)
+- [http://localhost:8000/api/bookings/2024-08-22/](http://localhost:8000/bookings/2024-08-22/)
 
   and
 
-- [http://localhost:8000/bookings/2024-09-01/](http://localhost:8000/bookings/2024-09-01/)
+- [http://localhost:8000/api/bookings/2024-09-01/](http://localhost:8000/bookings/2024-09-01/)
 
 Or using `request parameter 'date'`:
 
-- [http://localhost:8000/bookings?date=2024-08-22](http://localhost:8000/bookings?date=2024-08-22)
+- [http://localhost:8000/api/bookings?date=2024-08-22](http://localhost:8000/bookings?date=2024-08-22)
 
   and
 
-- [http://localhost:8000/bookings?date=2024-09-01](http://localhost:8000/bookings?date=2024-09-01)
+- [http://localhost:8000/api/bookings?date=2024-09-01](http://localhost:8000/bookings?date=2024-09-01)
 
 
 
@@ -335,7 +331,7 @@ mysql> SELECT * FROM hr_reservation;
 
 ####  - Bash for pip / python3
 ```shell
-% pipenv shell              
+% sudo pipenv shell              
 Creating a virtualenv for this project...
 Pipfile: /.../workspace/booking-sys/Pipfile
 Using /usr/local/bin/python3 (3.12.4) to create virtualenv...
