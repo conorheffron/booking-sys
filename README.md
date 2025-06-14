@@ -174,13 +174,10 @@ web-1  | INFO 2025-05-19 20:16:27,605 basehttp 7 140309348484800 "POST / HTTP/1.
 
 ## Alternatively, Debug Django Application
 - Go to 'Run and Debug' View in VS code
-- Select launch.json confirguration 'Python: Current File' & Run
+- Select launch.json confirguration 'Python: Bookings API' & Run
 - Set breakpoints in views.py
 
 ![debug](./screenshots/debug.png?raw=true "Debug GET Bookings Request")
-
-Free to use icon image at: [lemon](https://www.flaticon.com/free-animated-icon/lemon_14385026?term=lemon&page=1&position=5&origin=tag&related_id=14385026)
-
 
 ## Functionality Demo
 
