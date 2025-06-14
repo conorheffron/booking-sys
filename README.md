@@ -1,10 +1,18 @@
 # booking-sys
 
-[![Build and deploy to Azure Web App - booking-sys](https://github.com/conorheffron/booking-sys/actions/workflows/main_booking-sys.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/main_booking-sys.yml)
+[![Build and deploy container app to Azure Web App - booking-sys](https://github.com/conorheffron/booking-sys/actions/workflows/main_booking-sys.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/main_booking-sys.yml)
 
 [![Django CI](https://github.com/conorheffron/booking-sys/actions/workflows/django.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/django.yml)
 
 [![Pylint](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/pylint.yml)
+
+[![Node.js CI](https://github.com/conorheffron/booking-sys/actions/workflows/node.js.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/node.js.yml)
+
+[![Docker Image CI](https://github.com/conorheffron/booking-sys/actions/workflows/docker-image.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/docker-image.yml)
+
+[![Docker Publish](https://github.com/conorheffron/booking-sys/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/docker-publish.yml)
+
+[![CodeQL Advanced](https://github.com/conorheffron/booking-sys/actions/workflows/codeql.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/codeql.yml)
 
 ## Technologies
 python3, django 5 admin/framework, django.test, & MySQL Server / Sqlite2
