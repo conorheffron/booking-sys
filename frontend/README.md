@@ -1,5 +1,9 @@
 # Booking System Frontend
 
+[![Build and deploy container app to Azure Web App - booking-sys](https://github.com/conorheffron/booking-sys/actions/workflows/main_booking-sys.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/main_booking-sys.yml)
+
+[![Node.js CI](https://github.com/conorheffron/booking-sys/actions/workflows/node.js.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/node.js.yml)
+
 This is the React + TypeScript frontend for the Booking System, migrated from traditional static assets and templates.
 
 ## Prerequisites
@@ -60,40 +64,50 @@ If needed, copy `.env.example` to `.env` and update any environment variables.
 
 Feel free to open issues or pull requests for improvements!
 
-----
+## Frontend Tests
+1. Run all tests.
 ```shell
-(base) frontend % npm test 
+(base) frontend % npm run test
 
-> booking-sys-frontend@1.0.0 test
+> booking-sys-frontend@3.0.2 test
 > jest
 
- PASS  src/components/__tests__/utils.test.tsx
  PASS  ./test.tsx
+ PASS  src/components/__tests__/Utils.test.tsx
 
 Test Suites: 2 passed, 2 total
 Tests:       5 passed, 5 total
 Snapshots:   0 total
-Time:        0.897 s, estimated 1 s
+Time:        2.844 s
 Ran all test suites.
 ```
-
+2. Run specific test suite for a compoenent (Utils.ts).
 ```shell
 
-(base) frontend % npm test -- frontend/src/components/__tests__/utils.test.ts
+(base) frontend % npm run test -- frontend/src/components/__tests__/Utils.test.ts
 
-> booking-sys-frontend@1.0.0 test
-> jest frontend/src/components/__tests__/utils.test.ts
+> booking-sys-frontend@3.0.2 test
+> jest frontend/src/components/__tests__/Utils.test.ts
 
- PASS  src/components/__tests__/utils.test.tsx
+ PASS  src/components/__tests__/Utils.test.tsx
+  getSlots
+    ✓ should return all 30-minute intervals from 09:00 AM to 07:00 PM (inclusive) (4 ms)
+    ✓ should return a fresh array each time (1 ms)
   getCSRFToken
-    ✓ should return the CSRF token value if present in the cookie (2 ms)
-    ✓ should return an empty string if CSRF token is not present in the cookie (1 ms)
-    ✓ should return the first CSRF token if multiple are present (1 ms)
-    ✓ should handle cookies with extra spaces (1 ms)
+    ✓ should fetch CSRF token from /api/csrf/ (4 ms)
+    ✓ should throw if response is not as expected (1 ms)
 
 Test Suites: 1 passed, 1 total
 Tests:       4 passed, 4 total
 Snapshots:   0 total
-Time:        0.84 s, estimated 1 s
-Ran all test suites matching /frontend\/src\/components\/__tests__\/utils.test.ts/i.
+Time:        1.95 s
+Ran all test suites matching /frontend\/src\/components\/__tests__\/Utils.test.ts/i.
+```
+3. Run specific test by test name or title.
+```
+npm run test -- -t="calls fetchReservations again when Refresh button is clicked"
+```
+4. Run all tests with coverage report.
+```
+npm run test -- --coverage
 ```

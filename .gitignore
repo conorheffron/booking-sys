@@ -5,3 +5,10 @@
 /hr/__pycache__
 /hr/migrations/__pycache__
 /__pycache__
+/frontend/node_modules
+/backend/hr/__pycache__
+/backend/hr/migrations/__pycache__
+/backend/hr/static/admin
+/backend/booking-sys/__pycache__
+/frontend/dist
+/frontend/coverage

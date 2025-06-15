@@ -1,28 +1,13 @@
 services:
-  backend:
+  app:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
-    working_dir: /app
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./backend:/app
+    image: booking-sys
+    container_name: booking-sys
     ports:
       - "8000:8000"
-    environment:
-      - PYTHONUNBUFFERED=1
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    working_dir: /app
-    command: npm run dev
-    volumes:
-      - ./frontend:/app
-    ports:
       - "5173:5173"
-    environment:
-      - NODE_ENV=development
-    depends_on:
-      - backend
+    env_file:
+      - .env
+    command: ["/entrypoint.sh"]
