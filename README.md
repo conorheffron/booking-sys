@@ -480,3 +480,39 @@ Django version 5.1, using settings 'booking-sys.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
+### Test Coverage
+```shell
+(booking-sys) backend(base) % pipenv run coverage run manage.py test
+Found 23 test(s).
+.
+.
+.
+Ran 23 tests in 0.112s
+
+OK
+Destroying test database for alias 'default'...
+
+
+(booking-sys) backend(base) % pipenv run coverage report
+Name                                         Stmts   Miss  Cover
+----------------------------------------------------------------
+booking-sys/__init__.py                          0      0   100%
+booking-sys/settings.py                         41      7    83%
+booking-sys/urls.py                              5      0   100%
+hr/__init__.py                                   6      0   100%
+hr/admin.py                                      0      0   100%
+hr/apps.py                                       4      0   100%
+hr/forms.py                                     13      0   100%
+hr/migrations/0001_initial.py                    5      0   100%
+hr/migrations/0002_alter_reservation_id.py       4      0   100%
+hr/migrations/__init__.py                        0      0   100%
+hr/models.py                                     6      0   100%
+hr/test_apis.py                                115      0   100%
+hr/test_forms.py                                53      0   100%
+hr/time_utils.py                                21      1    95%
+hr/urls.py                                       3      0   100%
+hr/views.py                                    129     42    67%
+manage.py                                        8      0   100%
+----------------------------------------------------------------
+TOTAL                                          413     50    88%
+```
