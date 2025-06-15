@@ -103,3 +103,11 @@ Snapshots:   0 total
 Time:        1.95 s
 Ran all test suites matching /frontend\/src\/components\/__tests__\/Utils.test.ts/i.
 ```
+3. Run specific test by test name or title.
+```
+npm run test -- -t="calls fetchReservations again when Refresh button is clicked"
+```
+4. Run all tests with coverage report.
+```
+npm run test -- --coverage
+```
