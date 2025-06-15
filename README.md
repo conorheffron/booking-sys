@@ -232,8 +232,14 @@ booking-sys  | INFO 2025-06-15 00:05:02,954 basehttp 10 140691342624448 "GET /ap
 
 ## Functionality Demo
 
-###  App Home Address
+###  App Frontend Home Address
 - [http://localhost:5173/](http://localhost:5173/)
+
+###  API End-point
+- [http://localhost:8000/api/](http://localhost:8000/api/)
+
+###  Django Admin UI
+- [http://localhost:5173/admin](http://localhost:5173/admin)
 
 ###  Make a Reservation Form
 ![reserve](./screenshots/reserve.png?raw=true "Make a Reservation")
@@ -248,21 +254,13 @@ booking-sys  | INFO 2025-06-15 00:05:02,954 basehttp 10 140691342624448 "GET /ap
 ![bookings-by-date](./screenshots/bookings-by-date.png?raw=true "View Bookings By Date Change")
 
 ###  Bookings By Date REST API End-point (used for view template above)
-Using `request path variable`:
+Using `request parameter 'date'`:
 
-- [http://localhost:8000/api/bookings/2024-08-22/](http://localhost:8000/bookings/2024-08-22/)
-
-  and
-
-- [http://localhost:8000/api/bookings/2024-09-01/](http://localhost:8000/bookings/2024-09-01/)
-
-Or using `request parameter 'date'`:
-
-- [http://localhost:8000/api/bookings?date=2024-08-22](http://localhost:8000/bookings?date=2024-08-22)
+- [http://localhost:8000/api/bookings?date=2024-08-22](http://localhost:8000/api/bookings?date=2024-08-22)
 
   and
 
-- [http://localhost:8000/api/bookings?date=2024-09-01](http://localhost:8000/bookings?date=2024-09-01)
+- [http://localhost:8000/api/bookings?date=2024-09-01](http://localhost:8000/api/bookings?date=2024-09-01)
 
 
 
@@ -278,7 +276,7 @@ Or using `request parameter 'date'`:
 ![dynamic-table-update](./screenshots/dynamic-table-update.png?raw=true "JSON Table Update")
 
 ###  View All Bookings Page
-- [http://localhost:8000/reservations/](http://localhost:8000/reservations/)
+- [http://localhost:8000/api/bookings](http://localhost:8000/api/bookings)
 
 ![all-bookings](./screenshots/all-bookings.png?raw=true "View All Resrvations")
 
@@ -454,12 +452,19 @@ sessions
  [ ] 0001_initial
 
 % python3 manage.py test          
-Found 2 test(s).
+Found 23 test(s).
 Creating test database for alias 'default'...
-System check identified no issues (0 silenced).
-..
+System check identified some issues:
+
+WARNINGS:
+?: (staticfiles.W004) The directory '******/booking-sys/backend/staticfiles' in the STATICFILES_DIRS setting does not exist.
+
+System check identified 1 issue (0 silenced).
+..............INFO 2025-06-15 00:17:20,300 views 43359 140704407604672 Request information (<WSGIRequest: GET '/version'>)
+INFO 2025-06-15 00:17:20,300 views 43359 140704407604672 Application version (3.0.3)
+.........
 ----------------------------------------------------------------------
-Ran 2 tests in 0.022s
+Ran 23 tests in 0.049s
 
 OK
 Destroying test database for alias 'default'...
