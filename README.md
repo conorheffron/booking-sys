@@ -15,7 +15,7 @@
 [![CodeQL Advanced](https://github.com/conorheffron/booking-sys/actions/workflows/codeql.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/codeql.yml)
 
 ## Technologies
-python3, django 5 admin/framework, django.test, & MySQL Server / Sqlite2
+python3, django 5 admin/framework, django.test, React 18, & MySQL Server / Sqlite2
 
 ### Buil & Run via Docker
 #### - Update 'DEBUG' in .env to True
