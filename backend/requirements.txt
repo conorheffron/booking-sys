@@ -1,5 +1,5 @@
 asgiref==3.8.1
-astroid==3.2.4
+astroid==3.3.10
 certifi==2025.4.26
 charset-normalizer==3.4.2
 coverage==7.9.1
