@@ -1,6 +1,6 @@
 asgiref==3.8.1
-astroid==3.2.4
-certifi==2025.4.26
+astroid==3.3.10
+certifi==2025.6.15
 charset-normalizer==3.4.2
 coverage==7.9.1
 defusedxml==0.7.1
@@ -15,7 +15,7 @@ djangorestframework-xml==2.0.0
 filelock==3.18.0
 idna==3.10
 iniconfig==2.1.0
-isort==5.13.2
+isort==6.0.1
 mccabe==0.7.0
 mysqlclient==2.2.7
 packaging==25.0
@@ -23,7 +23,7 @@ pipenv==2025.0.3
 platformdirs==4.3.8
 pluggy==1.6.0
 Pygments==2.19.1
-pylint==3.2.7
+pylint==3.3.7
 pylint-django==2.6.1
 pylint-plugin-utils==0.8.2
 pytest==8.4.0
