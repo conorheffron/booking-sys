@@ -11,34 +11,37 @@ from hr.forms import EditReservationForm
 from hr import VERSION
 from .models import Reservation
 from .time_utils import TimeUtils
+from rest_framework.views import APIView
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
 
 logger = logging.getLogger(__name__)
 
-class Views():
+class Views(APIView):
     """Views class for Views Mapping & Logic
     """
 
-    @classmethod
-    def csrf(cls, request:WSGIRequest):
+    def csrf(request:WSGIRequest):
         """GET CSRF Token / Cookie Value from incoming requests"""
         return JsonResponse({'csrfToken': request.META.get('CSRF_COOKIE', '')})
 
-    @classmethod
-    def version(cls, request:WSGIRequest):
+    @swagger_auto_schema(methods=['get'])
+    @api_view(['GET'])
+    def version(request:WSGIRequest):
         """GET Application Version for current deployment"""
         logger.info('Request information (%s)', request)
         app_version = VERSION
         logger.info('Application version (%s)', app_version)
         return HttpResponse(str(app_version))
 
-    @classmethod
-    def table_view(cls, request:WSGIRequest):
+    @swagger_auto_schema(methods=['get'])
+    @api_view(['GET'])
+    def table_view(request):
         """GET bookings by date request parameter"""
         date = request.GET.get("date", TimeUtils.get_current_date_time().date())
-        return cls._find_bookings_by_date(cls, date)
+        return Views._find_bookings_by_date(date)
 
-    @classmethod
-    def edit_reservation(cls, request, reservation_id):
+    def edit_reservation(request, reservation_id):
         """
         Handle the editing of an existing reservation.
         Do not allow editing of past bookings.
@@ -96,8 +99,7 @@ class Views():
             "reservation": reservation
         })
 
-    @classmethod
-    def bookings_by_id(cls, request, reservation_id):
+    def bookings_by_id(request, reservation_id):
         """
         GET: Return booking info by id as JSON
         PUT: Update booking info by id from JSON body
@@ -177,8 +179,7 @@ class Views():
         else:
             return JsonResponse({"error": "Method not allowed."}, status=405)
 
-    @classmethod
-    def save_reservation(cls, request):
+    def save_reservation(request):
         """
         Handle saving (creating or updating) a reservation via PUT.
         Do not allow new reservations for past date/time.
@@ -240,7 +241,7 @@ class Views():
         }
         return JsonResponse(data, status=201)
 
-    def _find_bookings_by_date(self, date):
+    def _find_bookings_by_date(date):
         """Bookings by date and return JSON response (private method)"""
         today = dt_date.today()
         queryset = None
