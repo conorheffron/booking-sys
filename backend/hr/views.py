@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 class Views(APIView):
     """Views class for Views Mapping & Logic
     """
-
-    def csrf(request:WSGIRequest):
+    @classmethod
+    def csrf(cls, request:WSGIRequest):
         """GET CSRF Token / Cookie Value from incoming requests"""
         return JsonResponse({'csrfToken': request.META.get('CSRF_COOKIE', '')})
 
@@ -34,14 +34,14 @@ class Views(APIView):
         logger.info('Application version (%s)', app_version)
         return HttpResponse(str(app_version))
 
-    @swagger_auto_schema(methods=['get'])
-    @api_view(['GET'])
-    def table_view(request):
+    @classmethod
+    def table_view(cls, request):
         """GET bookings by date request parameter"""
         date = request.GET.get("date", TimeUtils.get_current_date_time().date())
-        return Views._find_bookings_by_date(date)
+        return cls._find_bookings_by_date(cls, date)
 
-    def edit_reservation(request, reservation_id):
+    @classmethod
+    def edit_reservation(cls, request, reservation_id):
         """
         Handle the editing of an existing reservation.
         Do not allow editing of past bookings.
@@ -100,7 +100,8 @@ class Views(APIView):
             "reservation": reservation
         })
 
-    def bookings_by_id(request, reservation_id):
+    @classmethod
+    def bookings_by_id(cls, request, reservation_id):
         """
         GET: Return booking info by id as JSON
         PUT: Update booking info by id from JSON body
@@ -188,7 +189,8 @@ class Views(APIView):
         else:
             return JsonResponse({"error": "Method not allowed."}, status=405)
 
-    def save_reservation(request):
+    @classmethod
+    def save_reservation(cls, request):
         """
         Handle saving (creating or updating) a reservation via PUT.
         Do not allow new reservations for past date/time.
@@ -253,7 +255,7 @@ class Views(APIView):
         }
         return JsonResponse(data, status=201)
 
-    def _find_bookings_by_date(date):
+    def _find_bookings_by_date(self, date):
         """Bookings by date and return JSON response (private method)"""
         today = dt_date.today()
         queryset = None

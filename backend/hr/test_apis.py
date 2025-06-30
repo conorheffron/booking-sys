@@ -17,6 +17,7 @@ class ApiTests(TestCase):
 
     def setUp(self):
         """HR Tests setUp"""
+        self.views = Views()
         self.factory = RequestFactory()
         self.reservation = Reservation.objects.create(
             first_name="Taylor",
@@ -39,7 +40,7 @@ class ApiTests(TestCase):
     def test_bookings_by_id_get_success(self):
         """HR Test case test_bookings_by_id_get_success"""
         request = self.factory.get(f"/api/reservations/{self.reservation.id}/")
-        response = Views.bookings_by_id(request, self.reservation.id)
+        response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 200
         data = json.loads(response.content.decode())
         assert data["first_name"] == "Taylor"
@@ -49,7 +50,7 @@ class ApiTests(TestCase):
         """HR Test case test_bookings_by_id_get_404"""
         request = self.factory.get("/api/reservations/9999/")
         with pytest.raises(Exception):
-            Views.bookings_by_id(request, 9999)
+            self.views.bookings_by_id(request, 9999)
 
     def test_bookings_by_id_put_success(self):
         """HR Test case test_bookings_by_id_put_success"""
@@ -63,7 +64,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.bookings_by_id(request, self.reservation.id)
+        response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 200
         data = json.loads(response.content.decode())
         assert data["first_name"] == "Bob"
@@ -81,7 +82,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.bookings_by_id(request, self.reservation.id)
+        response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
         assert "All fields are required." in data["error"]
@@ -98,7 +99,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.bookings_by_id(request, self.reservation.id)
+        response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
         assert "Invalid time format" in data["error"]
@@ -120,7 +121,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.bookings_by_id(request, self.reservation.id)
+        response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
         assert "Already Reserved" in data["error"]
@@ -128,7 +129,7 @@ class ApiTests(TestCase):
     def test_bookings_by_id_method_not_allowed(self):
         """HR Test case test_bookings_by_id_method_not_allowed"""
         request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
-        response = Views.bookings_by_id(request, self.reservation.id)
+        response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 405
         data = json.loads(response.content.decode())
         assert "Method not allowed" in data["error"]
@@ -140,7 +141,7 @@ class ApiTests(TestCase):
             data="not a json",
             content_type="application/json"
         )
-        response = Views.bookings_by_id(request, self.reservation.id)
+        response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         assert "Invalid JSON body" in json.loads(response.content.decode())["error"]
 
@@ -156,7 +157,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.save_reservation(request)
+        response = self.views.save_reservation(request)
         assert response.status_code == 201
         data = json.loads(response.content.decode())
         assert data["first_name"] == "TestGuy"
@@ -181,7 +182,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.save_reservation(request)
+        response = self.views.save_reservation(request)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
         assert "Already Reserved" in data["error"]
@@ -189,7 +190,7 @@ class ApiTests(TestCase):
     def test_save_reservation_bad_method(self):
         """HR Test case test_save_reservation_bad_method"""
         request = self.factory.get("/api/save_reservation/")
-        response = Views.save_reservation(request)
+        response = self.views.save_reservation(request)
         assert response.status_code == 405
         assert "Method not allowed" in json.loads(response.content.decode())["error"]
 
@@ -200,7 +201,7 @@ class ApiTests(TestCase):
             data="bad json",
             content_type="application/json"
         )
-        response = Views.save_reservation(request)
+        response = self.views.save_reservation(request)
         assert response.status_code == 400
         assert "Invalid JSON body" in json.loads(response.content.decode())["error"]
 
@@ -215,7 +216,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.save_reservation(request)
+        response = self.views.save_reservation(request)
         assert response.status_code == 400
         assert "All fields are required" in json.loads(response.content.decode())["error"]
 
@@ -231,7 +232,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        response = Views.save_reservation(request)
+        response = self.views.save_reservation(request)
         assert response.status_code == 400
         assert "reservation_slot must be in format" in json.loads(
             response.content.decode())["error"]

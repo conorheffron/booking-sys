@@ -29,7 +29,8 @@ describe('Navbar', () => {
     expect(screen.getByText('Booking System')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
     expect(screen.getByRole('link', { name: 'Bookings' })).toHaveAttribute('href', '/reservations');
-    expect(screen.getByRole('link', { name: 'Login' })).toHaveAttribute('href', '/admin');
+    expect(screen.getByRole('link', { name: 'Django-Admin' })).toHaveAttribute('href', '/admin');
+    expect(screen.getByRole('link', { name: 'Swagger' })).toHaveAttribute('href', '/api/docs/');
   });
 
   it('renders initial version as ellipsis', () => {
