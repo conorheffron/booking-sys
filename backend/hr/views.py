@@ -7,13 +7,13 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from hr.forms import EditReservationForm
 from hr import VERSION
 from .models import Reservation
 from .time_utils import TimeUtils
-from rest_framework.views import APIView
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import api_view
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +51,8 @@ class Views(APIView):
         # Block editing of past bookings
         now = datetime.now()
         # Combine date and time for comparison
-        reservation_datetime = datetime.combine(reservation.reservation_date, reservation.reservation_slot)
+        reservation_datetime = datetime.combine(reservation.reservation_date,
+                                                reservation.reservation_slot)
         if reservation_datetime < now:
             return render(request, "edit_reservation.html", {
                 "form": None,
@@ -113,15 +114,19 @@ class Views(APIView):
                 "id": reservation.id,
                 "first_name": reservation.first_name,
                 "reservation_date": str(reservation.reservation_date),
-                "reservation_slot": reservation.reservation_slot.strftime("%I:%M %p") if isinstance(reservation.reservation_slot, dt_time) else str(reservation.reservation_slot),
+                "reservation_slot": reservation.reservation_slot.strftime("%I:%M %p") 
+                if isinstance(reservation.reservation_slot, dt_time)
+                else str(reservation.reservation_slot),
             }
             return JsonResponse(data, status=200)
         elif request.method == "PUT":
             now = datetime.now()
             # Block editing of past bookings
-            original_datetime = datetime.combine(reservation.reservation_date, reservation.reservation_slot)
+            original_datetime = datetime.combine(reservation.reservation_date,
+                                                 reservation.reservation_slot)
             if original_datetime < now:
-                return JsonResponse({"error": "Editing past bookings is not allowed."}, status=400)
+                return JsonResponse({"error": "Editing past bookings is not allowed."},
+                                    status=400)
             try:
                 body = json.loads(request.body.decode("utf-8"))
             except Exception:
@@ -159,9 +164,13 @@ class Views(APIView):
                     slot_time
                 )
             except Exception:
-                return JsonResponse({"error": "Invalid reservation_date or reservation_slot."}, status=400)
+                return JsonResponse({
+                    "error": "Invalid reservation_date or reservation_slot."
+                    }, status=400)
             if new_datetime < now:
-                return JsonResponse({"error": "Cannot update reservation to a past date/time."}, status=400)
+                return JsonResponse({
+                    "error": "Cannot update reservation to a past date/time."
+                    }, status=400)
 
             reservation.first_name = first_name
             reservation.reservation_date = reservation_date
@@ -213,17 +222,20 @@ class Views(APIView):
                 slot_time
             )
         except Exception:
-            return JsonResponse({"error": "Invalid reservation_date or reservation_slot."}, status=400)
+            return JsonResponse({"error": "Invalid reservation_date or reservation_slot."},
+                                status=400)
         now = datetime.now()
         if reservation_datetime < now:
-            return JsonResponse({"error": "Cannot make a reservation for a past date/time."}, status=400)
+            return JsonResponse({"error": "Cannot make a reservation for a past date/time."},
+                                status=400)
 
         # Prevent double booking
         if Reservation.objects.filter(
             reservation_date=reservation_date,
             reservation_slot=slot_time
         ).exists():
-            return JsonResponse({"error": "Booking Failed: Already Reserved."}, status=400)
+            return JsonResponse({"error": "Booking Failed: Already Reserved."},
+                                status=400)
 
         # Save reservation
         reservation = Reservation.objects.create(
