@@ -3,13 +3,18 @@
 import logging
 from datetime import datetime, date as dt_date, time as dt_time
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse
-from drf_yasg.utils import swagger_auto_schema
+
 from rest_framework.decorators import api_view
-from rest_framework.views import APIView
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter,
+    OpenApiTypes,
+    extend_schema_view
+)
+
 from hr.forms import EditReservationForm
 from hr import VERSION
 from .models import Reservation
@@ -17,7 +22,7 @@ from .time_utils import TimeUtils
 
 logger = logging.getLogger(__name__)
 
-class Views(APIView):
+class Views:
     """Views class for Views Mapping & Logic
     """
     @classmethod
@@ -25,9 +30,8 @@ class Views(APIView):
         """GET CSRF Token / Cookie Value from incoming requests"""
         return JsonResponse({'csrfToken': request.META.get('CSRF_COOKIE', '')})
 
-    @swagger_auto_schema(methods=['get'])
-    @api_view(['GET'])
-    def version(request:WSGIRequest):
+    @classmethod
+    def version(cls, request:WSGIRequest):
         """GET Application Version for current deployment"""
         logger.info('Request information (%s)', request)
         app_version = VERSION
@@ -52,7 +56,7 @@ class Views(APIView):
         now = datetime.now()
         # Combine date and time for comparison
         reservation_datetime = datetime.combine(reservation.reservation_date,
-                                                reservation.reservation_slot)
+                                               reservation.reservation_slot)
         if reservation_datetime < now:
             return render(request, "edit_reservation.html", {
                 "form": None,
@@ -287,3 +291,65 @@ class Views(APIView):
             'message': 'success',
             'reservations': data
         })
+
+# ==== WRAPPER VIEWS FOR DRF SPECTACULAR + Django URLS ====
+
+@extend_schema(
+    methods=["GET"],
+    description="GET CSRF Token / Cookie Value from incoming requests",
+    responses={200: OpenApiTypes.OBJECT}
+)
+@api_view(['GET'])
+def csrf_view(request):
+    return Views.csrf(request)
+
+@extend_schema(
+    methods=["GET"],
+    description="GET Application Version for current deployment",
+    responses={200: OpenApiTypes.STR}
+)
+@api_view(['GET'])
+def version_view(request):
+    return Views.version(request)
+
+@extend_schema(
+    methods=["GET"],
+    description="GET bookings by date request parameter",
+    parameters=[
+        OpenApiParameter(
+            name="date",
+            type=OpenApiTypes.DATE,
+            required=False,
+            location=OpenApiParameter.QUERY,
+            description="Filter bookings by date (YYYY-MM-DD)"
+        )
+    ],
+    responses={200: OpenApiTypes.OBJECT}
+)
+@api_view(['GET'])
+def table_view(request):
+    return Views.table_view(request)
+
+@extend_schema_view(
+    get=extend_schema(
+        description="GET: Return booking info by id as JSON",
+        parameters=[
+            OpenApiParameter(
+                name="reservation_id",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.PATH,
+                description="Reservation ID"
+            )
+        ],
+        responses={200: OpenApiTypes.OBJECT, 404: OpenApiTypes.OBJECT}
+    ),
+    put=extend_schema(exclude=True)  # <--- this hides PUT in Swagger!
+)
+@api_view(['GET', 'PUT'])
+def bookings_by_id_view(request, reservation_id):
+    return Views.bookings_by_id(request, reservation_id)
+
+@extend_schema(exclude=True)
+@api_view(['PUT'])
+def save_reservation_view(request):
+    return Views.save_reservation(request)
