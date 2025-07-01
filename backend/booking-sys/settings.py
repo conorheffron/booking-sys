@@ -64,7 +64,7 @@ REST_FRAMEWORK = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'booking-sys API',
     'DESCRIPTION': 'booking-sys API collection',
-    'VERSION': '3.1.1',
+    'VERSION': '3.1.2',
 }
 
 SWAGGER_SETTINGS = {
