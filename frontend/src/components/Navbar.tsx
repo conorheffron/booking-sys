@@ -52,8 +52,11 @@ export const Navbar: React.FC = () => {
             <Link className="nav-link text-white" to="/reservations">
               Bookings
             </Link>
+            <Link className="nav-link text-white" to="/api/docs/" target="_blank" rel="noopener noreferrer">
+              Swagger
+            </Link>
             <a className="nav-link text-white" target="_blank" rel="noopener noreferrer" href="/admin">
-              Login
+              Django-Admin
             </a>
             <a
               href="https://github.com/conorheffron/booking-sys"
