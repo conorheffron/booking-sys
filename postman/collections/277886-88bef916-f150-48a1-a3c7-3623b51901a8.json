@@ -85,6 +85,153 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "GET booking by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend}}/api/reservations/{{reservation_id}}/",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"reservations",
+						"{{reservation_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT update booking by ID",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"John\",\n    \"reservation_date\": \"2025-07-02\",\n    \"reservation_slot\": \"02:00 PM\"\n}"
+				},
+				"url": {
+					"raw": "{{backend}}/api/reservations/{{reservation_id}}/",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"reservations",
+						"{{reservation_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT save reservation",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"John\",\n    \"reservation_date\": \"2025-07-02\",\n    \"reservation_slot\": \"02:00 PM\"\n}"
+				},
+				"url": {
+					"raw": "{{backend}}/api/save_reservation/",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"save_reservation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST new reservation",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"Jane\",\n    \"reservation_date\": \"2025-07-02\",\n    \"reservation_slot\": \"05:00 PM\"\n}"
+				},
+				"url": {
+					"raw": "{{backend}}/api/reservations/",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"reservations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET CSRF Token",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend}}/api/csrf/",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"csrf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET App Version",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend}}/api/version/",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"version"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "backend",
+			"value": "http://localhost:8000"
+		},
+		{
+			"key": "reservation_id",
+			"value": "1"
 		}
 	]
 }
