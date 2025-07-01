@@ -1,0 +1,201 @@
+{
+	"info": {
+		"_postman_id": "277886-201fdc3d-2df2-447c-88c2-ec56697c85b5",
+		"name": "booking-sys",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET bookings by data param",
+			"id": "277886-8458785a-8780-4ee7-b01a-05ee287e5b1f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend}}/api/bookings?date=2025-07-01",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"bookings"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2025-07-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET upcoming bookings",
+			"id": "277886-33837f6a-4aff-4f0f-ad3e-0ad0ac11ac09",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend}}/api/bookings",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"bookings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET booking by ID",
+			"id": "277886-5302ef72-f090-4346-8a25-2770aed21945",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend}}/api/reservations/{{reservation_id}}",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"reservations",
+						"{{reservation_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT update booking by ID",
+			"id": "277886-8ebcc130-cde9-4744-a943-68fd9d7817ae",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"John\",\n    \"reservation_date\": \"2025-07-02\",\n    \"reservation_slot\": \"02:00 PM\"\n}"
+				},
+				"url": {
+					"raw": "{{backend}}/api/bookingsById/{{reservation_id}}",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"bookingsById",
+						"{{reservation_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT save reservation",
+			"id": "277886-ad561a26-5102-4359-a6e4-90e638c978f4",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"John\",\n    \"reservation_date\": \"2025-07-02\",\n    \"reservation_slot\": \"02:00 PM\"\n}"
+				},
+				"url": {
+					"raw": "{{backend}}/api/reservations",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"reservations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET CSRF Token",
+			"id": "277886-7b1a5955-8412-4afb-9995-d83a79dd94d7",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend}}/api/csrf/",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"csrf",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET App Version",
+			"id": "277886-bee8ca82-0ae5-4358-9022-bec5f65a1c47",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend}}/api/version/",
+					"host": [
+						"{{backend}}"
+					],
+					"path": [
+						"api",
+						"version",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "backend",
+			"value": "http://localhost:8000"
+		},
+		{
+			"key": "reservation_id",
+			"value": "1"
+		}
+	]
+}
