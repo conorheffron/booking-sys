@@ -1,0 +1,71 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+name: Node.js Package
+
+on:
+  release:
+    types: [created]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+        working-directory: './frontend'
+      - run: npm run test
+        working-directory: './frontend'
+
+  publish-gpr:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: https://npm.pkg.github.com/
+          scope: '@conorheffron'
+      - run: npm ci
+        working-directory: './frontend'
+      - run: npm set "//npm.pkg.github.com/:_authToken=$NPM_TOKEN"
+        working-directory: './frontend'
+        env: 
+          NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - run: echo registry=https://npm.pkg.github.com/conorheffron >> .npmrc
+        working-directory: './frontend'
+      - run: npm publish
+        working-directory: './frontend'
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+        working-directory: './frontend'
+      - run: npm set "//registry.npmjs.org/conorheffron/:_authToken=$NPM_TOKEN"
+        working-directory: './frontend'
+        env: 
+          NPM_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
+      - run: npm publish --access public
+        working-directory: './frontend'
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
