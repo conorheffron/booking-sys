@@ -8,6 +8,8 @@
 
 [![Node.js CI](https://github.com/conorheffron/booking-sys/actions/workflows/node.js.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/node.js.yml)
 
+[![Node.js Package](https://github.com/conorheffron/booking-sys/actions/workflows/npm-publish-packages.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/npm-publish-packages.yml)
+
 [![Docker Image CI](https://github.com/conorheffron/booking-sys/actions/workflows/docker-image.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/docker-image.yml)
 
 [![Docker Publish](https://github.com/conorheffron/booking-sys/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/docker-publish.yml)
