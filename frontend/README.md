@@ -4,6 +4,8 @@
 
 [![Node.js CI](https://github.com/conorheffron/booking-sys/actions/workflows/node.js.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/node.js.yml)
 
+[![Node.js Package](https://github.com/conorheffron/booking-sys/actions/workflows/npm-publish-packages.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/npm-publish-packages.yml)
+
 This is the React + TypeScript frontend for the Booking System, migrated from traditional static assets and templates.
 
 ## Prerequisites
