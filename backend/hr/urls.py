@@ -22,7 +22,7 @@ urlpatterns = [
 
     path('bookings', table_view, name='bookings_by_date'),
 
-    # Get or update a booking by ID (GET, PUT): /bookingsById/<reservation_id>
+    # Get, Delete or update a booking by ID (GET, PUT): /bookingsById/<reservation_id>
     path('bookingsById/<int:reservation_id>', bookings_by_id_view, name='bookingsById'),
 
     path('reservations', save_reservation_view, name='save_reservation'),

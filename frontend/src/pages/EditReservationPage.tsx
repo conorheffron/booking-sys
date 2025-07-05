@@ -11,7 +11,30 @@ interface Reservation {
   reservation_slot: string;
 }
 
-const slots = getSlots();
+const slots = getSlots(); // Should return slots in "HH:MM AM/PM" format
+
+// Convert any "13:30" or "16:30" (24-hour) to "01:30 PM" or "04:30 PM" (12-hour)
+function to12Hour(slot: string): string {
+  slot = slot.trim();
+  // Already in AM/PM format
+  if (slot.match(/(AM|PM)$/i)) {
+    return slot
+      .replace(/\s+am$/i, " AM")
+      .replace(/\s+pm$/i, " PM")
+      .replace(/^(\d):/, "0$1:"); // pad hour if needed
+  }
+  // 24-hour format
+  const match = slot.match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) return slot;
+  let [_, h, m] = match;
+  let hour = parseInt(h, 10);
+  const minute = m;
+  const ampm = hour >= 12 ? "PM" : "AM";
+  if (hour === 0) hour = 12;
+  if (hour > 12) hour -= 12;
+  const hourStr = hour < 10 ? "0" + hour : "" + hour;
+  return `${hourStr}:${minute} ${ampm}`;
+}
 
 export const EditReservationPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -35,7 +58,15 @@ export const EditReservationPage: React.FC = () => {
       .then((data: Reservation) => {
         setName(data.first_name);
         setDate(data.reservation_date);
-        setSlot(data.reservation_slot);
+        // Normalize slot to match the dropdown values
+        const normalized = to12Hour(data.reservation_slot);
+        if (slots.includes(normalized)) {
+          setSlot(normalized);
+        } else {
+          // Try to find a slot with same hour/minute (fallback)
+          const alt = slots.find(s => to12Hour(s) === normalized);
+          setSlot(alt || slots[0] || '');
+        }
       })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
@@ -64,10 +95,15 @@ export const EditReservationPage: React.FC = () => {
         return;
       }
       setSuccessMsg('Reservation updated successfully!');
-      setTimeout(() => navigate('/reservations'), 1200); // Redirect after success
+      setTimeout(() => navigate('/reservations'), 1200);
     } catch (err: any) {
       setError(err.message || 'Failed to update reservation');
     }
+  };
+
+  const handleCancel = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate('/reservations');
   };
 
   return (
@@ -103,8 +139,8 @@ export const EditReservationPage: React.FC = () => {
                         required
                       />
                     </div>
-                    <div className="form-group">
-                      <label htmlFor="date">Date</label>
+                    <div className="form-group mt-3">
+                      <label htmlFor="date">Reservation Date</label>
                       <input
                         className="form-control"
                         id="date"
@@ -114,8 +150,8 @@ export const EditReservationPage: React.FC = () => {
                         required
                       />
                     </div>
-                    <div className="form-group">
-                      <label htmlFor="slot">Slot</label>
+                    <div className="form-group mt-3">
+                      <label htmlFor="slot">Reservation Slot</label>
                       <select
                         className="form-control"
                         id="slot"
@@ -124,12 +160,23 @@ export const EditReservationPage: React.FC = () => {
                         required
                       >
                         <option value="" disabled>Select a slot</option>
-                        {slots.map(option => (
-                          <option key={option} value={option}>{option}</option>
+                        {slots.map(s => (
+                          <option key={s} value={s}>{s}</option>
                         ))}
                       </select>
                     </div>
-                    <button type="submit" className="btn btn-primary btn-block">Save</button>
+                    <div className="d-flex justify-content-between mt-4">
+                      <button type="submit" className="btn btn-primary">
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={handleCancel}
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </form>
                 )}
               </div>

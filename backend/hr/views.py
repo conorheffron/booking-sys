@@ -109,6 +109,7 @@ class Views:
         """
         GET: Return booking info by id as JSON
         PUT: Update booking info by id from JSON body
+        DELETE: Delete booking by id
         - Do not allow editing of past bookings
         - Do not allow updating to a past date/time
         """
@@ -190,6 +191,9 @@ class Views:
                 "success": True
             }
             return JsonResponse(data, status=200)
+        elif request.method == "DELETE":
+            reservation.delete()
+            return JsonResponse({"success": True, "message": "Booking deleted."}, status=200)
         else:
             return JsonResponse({"error": "Method not allowed."}, status=405)
 
@@ -269,7 +273,7 @@ class Views:
             # Order by reservation_date DESC, reservation_slot DESC for most recent to top
             queryset = Reservation.objects.filter(
                 reservation_date=query_date
-            ).order_by('-reservation_date', '-reservation_slot')
+            ).order_by('reservation_date', 'reservation_slot')
             logger.info('GET by date (%s) Query set results: %s',
                         query_date,
                         list(queryset.values('id',
@@ -279,7 +283,7 @@ class Views:
         except (TypeError, ValueError):
             queryset = Reservation.objects.filter(
                 reservation_date__gt=today
-            ).order_by('-reservation_date', '-reservation_slot')
+            ).order_by('reservation_date', 'reservation_slot')
             logger.info('GET by future date (after %s) Query set results: %s',
                         today,
                         list(queryset.values('id',
@@ -343,9 +347,22 @@ def table_view(request):
         ],
         responses={200: OpenApiTypes.OBJECT, 404: OpenApiTypes.OBJECT}
     ),
-    put=extend_schema(exclude=True)  # <--- this hides PUT in Swagger!
+    put=extend_schema(exclude=True),  # <--- this hides PUT in Swagger!
+    delete=extend_schema(exclude=True)
+    # delete=extend_schema(
+    #     description="DELETE: Delete booking by id",
+    #     parameters=[
+    #         OpenApiParameter(
+    #             name="reservation_id",
+    #             type=OpenApiTypes.INT,
+    #             location=OpenApiParameter.PATH,
+    #             description="Reservation ID"
+    #         )
+    #     ],
+    #     responses={200: OpenApiTypes.OBJECT, 404: OpenApiTypes.OBJECT}
+    # )
 )
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def bookings_by_id_view(request, reservation_id):
     return Views.bookings_by_id(request, reservation_id)
 

@@ -31,6 +31,14 @@ export const BookingPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<string>('');
 
+  // NEW: Hide success message after a few seconds
+  useEffect(() => {
+    if (formOutMsg && formOutType === 'success') {
+      const timer = setTimeout(() => setFormOutMsg(''), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [formOutMsg, formOutType]);
+
   // Fetch bookings for the selected form date
   const fetchBookings = async (date: string) => {
     if (!date) {
@@ -96,7 +104,7 @@ export const BookingPage: React.FC = () => {
       // Do not reset form values
       // Refetch bookings for the selected date
       fetchBookings(form.reservation_date);
-      // Do not auto-clear message
+      // Message will auto-clear if successful
     } catch (err: any) {
       setFormOutType('danger');
       setFormOutMsg(`Error: ${err.message || 'Could not submit reservation.'}`);
@@ -126,7 +134,7 @@ export const BookingPage: React.FC = () => {
                     </div>
                   )}
                   <div className="form-group">
-                    <label htmlFor="first_name">First name</label>
+                    <label htmlFor="first_name">Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -137,7 +145,7 @@ export const BookingPage: React.FC = () => {
                       required
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="form-group mt-3">
                     <label htmlFor="reservation_date">Reservation date</label>
                     <input
                       type="date"
@@ -149,7 +157,7 @@ export const BookingPage: React.FC = () => {
                       required
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="form-group mt-3">
                     <label htmlFor="reservation_slot">Reservation slot</label>
                     <select
                       className="form-control"
@@ -165,7 +173,11 @@ export const BookingPage: React.FC = () => {
                       ))}
                     </select>
                   </div>
-                  <button type="submit" className="btn btn-primary btn-block">Reserve</button>
+                  <div className="d-flex justify-content-center mt-4">
+                    <button type="submit" className="btn btn-primary px-5">
+                      Reserve
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>
