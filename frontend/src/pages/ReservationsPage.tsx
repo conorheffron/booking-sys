@@ -47,7 +47,7 @@ export const ReservationsPage: React.FC = () => {
           <div className="col-md-12 col-lg-10 main-content-bg">
             <div className="card shadow-sm">
               <div className="card-body" style={{ background: 'transparent' }}>
-                <h3 className="card-title mb-4 text-center">All Active Reservations</h3>
+                <h3 className="card-title mb-4 text-center">All Upcoming Reservations</h3>
                 {loading ? (
                   <div className="text-center">Loading...</div>
                 ) : error ? (
