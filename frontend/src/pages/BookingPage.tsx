@@ -126,7 +126,7 @@ export const BookingPage: React.FC = () => {
                     </div>
                   )}
                   <div className="form-group">
-                    <label htmlFor="first_name">First name</label>
+                    <label htmlFor="first_name">Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -137,7 +137,7 @@ export const BookingPage: React.FC = () => {
                       required
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="form-group mt-3">
                     <label htmlFor="reservation_date">Reservation date</label>
                     <input
                       type="date"
@@ -149,7 +149,7 @@ export const BookingPage: React.FC = () => {
                       required
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="form-group mt-3">
                     <label htmlFor="reservation_slot">Reservation slot</label>
                     <select
                       className="form-control"
@@ -165,7 +165,11 @@ export const BookingPage: React.FC = () => {
                       ))}
                     </select>
                   </div>
-                  <button type="submit" className="btn btn-primary btn-block">Reserve</button>
+                  <div className="d-flex justify-content-center mt-4">
+                    <button type="submit" className="btn btn-primary px-5">
+                      Reserve
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>
