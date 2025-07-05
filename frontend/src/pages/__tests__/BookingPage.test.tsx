@@ -22,7 +22,7 @@ describe("BookingPage (basic smoke tests)", () => {
   it("renders booking form and table", () => {
     render(<BookingPage />);
     expect(screen.getByText(/Make a Reservation/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/First name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Reservation date/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Reservation slot/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Reserve/i })).toBeInTheDocument();
@@ -39,7 +39,7 @@ describe("BookingPage (basic smoke tests)", () => {
 
   it("can fill the form fields", () => {
     render(<BookingPage />);
-    const nameInput = screen.getByLabelText(/First name/i);
+    const nameInput = screen.getByLabelText(/Name/i);
     const dateInput = screen.getByLabelText(/Reservation date/i);
     const slotSelect = screen.getByLabelText(/Reservation slot/i);
 
@@ -56,7 +56,7 @@ describe("BookingPage (basic smoke tests)", () => {
     render(<BookingPage />);
     fireEvent.click(screen.getByRole("button", { name: /Reserve/i }));
     // Expect some indication of invalid input (native validation won't submit)
-    const nameInput = screen.getByLabelText(/First name/i);
+    const nameInput = screen.getByLabelText(/Name/i);
     expect(nameInput).toBeInvalid();
   });
 
@@ -86,7 +86,7 @@ describe("BookingPage (basic smoke tests)", () => {
   it("shows correct table headers", () => {
     render(<BookingPage />);
     // Only assert that a <th> contains the text
-    const firstNameHeaders = screen.getAllByText(/First Name/i);
+    const firstNameHeaders = screen.getAllByText(/Name/i);
     expect(firstNameHeaders.some((el) => el.tagName === "TH")).toBe(true);
 
     const dateHeaders = screen.getAllByText(/Date/i);
