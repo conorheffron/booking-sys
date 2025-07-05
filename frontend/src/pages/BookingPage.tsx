@@ -31,6 +31,14 @@ export const BookingPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<string>('');
 
+  // NEW: Hide success message after a few seconds
+  useEffect(() => {
+    if (formOutMsg && formOutType === 'success') {
+      const timer = setTimeout(() => setFormOutMsg(''), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [formOutMsg, formOutType]);
+
   // Fetch bookings for the selected form date
   const fetchBookings = async (date: string) => {
     if (!date) {
@@ -96,7 +104,7 @@ export const BookingPage: React.FC = () => {
       // Do not reset form values
       // Refetch bookings for the selected date
       fetchBookings(form.reservation_date);
-      // Do not auto-clear message
+      // Message will auto-clear if successful
     } catch (err: any) {
       setFormOutType('danger');
       setFormOutMsg(`Error: ${err.message || 'Could not submit reservation.'}`);
