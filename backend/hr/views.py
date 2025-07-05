@@ -109,6 +109,7 @@ class Views:
         """
         GET: Return booking info by id as JSON
         PUT: Update booking info by id from JSON body
+        DELETE: Delete booking by id
         - Do not allow editing of past bookings
         - Do not allow updating to a past date/time
         """
@@ -190,6 +191,9 @@ class Views:
                 "success": True
             }
             return JsonResponse(data, status=200)
+        elif request.method == "DELETE":
+            reservation.delete()
+            return JsonResponse({"success": True, "message": "Booking deleted."}, status=200)
         else:
             return JsonResponse({"error": "Method not allowed."}, status=405)
 
@@ -343,9 +347,22 @@ def table_view(request):
         ],
         responses={200: OpenApiTypes.OBJECT, 404: OpenApiTypes.OBJECT}
     ),
-    put=extend_schema(exclude=True)  # <--- this hides PUT in Swagger!
+    put=extend_schema(exclude=True),  # <--- this hides PUT in Swagger!
+    delete=extend_schema(exclude=True)
+    # delete=extend_schema(
+    #     description="DELETE: Delete booking by id",
+    #     parameters=[
+    #         OpenApiParameter(
+    #             name="reservation_id",
+    #             type=OpenApiTypes.INT,
+    #             location=OpenApiParameter.PATH,
+    #             description="Reservation ID"
+    #         )
+    #     ],
+    #     responses={200: OpenApiTypes.OBJECT, 404: OpenApiTypes.OBJECT}
+    # )
 )
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def bookings_by_id_view(request, reservation_id):
     return Views.bookings_by_id(request, reservation_id)
 

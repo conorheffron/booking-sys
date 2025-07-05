@@ -126,9 +126,30 @@ class ApiTests(TestCase):
         data = json.loads(response.content.decode())
         assert "Already Reserved" in data["error"]
 
+    def test_bookings_by_id_delete_success(self):
+        """HR Test case test_bookings_by_id_delete_success"""
+        # Ensure the reservation exists
+        assert Reservation.objects.filter(id=self.reservation.id).exists()
+        request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
+        response = self.views.bookings_by_id(request, self.reservation.id)
+        assert response.status_code == 200
+        data = json.loads(response.content.decode())
+        assert data["success"] is True
+        assert "deleted" in data["message"].lower()
+        # Confirm it's deleted from the database
+        assert not Reservation.objects.filter(id=self.reservation.id).exists()
+
+    def test_bookings_by_id_delete_404(self):
+        """HR Test case test_bookings_by_id_delete_404"""
+        # Attempt to delete a reservation that does not exist
+        request = self.factory.delete("/api/reservations/9999/")
+        with pytest.raises(Exception):
+            self.views.bookings_by_id(request, 9999)
+
     def test_bookings_by_id_method_not_allowed(self):
         """HR Test case test_bookings_by_id_method_not_allowed"""
-        request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
+        # PATCH is not allowed
+        request = self.factory.patch(f"/api/reservations/{self.reservation.id}/")
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 405
         data = json.loads(response.content.decode())
