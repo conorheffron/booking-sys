@@ -73,7 +73,7 @@ export const ReservationsPage: React.FC = () => {
           <div className="col-md-10 col-lg-8 main-content-bg">
             <div className="card shadow-sm" style={{ background: 'transparent', border: 'none' }}>
               <div className="card-body">
-                <h3 className="card-title mb-4 text-center">All Upcoming Reservations</h3>
+                <h3 className="card-title mb-4 text-center">Upcoming Reservations</h3>
                 {error && (
                   <div className="alert alert-danger text-center">{error}</div>
                 )}
@@ -81,7 +81,7 @@ export const ReservationsPage: React.FC = () => {
                   <table className="table table-sm table-bordered table-hover">
                     <thead>
                       <tr>
-                        <th>#</th>
+                        <th>ID</th>
                         <th>Name</th>
                         <th>Booking Date</th>
                         <th>Booking Time</th>
@@ -100,7 +100,7 @@ export const ReservationsPage: React.FC = () => {
                       ) : (
                         reservations.map((r, idx) => (
                           <tr key={r.id}>
-                            <td>{idx + 1}</td>
+                            <td>{r.id}</td>
                             <td>{r.first_name}</td>
                             <td>{r.reservation_date}</td>
                             <td>{r.reservation_slot}</td>

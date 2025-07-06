@@ -83,7 +83,7 @@ describe("ReservationsPage", () => {
     const table = container.querySelector("table")!;
     const headers = Array.from(table.querySelectorAll("th")).map(th => th.textContent?.trim());
     expect(headers).toEqual([
-        "#",
+        "ID",
         "Name",
         "Booking Date",
         "Booking Time",
