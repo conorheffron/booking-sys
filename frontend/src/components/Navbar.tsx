@@ -4,15 +4,17 @@ import robotLogo from '../img/robot-logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../css/style.css';
+import { getAppVersion } from '../components/appVersionCache';
 
 export const Navbar: React.FC = () => {
   const [appVersion, setAppVersion] = useState<string>('…');
 
   useEffect(() => {
-    fetch('/api/version/')
-      .then(res => res.ok ? res.text() : Promise.reject('Could not fetch version'))
-      .then(text => setAppVersion(text.trim()))
-      .catch(() => setAppVersion('unknown'));
+    let mounted = true;
+    getAppVersion()
+      .then(version => { if (mounted) setAppVersion(version); })
+      .catch(() => { if (mounted) setAppVersion('unknown'); });
+    return () => { mounted = false; };
   }, []);
 
   return (
