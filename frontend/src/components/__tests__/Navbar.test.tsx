@@ -6,6 +6,13 @@ import { Navbar } from '../Navbar';
 // If you have moduleNameMapper for images, you can remove this manual mock
 jest.mock('../img/robot-logo.png', () => 'robot-logo.png');
 
+// Mock appVersionCache
+jest.mock('../../components/appVersionCache', () => ({
+  getAppVersion: jest.fn(),
+}));
+
+import { getAppVersion } from '../../components/appVersionCache';
+
 // Helper to render with router context
 function renderWithRouter(ui: React.ReactElement) {
   return render(<BrowserRouter>{ui}</BrowserRouter>);
@@ -14,16 +21,11 @@ function renderWithRouter(ui: React.ReactElement) {
 describe('Navbar', () => {
   afterEach(() => {
     jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   it('renders logo, brand, and navigation links', () => {
-    // Mock fetch (prevent it from running for this test)
-    jest.spyOn(global, 'fetch').mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        text: () => Promise.resolve('1.2.3'),
-      } as Response)
-    );
+    (getAppVersion as jest.Mock).mockResolvedValue('1.2.3');
     renderWithRouter(<Navbar />);
     expect(screen.getByAltText('Logo')).toBeInTheDocument();
     expect(screen.getByText('Booking System')).toBeInTheDocument();
@@ -34,19 +36,13 @@ describe('Navbar', () => {
   });
 
   it('renders initial version as ellipsis', () => {
-    jest.spyOn(global, 'fetch').mockImplementation(() =>
-      new Promise(() => {}) // never resolves
-    );
+    (getAppVersion as jest.Mock).mockImplementation(() => new Promise(() => {}));
     renderWithRouter(<Navbar />);
     expect(screen.getByText(/Version: …/)).toBeInTheDocument();
   });
 
   it('fetches and displays the app version on success', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      ok: true,
-      text: () => Promise.resolve('1.2.3\n'),
-    } as Response);
-
+    (getAppVersion as jest.Mock).mockResolvedValue('1.2.3');
     renderWithRouter(<Navbar />);
     await waitFor(() => {
       expect(screen.getByText('Version: 1.2.3')).toBeInTheDocument();
@@ -54,33 +50,15 @@ describe('Navbar', () => {
   });
 
   it('displays "unknown" if fetch fails', async () => {
-    jest.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'));
-
+    (getAppVersion as jest.Mock).mockRejectedValue(new Error('Network error'));
     renderWithRouter(<Navbar />);
     await waitFor(() => {
-      expect(screen.getByText('Version: unknown')).toBeInTheDocument();
-    });
-  });
-
-  it('displays "unknown" if fetch response is not ok', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      ok: false,
-      text: () => Promise.resolve('should not be used'),
-    } as Response);
-
-    renderWithRouter(<Navbar />);
-    await waitFor(() => {
-      expect(screen.getByText('Version: unknown')).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /unknown/i })).toBeInTheDocument();
     });
   });
 
   it('has external link to the GitHub repo', () => {
-    jest.spyOn(global, 'fetch').mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        text: () => Promise.resolve('1.2.3'),
-      } as Response)
-    );
+    (getAppVersion as jest.Mock).mockResolvedValue('1.2.3');
     renderWithRouter(<Navbar />);
     const link = screen.getByRole('link', { name: /Version:/ });
     expect(link).toHaveAttribute('href', 'https://github.com/conorheffron/booking-sys');
