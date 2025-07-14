@@ -25,7 +25,7 @@ jsonschema-specifications==2025.4.1
 mccabe==0.7.0
 mysqlclient==2.2.7
 packaging==25.0
-pipenv==2025.0.3
+pipenv==2025.0.4
 platformdirs==4.3.8
 pluggy==1.6.0
 Pygments==2.19.2
