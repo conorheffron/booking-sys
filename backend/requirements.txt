@@ -50,5 +50,5 @@ tomlkit==0.13.3
 typing_extensions==4.14.1
 uritemplate==4.2.0
 urllib3==2.5.0
-virtualenv==20.32.0
+virtualenv==20.33.1
 whitenoise==6.9.0
