@@ -4,7 +4,7 @@ attrs==25.3.0
 certifi==2025.7.14
 charset-normalizer==3.4.2
 coreschema==0.0.4
-coverage==7.9.2
+coverage==7.10.3
 defusedxml==0.7.1
 dill==0.4.0
 distlib==0.4.0
