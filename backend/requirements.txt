@@ -47,7 +47,7 @@ rpds-py==0.27.0
 setuptools==80.9.0
 sqlparse==0.5.3
 tomlkit==0.13.3
-typing_extensions==4.14.1
+typing_extensions==4.15.0
 uritemplate==4.2.0
 urllib3==2.5.0
 virtualenv==20.34.0
