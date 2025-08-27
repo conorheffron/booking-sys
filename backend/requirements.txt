@@ -4,7 +4,7 @@ attrs==25.3.0
 certifi==2025.8.3
 charset-normalizer==3.4.3
 coreschema==0.0.4
-coverage==7.10.4
+coverage==7.10.5
 defusedxml==0.7.1
 dill==0.4.0
 distlib==0.4.0
@@ -47,7 +47,7 @@ rpds-py==0.27.0
 setuptools==80.9.0
 sqlparse==0.5.3
 tomlkit==0.13.3
-typing_extensions==4.14.1
+typing_extensions==4.15.0
 uritemplate==4.2.0
 urllib3==2.5.0
 virtualenv==20.34.0
