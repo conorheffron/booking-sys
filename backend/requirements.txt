@@ -11,7 +11,7 @@ distlib==0.4.0
 Django==5.2.2
 django-appconf==1.1.0
 django-compressor==4.5.1
-django-cors-headers==4.7.0
+django-cors-headers==4.8.0
 djangorestframework==3.16.1
 djangorestframework-xml==2.0.0
 drf-spectacular==0.28.0
