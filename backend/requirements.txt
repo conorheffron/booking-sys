@@ -36,7 +36,7 @@ Pygments==2.19.2
 pylint==3.3.8
 pylint-django==2.6.1
 pylint-plugin-utils==0.9.0
-pytest==8.4.1
+pytest==8.4.2
 pytz==2025.2
 PyYAML==6.0.2
 rcssmin==1.1.2
