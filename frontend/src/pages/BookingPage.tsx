@@ -202,7 +202,7 @@ export const BookingPage: React.FC = () => {
                   <table className="table table-sm table-bordered table-hover">
                     <thead>
                       <tr>
-                        <th>First Name</th>
+                        <th>Name</th>
                         <th>Date</th>
                         <th>Slot</th>
                       </tr>
