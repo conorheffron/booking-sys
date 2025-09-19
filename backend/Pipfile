@@ -57,7 +57,7 @@ typing-extensions = "==4.15.0"
 uritemplate = "==4.2.0"
 urllib3 = "==2.5.0"
 virtualenv = "==20.34.0"
-whitenoise = "==6.9.0"
+whitenoise = "==6.10.0"
 
 [dev-packages]
 
