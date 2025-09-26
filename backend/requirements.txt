@@ -4,14 +4,14 @@ attrs==25.3.0
 certifi==2025.8.3
 charset-normalizer==3.4.3
 coreschema==0.0.4
-coverage==7.10.6
+coverage==7.10.7
 defusedxml==0.7.1
 dill==0.4.0
 distlib==0.4.0
 Django==5.2.6
 django-appconf==1.1.0
 django-compressor==4.5.1
-django-cors-headers==4.8.0
+django-cors-headers==4.9.0
 djangorestframework==3.16.1
 djangorestframework-xml==2.0.0
 drf-spectacular==0.28.0
@@ -51,4 +51,4 @@ typing_extensions==4.15.0
 uritemplate==4.2.0
 urllib3==2.5.0
 virtualenv==20.34.0
-whitenoise==6.10.0
+whitenoise==6.11.0
