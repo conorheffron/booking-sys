@@ -15,7 +15,7 @@ django-cors-headers==4.9.0
 djangorestframework==3.16.1
 djangorestframework-xml==2.0.0
 drf-spectacular==0.28.0
-drf-yasg==1.21.10
+drf-yasg==1.21.11
 filelock==3.19.1
 idna==3.10
 inflection==0.5.1
