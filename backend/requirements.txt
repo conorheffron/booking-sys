@@ -38,7 +38,7 @@ pylint-django==2.6.1
 pylint-plugin-utils==0.9.0
 pytest==8.4.2
 pytz==2025.2
-PyYAML==6.0.2
+PyYAML==6.0.3
 rcssmin==1.1.2
 referencing==0.36.2
 requests==2.32.5
