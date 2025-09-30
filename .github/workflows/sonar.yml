@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test-and-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
+
+      - name: Install dependencies
+        run: cd backend && pip install -r requirements.txt pytest pytest-cov pytest-django pysonar
+
+      - name: Run tests with coverage
+        run: cd backend && pytest --cov=. --cov-report=xml
+
+      - name: Run SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          pysonar \
+            --sonar-project-key=conorheffron_booking-sys \
+            --sonar-organization=conorheffron \
+            --sonar-token=$SONAR_TOKEN

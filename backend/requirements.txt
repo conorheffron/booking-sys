@@ -1,4 +1,4 @@
-asgiref==3.9.1
+asgiref==3.9.2
 astroid==3.3.11
 attrs==25.3.0
 certifi==2025.8.3
@@ -15,7 +15,7 @@ django-cors-headers==4.9.0
 djangorestframework==3.16.1
 djangorestframework-xml==2.0.0
 drf-spectacular==0.28.0
-drf-yasg==1.21.10
+drf-yasg==1.21.11
 filelock==3.19.1
 idna==3.10
 inflection==0.5.1
@@ -25,7 +25,7 @@ itypes==1.2.0
 Jinja2==3.1.6
 jsonschema==4.25.1
 jsonschema-specifications==2025.9.1
-MarkupSafe==3.0.2
+MarkupSafe==3.0.3
 mccabe==0.7.0
 mysqlclient==2.2.7
 packaging==25.0
@@ -37,8 +37,9 @@ pylint==3.3.8
 pylint-django==2.6.1
 pylint-plugin-utils==0.9.0
 pytest==8.4.2
+pytest-django==4.11.1
 pytz==2025.2
-PyYAML==6.0.2
+PyYAML==6.0.3
 rcssmin==1.1.2
 referencing==0.36.2
 requests==2.32.5

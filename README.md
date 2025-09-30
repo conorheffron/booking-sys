@@ -16,6 +16,12 @@
 
 [![CodeQL Advanced](https://github.com/conorheffron/booking-sys/actions/workflows/codeql.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/codeql.yml)
 
+### SonarQube
+
+[![Build](https://github.com/conorheffron/booking-sys/actions/workflows/sonar.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/sonar.yml)
+
+[Sonar Cloud Overall Code Summary](https://sonarcloud.io/summary/overall?id=conorheffron_booking-sys&branch=main)
+
 ## Technologies
 python3, django 5 admin/framework, django.test, React 18, & MySQL Server / Sqlite2
 
