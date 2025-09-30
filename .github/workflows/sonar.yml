@@ -20,7 +20,7 @@ jobs:
           python-version: 3.13
 
       - name: Install dependencies
-        run: cd backend && pip install -r requirements.txt pytest pytest-cov pytest-django
+        run: cd backend && pip install -r requirements.txt pytest pytest-cov pytest-django pysonar
 
       - name: Run tests with coverage
         run: cd backend && pytest --cov=. --cov-report=xml
@@ -29,8 +29,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          sonar-scanner \
-            -Dsonar.projectKey=conorheffron_booking-sys \
-            -Dsonar.organization=conorheffron \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN
+          pysonar \
+            --sonar-project-key=conorheffron_booking-sys \
+            --sonar-organization=conorheffron \
+            --sonar-token=$SONAR_TOKEN
