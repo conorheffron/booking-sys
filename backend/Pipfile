@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 setuptools = "==80.9.0"
+pytest-cov = "7.0.0"
 asgiref = "==3.9.2"
 astroid = "==3.3.11"
 attrs = "==25.3.0"
