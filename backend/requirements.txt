@@ -8,7 +8,7 @@ coverage==7.10.7
 defusedxml==0.7.1
 dill==0.4.0
 distlib==0.4.0
-Django==5.2.6
+Django==5.2.7
 django-appconf==1.1.0
 django-compressor==4.5.1
 django-cors-headers==4.9.0
