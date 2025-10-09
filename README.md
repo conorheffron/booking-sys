@@ -20,6 +20,8 @@
 
 [![Build](https://github.com/conorheffron/booking-sys/actions/workflows/sonar.yml/badge.svg)](https://github.com/conorheffron/booking-sys/actions/workflows/sonar.yml)
 
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=conorheffron_booking-sys)](https://sonarcloud.io/summary/new_code?id=conorheffron_booking-sys)
+
 [Sonar Cloud Overall Code Summary](https://sonarcloud.io/summary/overall?id=conorheffron_booking-sys&branch=main)
 
 ## Technologies
