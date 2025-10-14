@@ -1,4 +1,4 @@
-FROM python:3.13-slim AS backend
+FROM python:3.14-slim AS backend
 
 # Install MySQL and build tools for mysqlclient, plus Node.js for frontend
 RUN apt-get update && \
