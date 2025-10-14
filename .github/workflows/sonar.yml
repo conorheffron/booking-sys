@@ -34,8 +34,4 @@ jobs:
     - name: Run SonarCloud analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        pysonar \
-          --sonar-project-key=conorheffron_booking-sys \
-          --sonar-organization=conorheffron \
-          --sonar-token=$SONAR_TOKEN
+      run: pysonar --sonar-project-key=conorheffron_booking-sys --sonar-organization=conorheffron --sonar-token=$SONAR_TOKEN
