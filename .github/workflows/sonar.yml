@@ -9,7 +9,6 @@ on:
 
 jobs:
   test-and-analyze:
-
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
