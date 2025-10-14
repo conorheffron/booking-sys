@@ -10,27 +10,26 @@ on:
 jobs:
   test-and-analyze:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.14]
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
-      run: |
-        cd backend
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt pytest pytest-cov pytest-django pysonar
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Run tests with coverage
-      run: cd backend && pytest --cov=. --cov-report=xml
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
 
-    - name: Run SonarCloud analysis
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: pysonar --sonar-project-key=conorheffron_booking-sys --sonar-organization=conorheffron --sonar-token=$SONAR_TOKEN
+      - name: Install dependencies
+        run: cd backend && pip install -r requirements.txt pytest pytest-cov pytest-django pysonar
+
+      - name: Run tests with coverage
+        run: cd backend && pytest --cov=. --cov-report=xml
+
+      - name: Run SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          pysonar \
+            --sonar-project-key=conorheffron_booking-sys \
+            --sonar-organization=conorheffron \
+            --sonar-token=$SONAR_TOKEN
