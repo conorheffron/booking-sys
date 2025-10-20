@@ -13,7 +13,7 @@ This is the React + TypeScript frontend for the Booking System, migrated from tr
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18 or later recommended)
+- [Node.js](https://nodejs.org/) (v22 (LTS) recommended)
 - [npm](https://www.npmjs.com/) (comes with Node.js)
 
 ## Installation

@@ -25,7 +25,7 @@
 [Sonar Cloud Overall Code Summary](https://sonarcloud.io/summary/overall?id=conorheffron_booking-sys&branch=main)
 
 ## Technologies
-python3, django 5 admin/framework, django.test, React 18, & MySQL Server / Sqlite2
+ - python3, django 5 admin/framework, django.test, React 18, TypeScipt, & MySQL Server / Sqlite2
 
 ### Buil & Run via Docker
 #### - Update 'DEBUG' in .env to True
@@ -57,7 +57,7 @@ pipenv run pip freeze > requirements.txt
 ```shell
 cd booking-sys/backend/
 sudo pipenv shell
-pipenv install -r  requirements.txt
+pipenv install -r requirements.txt
 ```
 
 ## Create DB Schema on MySQL via Mac (mysql client for CLI)
