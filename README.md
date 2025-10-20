@@ -57,7 +57,7 @@ pipenv run pip freeze > requirements.txt
 ```shell
 cd booking-sys/backend/
 sudo pipenv shell
-pipenv install -r  requirements.txt
+pipenv install -r requirements.txt
 ```
 
 ## Create DB Schema on MySQL via Mac (mysql client for CLI)
