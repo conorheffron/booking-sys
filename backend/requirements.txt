@@ -4,12 +4,12 @@ attrs==25.4.0
 certifi==2025.10.5
 charset-normalizer==3.4.4
 coreschema==0.0.4
-coverage==7.11.0
+coverage==7.11.3
 defusedxml==0.7.1
 dill==0.4.0
 distlib==0.4.0
 Django==5.2.8
-django-appconf==1.1.0
+django-appconf==1.2.0
 django-compressor==4.6.0
 django-cors-headers==4.9.0
 djangorestframework==3.16.1
@@ -36,7 +36,7 @@ Pygments==2.19.2
 pylint==3.3.9
 pylint-django==2.6.1
 pylint-plugin-utils==0.9.0
-pytest==8.4.2
+pytest==9.0.0
 pytest-django==4.11.1
 pytz==2025.2
 PyYAML==6.0.3
