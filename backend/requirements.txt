@@ -10,7 +10,7 @@ dill==0.4.0
 distlib==0.4.0
 Django==5.2.8
 django-appconf==1.1.0
-django-compressor==4.5.1
+django-compressor==4.6.0
 django-cors-headers==4.9.0
 djangorestframework==3.16.1
 djangorestframework-xml==2.0.0
