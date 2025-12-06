@@ -1,16 +1,16 @@
 {
-    "version": "3.4.4",
+    "version": "3.4.5",
     "configurations": [
 
         {
             "name": "Python: Bookings API",
             "type": "python",
             "request": "launch",
-            "pythonPath": "/Users/conorheffron/.local/share/virtualenvs/booking-sys-kyjdh7L0/bin/python3", // path to your virtual environment's python
+            "pythonPath": "/Users/conorheffron/.local/share/virtualenvs/booking-sys-kyjdh7L0/bin/python3",
             "program": "${workspaceFolder}/backend/manage.py",
             "args": [
                 "runserver",
-                "8000", // or any other port you wish to use
+                "8000",
             ],
             "env": {
                 "PYTHONUNBUFFERED": "1",
@@ -23,7 +23,7 @@
             "name": "Django Run All Tests",
             "type": "python",
             "request": "launch",
-            "pythonPath": "/Users/conorheffron/.local/share/virtualenvs/booking-sys-kyjdh7L0/bin/python3", // path to your virtual environment's python
+            "pythonPath": "/Users/conorheffron/.local/share/virtualenvs/booking-sys-kyjdh7L0/bin/python3",
             "program": "${workspaceFolder}/backend/manage.py",
             "args": [
                 "test",
