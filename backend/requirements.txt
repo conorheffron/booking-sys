@@ -29,7 +29,7 @@ MarkupSafe==3.0.3
 mccabe==0.7.0
 mysqlclient==2.2.7
 packaging==25.0
-pipenv==2025.0.4
+pipenv==2025.1.1
 platformdirs==4.5.0
 pluggy==1.6.0
 Pygments==2.19.2
