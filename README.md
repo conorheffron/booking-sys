@@ -27,7 +27,7 @@
 [Sonar Cloud Overall Code Summary](https://sonarcloud.io/summary/overall?id=conorheffron_booking-sys&branch=main)
 
 ## Technologies
- - python3, django 5 admin/framework, django.test, React 18, TypeScipt, & MySQL Server / Sqlite2
+ - python3, django 6 admin/framework, django.test, React 18, TypeScipt, & MySQL Server / Sqlite2
 
 ### Buil & Run via Docker
 #### - Update 'DEBUG' in .env to True
