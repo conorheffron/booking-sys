@@ -6,7 +6,7 @@ charset-normalizer==3.4.4
 coreschema==0.0.4
 coverage==7.13.1
 defusedxml==0.7.1
-dill==0.4.0
+dill==0.4.1
 distlib==0.4.0
 Django==6.0.1
 django-appconf==1.2.0
@@ -15,7 +15,7 @@ django-cors-headers==4.9.0
 djangorestframework==3.16.1
 djangorestframework-xml==2.0.0
 drf-spectacular==0.29.0
-drf-yasg==1.21.11
+drf-yasg==1.21.14
 filelock==3.20.3
 idna==3.11
 inflection==0.5.1
@@ -47,7 +47,7 @@ rjsmin==1.2.4
 rpds-py==0.30.0
 setuptools==80.9.0
 sqlparse==0.5.5
-tomlkit==0.13.3
+tomlkit==0.14.0
 typing_extensions==4.15.0
 uritemplate==4.2.0
 urllib3==2.6.3
