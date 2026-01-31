@@ -4,14 +4,14 @@ attrs==25.4.0
 certifi==2026.1.4
 charset-normalizer==3.4.4
 coreschema==0.0.4
-coverage==7.13.1
+coverage==7.13.2
 defusedxml==0.7.1
 dill==0.4.1
 distlib==0.4.0
 Django==6.0.1
 django-appconf==1.2.0
-django-compressor==4.6.0
 django-cors-headers==4.9.0
+django_compressor==4.6.0
 djangorestframework==3.16.1
 djangorestframework-xml==2.0.0
 drf-spectacular==0.29.0
@@ -28,7 +28,7 @@ jsonschema-specifications==2025.9.1
 MarkupSafe==3.0.3
 mccabe==0.7.0
 mysqlclient==2.2.7
-packaging==25.0
+packaging==26.0
 pipenv==2026.0.3
 platformdirs==4.5.1
 pluggy==1.6.0
@@ -37,6 +37,7 @@ pylint==3.3.9
 pylint-django==2.7.0
 pylint-plugin-utils==0.9.0
 pytest==9.0.2
+pytest-cov==7.0.0
 pytest-django==4.11.1
 pytz==2025.2
 PyYAML==6.0.3
@@ -45,7 +46,7 @@ referencing==0.37.0
 requests==2.32.5
 rjsmin==1.2.4
 rpds-py==0.30.0
-setuptools==80.9.0
+setuptools==80.10.2
 sqlparse==0.5.5
 tomlkit==0.14.0
 typing_extensions==4.15.0
