@@ -46,7 +46,7 @@ referencing==0.37.0
 requests==2.32.5
 rjsmin==1.2.4
 rpds-py==0.30.0
-setuptools==80.10.2
+setuptools==82.0.0
 sqlparse==0.5.5
 tomlkit==0.14.0
 typing_extensions==4.15.0
