@@ -16,6 +16,53 @@ This is the React + TypeScript frontend for the Booking System, migrated from tr
 - [Node.js](https://nodejs.org/) (`v24` (LTS) recommended)
 - [npm](https://www.npmjs.com/) (comes with Node.js `11`)
 
+## Project Structure (Frontend Skeleton)
+```shell
+.
+├── index.html
+├── jest.config.js
+├── package-lock.json
+├── package.json
+├── public
+├── setupTests.ts
+├── src
+│   ├── assets
+│   │   ├── favico.png
+│   │   ├── icon.svg
+│   │   └── robot-logo.png
+│   ├── components
+│   │   ├── Navbar.tsx
+│   │   ├── Utils.tsx
+│   │   ├── __mocks__
+│   │   │   └── fileMock.js
+│   │   ├── __tests__
+│   │   │   ├── Navbar.test.tsx
+│   │   │   ├── Utils.test.tsx
+│   │   │   └── appVersionCache.test.tsx
+│   │   └── appVersionCache.tsx
+│   ├── css
+│   │   └── style.css
+│   ├── main.tsx
+│   ├── pages
+│   │   ├── BookingPage.tsx
+│   │   ├── EditReservationPage.tsx
+│   │   ├── ErrorPage.tsx
+│   │   ├── ReservationsPage.tsx
+│   │   └── __tests__
+│   │       ├── BookingPage.test.tsx
+│   │       ├── EditReservationPage.test.tsx
+│   │       ├── ErrorPage.test.tsx
+│   │       └── Reservationspage.test.tsx
+│   └── styles
+│       └── style.module.css
+├── test.tsx
+├── tsconfig.json
+├── typings
+│   └── custom
+│       └── import-png.d.ts
+└── vite.config.ts
+```
+
 ## Installation
 
 1. Navigate to the frontend directory:

@@ -29,6 +29,35 @@
 ## Technologies
  - python3, django 6 admin/framework, django.test, React 18, TypeScipt, & MySQL Server / Sqlite2
 
+## Project Structure (Backend Skeleton)
+```shell
+.
+├── Pipfile
+├── booking-sys
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── db.sqlite3
+├── hr
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── migrations
+│   │   ├── 0001_initial.py
+│   │   ├── 0001_initial_squashed_0002_alter_reservation_id.py
+│   │   └── 0002_alter_reservation_id.py
+│   ├── models.py
+│   ├── templates
+│   │   └── navbar.html
+│   ├── test_apis.py
+│   ├── test_forms.py
+│   ├── time_utils.py
+│   ├── urls.py
+│   └── views.py
+└── manage.py
+```
+
 ### Buil & Run via Docker
 #### - Update 'DEBUG' in .env to True
 ```shell
