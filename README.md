@@ -31,7 +31,7 @@
 
 ## Project Structure (Backend Skeleton)
 ```shell
-.
+backend
 ├── Pipfile
 ├── booking-sys
 │   ├── asgi.py
