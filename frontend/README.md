@@ -18,7 +18,7 @@ This is the React + TypeScript frontend for the Booking System, migrated from tr
 
 ## Project Structure (Frontend Skeleton)
 ```shell
-.
+frontend
 ├── index.html
 ├── jest.config.js
 ├── package-lock.json
