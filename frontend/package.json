@@ -1,6 +1,6 @@
 {
   "name": "@conorheffron/booking-sys-frontend",
-  "version": "3.5.3",
+  "version": "3.5.4",
   "private": false,
   "license": "GPL-3.0-or-later",
   "description": "React + TypeScript frontend for Booking System",
