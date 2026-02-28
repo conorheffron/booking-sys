@@ -30,7 +30,7 @@ mccabe==0.7.0
 mysqlclient==2.2.8
 packaging==26.0
 pipenv==2026.0.3
-platformdirs==4.5.1
+platformdirs==4.9.2
 pluggy==1.6.0
 Pygments==2.19.2
 pylint==3.3.9
