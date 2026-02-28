@@ -43,13 +43,7 @@ backend
 │   ├── admin.py
 │   ├── apps.py
 │   ├── forms.py
-│   ├── migrations
-│   │   ├── 0001_initial.py
-│   │   ├── 0001_initial_squashed_0002_alter_reservation_id.py
-│   │   └── 0002_alter_reservation_id.py
 │   ├── models.py
-│   ├── templates
-│   │   └── navbar.html
 │   ├── test_apis.py
 │   ├── test_forms.py
 │   ├── time_utils.py
