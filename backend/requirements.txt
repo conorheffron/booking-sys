@@ -16,7 +16,7 @@ djangorestframework==3.16.1
 djangorestframework-xml==2.0.0
 drf-spectacular==0.29.0
 drf-yasg==1.21.14
-filelock==3.20.3
+filelock==3.24.3
 idna==3.11
 inflection==0.5.1
 iniconfig==2.3.0
