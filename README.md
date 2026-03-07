@@ -52,6 +52,8 @@ backend
 └── manage.py
 ```
 
+ - See the frontend README.md [here](./frontend/README.md)
+
 ### Buil & Run via Docker
 #### - Update 'DEBUG' in .env to True
 ```shell
