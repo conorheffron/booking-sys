@@ -21,10 +21,7 @@ This is the React + TypeScript frontend for the Booking System, migrated from tr
 frontend
 ├── index.html
 ├── jest.config.js
-├── package-lock.json
 ├── package.json
-├── public
-├── setupTests.ts
 ├── src
 │   ├── assets
 │   │   ├── favico.png
@@ -55,7 +52,6 @@ frontend
 │   │       └── Reservationspage.test.tsx
 │   └── styles
 │       └── style.module.css
-├── test.tsx
 ├── tsconfig.json
 ├── typings
 │   └── custom
