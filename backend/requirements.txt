@@ -53,4 +53,4 @@ typing_extensions==4.15.0
 uritemplate==4.2.0
 urllib3==2.6.3
 virtualenv==21.2.0
-whitenoise==6.11.0
+whitenoise==6.12.0
