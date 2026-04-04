@@ -17,7 +17,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: 3.14
+          python-version: 3.13 # Upgrade when pysonar conflict for 'type' error resolved
 
       - name: Install dependencies
         run: cd backend && pip install -r requirements.txt pytest pytest-cov pytest-django pysonar
