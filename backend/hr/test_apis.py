@@ -2,10 +2,12 @@
 import json
 import re
 from datetime import date, timedelta
+from unittest.mock import patch
 import pytest
+from django.http import HttpResponse
 from django.test import RequestFactory, TestCase
 from hr.models import Reservation
-from hr.views import Views
+from hr.views import Views, csrf_view, version_view, table_view, bookings_by_id_view, save_reservation_view
 
 @pytest.mark.django_db
 class ApiTests(TestCase):
@@ -257,3 +259,218 @@ class ApiTests(TestCase):
         assert response.status_code == 400
         assert "reservation_slot must be in format" in json.loads(
             response.content.decode())["error"]
+
+    def test_csrf_success(self):
+        """HR Test case test_csrf_success"""
+        request = self.factory.get('/api/csrf/')
+        request.META["CSRF_COOKIE"] = "token-123"
+        response = Views.csrf(request)
+        assert response.status_code == 200
+        assert json.loads(response.content.decode())["csrfToken"] == "token-123"
+
+    def test_table_view_with_query_date(self):
+        """HR Test case test_table_view_with_query_date"""
+        target_date = str(date.today() + timedelta(days=2))
+        Reservation.objects.create(
+            first_name="Future",
+            reservation_date=target_date,
+            reservation_slot="11:00:00"
+        )
+        request = self.factory.get(f'/api/bookings?date={target_date}')
+        response = Views.table_view(request)
+        data = json.loads(response.content.decode())
+        assert response.status_code == 200
+        assert data["message"] == "success"
+        assert len(data["reservations"]) == 1
+        assert data["reservations"][0]["first_name"] == "Future"
+
+    def test_table_view_without_query_date_returns_future(self):
+        """HR Test case test_table_view_without_query_date_returns_future"""
+        Reservation.objects.create(
+            first_name="Past",
+            reservation_date=str(date.today() - timedelta(days=1)),
+            reservation_slot="09:00:00"
+        )
+        Reservation.objects.create(
+            first_name="Future",
+            reservation_date=str(date.today() + timedelta(days=3)),
+            reservation_slot="10:00:00"
+        )
+        request = self.factory.get('/api/bookings')
+        response = Views.table_view(request)
+        data = json.loads(response.content.decode())
+        assert response.status_code == 200
+        assert len(data["reservations"]) == 2  # includes self.reservation from setUp
+        first_names = [booking["first_name"] for booking in data["reservations"]]
+        assert "Future" in first_names
+        assert "Past" not in first_names
+
+    def test_bookings_by_id_put_invalid_reservation_date(self):
+        """HR Test case test_bookings_by_id_put_invalid_reservation_date"""
+        payload = {
+            "first_name": "Taylor",
+            "reservation_date": "invalid-date",
+            "reservation_slot": "02:00 PM"
+        }
+        request = self.factory.put(
+            f"/api/reservations/{self.reservation.id}/",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        response = self.views.bookings_by_id(request, self.reservation.id)
+        assert response.status_code == 400
+        assert "Invalid reservation_date" in json.loads(response.content.decode())["error"]
+
+    def test_bookings_by_id_put_past_date_time_rejected(self):
+        """HR Test case test_bookings_by_id_put_past_date_time_rejected"""
+        payload = {
+            "first_name": "Taylor",
+            "reservation_date": str(date.today() - timedelta(days=1)),
+            "reservation_slot": "10:00 AM"
+        }
+        request = self.factory.put(
+            f"/api/reservations/{self.reservation.id}/",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        response = self.views.bookings_by_id(request, self.reservation.id)
+        assert response.status_code == 400
+        assert "Cannot update reservation to a past date/time." in json.loads(
+            response.content.decode()
+        )["error"]
+
+    def test_save_reservation_invalid_date_rejected(self):
+        """HR Test case test_save_reservation_invalid_date_rejected"""
+        payload = {
+            "first_name": "Test",
+            "reservation_date": "not-a-date",
+            "reservation_slot": "10:00 AM"
+        }
+        request = self.factory.put(
+            "/api/save_reservation/",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        response = self.views.save_reservation(request)
+        assert response.status_code == 400
+        assert "Invalid reservation_date or reservation_slot." in json.loads(
+            response.content.decode()
+        )["error"]
+
+    def test_save_reservation_past_date_rejected(self):
+        """HR Test case test_save_reservation_past_date_rejected"""
+        payload = {
+            "first_name": "Test",
+            "reservation_date": str(date.today() - timedelta(days=1)),
+            "reservation_slot": "10:00 AM"
+        }
+        request = self.factory.put(
+            "/api/save_reservation/",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        response = self.views.save_reservation(request)
+        assert response.status_code == 400
+        assert "Cannot make a reservation for a past date/time." in json.loads(
+            response.content.decode()
+        )["error"]
+
+    @patch("hr.views.render")
+    def test_edit_reservation_get_initial_form(self, mock_render):
+        """HR Test case test_edit_reservation_get_initial_form"""
+        mock_render.return_value = HttpResponse("ok")
+        request = self.factory.get(f"/api/reservations/edit/{self.reservation.id}/")
+        response = Views.edit_reservation(request, self.reservation.id)
+        assert response.status_code == 200
+        args, _ = mock_render.call_args
+        assert args[1] == "edit_reservation.html"
+        assert args[2]["reservation"].id == self.reservation.id
+        assert args[2]["form"].initial["reservation_date"] == self.reservation.reservation_date
+
+    @patch("hr.views.render")
+    def test_edit_reservation_blocks_past_booking(self, mock_render):
+        """HR Test case test_edit_reservation_blocks_past_booking"""
+        mock_render.return_value = HttpResponse("blocked")
+        past_reservation = Reservation.objects.create(
+            first_name="Old",
+            reservation_date=date.today() - timedelta(days=1),
+            reservation_slot="09:00:00"
+        )
+        request = self.factory.get(f"/api/reservations/edit/{past_reservation.id}/")
+        response = Views.edit_reservation(request, past_reservation.id)
+        assert response.status_code == 200
+        args, _ = mock_render.call_args
+        assert args[2]["form"] is None
+        assert "Editing past bookings is not allowed." in args[2]["error"]
+
+    @patch("hr.views.render")
+    def test_edit_reservation_post_conflict(self, mock_render):
+        """HR Test case test_edit_reservation_post_conflict"""
+        mock_render.return_value = HttpResponse("conflict")
+        future_date = date.today() + timedelta(days=2)
+        Reservation.objects.create(
+            first_name="Clash",
+            reservation_date=future_date,
+            reservation_slot="11:00:00"
+        )
+        request = self.factory.post(
+            f"/api/reservations/edit/{self.reservation.id}/",
+            data={"reservation_date": str(future_date), "reservation_slot": "11:00"}
+        )
+        response = Views.edit_reservation(request, self.reservation.id)
+        assert response.status_code == 200
+        args, _ = mock_render.call_args
+        assert "Already Reserved" in args[2]["error"]
+
+    @patch("hr.views.render")
+    def test_edit_reservation_post_past_datetime(self, mock_render):
+        """HR Test case test_edit_reservation_post_past_datetime"""
+        mock_render.return_value = HttpResponse("past")
+        request = self.factory.post(
+            f"/api/reservations/edit/{self.reservation.id}/",
+            data={
+                "reservation_date": str(date.today() - timedelta(days=1)),
+                "reservation_slot": "09:00"
+            }
+        )
+        response = Views.edit_reservation(request, self.reservation.id)
+        assert response.status_code == 200
+        args, _ = mock_render.call_args
+        assert "past date/time" in args[2]["error"]
+
+    @patch("hr.views.redirect")
+    def test_edit_reservation_post_success_redirect(self, mock_redirect):
+        """HR Test case test_edit_reservation_post_success_redirect"""
+        mock_redirect.return_value = HttpResponse("redirected")
+        future_date = date.today() + timedelta(days=4)
+        request = self.factory.post(
+            f"/api/reservations/edit/{self.reservation.id}/",
+            data={"reservation_date": str(future_date), "reservation_slot": "12:30"}
+        )
+        response = Views.edit_reservation(request, self.reservation.id)
+        self.reservation.refresh_from_db()
+        assert response.status_code == 200
+        assert mock_redirect.call_args[0][0] == "reservations"
+        assert self.reservation.reservation_date == future_date
+
+    def test_wrapper_views(self):
+        """HR Test case test_wrapper_views"""
+        csrf_request = self.factory.get('/api/csrf/')
+        csrf_request.META["CSRF_COOKIE"] = "wrapper-token"
+        csrf_response = csrf_view(csrf_request)
+        assert csrf_response.status_code == 200
+
+        version_response = version_view(self.factory.get('/api/version/'))
+        assert version_response.status_code == 200
+
+        table_response = table_view(self.factory.get('/api/bookings?date=bad-date'))
+        assert table_response.status_code == 200
+
+        bookings_response = bookings_by_id_view(
+            self.factory.get(f"/api/bookingsById/{self.reservation.id}"),
+            self.reservation.id
+        )
+        assert bookings_response.status_code == 200
+
+        save_response = save_reservation_view(self.factory.get("/api/reservations"))
+        assert save_response.status_code == 405

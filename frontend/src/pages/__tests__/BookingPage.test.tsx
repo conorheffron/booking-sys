@@ -95,4 +95,67 @@ describe("BookingPage (basic smoke tests)", () => {
     const slotHeaders = screen.getAllByText(/Slot/i);
     expect(slotHeaders.some((el) => el.tagName === "TH")).toBe(true);
   });
+
+  it("renders booking rows when bookings API returns data", async () => {
+    (global.fetch as jest.Mock) = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        reservations: [
+          { first_name: "Alice", reservation_date: "2099-01-01", reservation_slot: "09:00 AM" },
+        ],
+      }),
+    });
+    render(<BookingPage />);
+    await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+    expect(screen.getByText("2099-01-01")).toBeInTheDocument();
+    expect(screen.getByText("09:00 AM")).toBeInTheDocument();
+  });
+
+  it("shows fetch error for bookings API failures", async () => {
+    (global.fetch as jest.Mock) = jest.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({}),
+    });
+    render(<BookingPage />);
+    await waitFor(() =>
+      expect(screen.getByText(/Failed to fetch bookings/i)).toBeInTheDocument()
+    );
+  });
+
+  it("shows backend error message when reservation submit fails", async () => {
+    (global.fetch as jest.Mock) = jest
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ reservations: [] }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ reservations: [] }) })
+      .mockResolvedValueOnce({ ok: false, json: async () => ({ detail: "Booking already exists" }) });
+
+    render(<BookingPage />);
+    fireEvent.change(screen.getByLabelText(/Name/i), { target: { value: "Bob" } });
+    fireEvent.change(screen.getByLabelText(/Reservation date/i), { target: { value: "2099-01-01" } });
+    fireEvent.change(screen.getByLabelText(/Reservation slot/i), { target: { value: "10:00" } });
+    fireEvent.click(screen.getByRole("button", { name: /Reserve/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/Error: Booking already exists/i)).toBeInTheDocument()
+    );
+  });
+
+  it("shows success message when reservation submit succeeds", async () => {
+    (global.fetch as jest.Mock) = jest
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ reservations: [] }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ reservations: [] }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ id: 1 }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ reservations: [] }) });
+
+    render(<BookingPage />);
+    fireEvent.change(screen.getByLabelText(/Name/i), { target: { value: "Bob" } });
+    fireEvent.change(screen.getByLabelText(/Reservation date/i), { target: { value: "2099-01-01" } });
+    fireEvent.change(screen.getByLabelText(/Reservation slot/i), { target: { value: "10:00" } });
+    fireEvent.click(screen.getByRole("button", { name: /Reserve/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/Reservation submitted!/i)).toBeInTheDocument()
+    );
+  });
 });

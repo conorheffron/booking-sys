@@ -166,4 +166,71 @@ describe("EditReservationPage", () => {
     renderWithRoute("55");
     expect(screen.getByText("Navbar")).toBeInTheDocument();
   });
+
+  it("keeps AM/PM slot when already normalized", async () => {
+    (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        id: 8,
+        first_name: "AMPM",
+        reservation_date: "2099-04-01",
+        reservation_slot: "10:00 AM",
+      }),
+    });
+    renderWithRoute("8");
+    await waitFor(() => expect(screen.getByLabelText(/Slot/i)).toHaveValue("10:00"));
+  });
+
+  it("shows generic save error when update request throws", async () => {
+    (global.fetch as jest.Mock) = jest.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          id: 70,
+          first_name: "Throw",
+          reservation_date: "2099-11-01",
+          reservation_slot: "09:00",
+        }),
+      })
+      .mockRejectedValueOnce(new Error("Network down"));
+
+    renderWithRoute("70");
+    await waitFor(() => expect(screen.getByLabelText(/Name/i)).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Save/i }));
+    await waitFor(() => expect(screen.getByText(/Network down/i)).toBeInTheDocument());
+  });
+
+  it("navigates back when cancel is clicked", async () => {
+    (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        id: 50,
+        first_name: "Cancel",
+        reservation_date: "2099-08-01",
+        reservation_slot: "09:00",
+      }),
+    });
+    renderWithRoute("50");
+    await waitFor(() => expect(screen.getByRole("button", { name: /Cancel/i })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Cancel/i }));
+    await waitFor(() => expect(screen.getByText(/Reservations List/i)).toBeInTheDocument());
+  });
+
+  it("allows changing reservation date and slot fields", async () => {
+    (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        id: 51,
+        first_name: "Fields",
+        reservation_date: "2099-08-02",
+        reservation_slot: "09:00",
+      }),
+    });
+    renderWithRoute("51");
+    await waitFor(() => expect(screen.getByLabelText(/Reservation Date/i)).toBeInTheDocument());
+    fireEvent.change(screen.getByLabelText(/Reservation Date/i), { target: { value: "2099-08-03" } });
+    fireEvent.change(screen.getByLabelText(/Reservation Slot/i), { target: { value: "11:00" } });
+    expect(screen.getByLabelText(/Reservation Date/i)).toHaveValue("2099-08-03");
+    expect(screen.getByLabelText(/Reservation Slot/i)).toHaveValue("11:00");
+  });
 });
