@@ -123,11 +123,12 @@ describe("BookingPage (basic smoke tests)", () => {
   });
 
   it("shows backend error message when reservation submit fails", async () => {
-    (global.fetch as jest.Mock) = jest
-      .fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ reservations: [] }) })
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ reservations: [] }) })
-      .mockResolvedValueOnce({ ok: false, json: async () => ({ detail: "Booking already exists" }) });
+    (global.fetch as jest.Mock) = jest.fn().mockImplementation((_url: string, options?: RequestInit) => {
+      if (options?.method === "PUT") {
+        return Promise.resolve({ ok: false, json: async () => ({ detail: "Booking already exists" }) });
+      }
+      return Promise.resolve({ ok: true, json: async () => ({ reservations: [] }) });
+    });
 
     render(<BookingPage />);
     fireEvent.change(screen.getByLabelText(/Name/i), { target: { value: "Bob" } });
@@ -141,12 +142,12 @@ describe("BookingPage (basic smoke tests)", () => {
   });
 
   it("shows success message when reservation submit succeeds", async () => {
-    (global.fetch as jest.Mock) = jest
-      .fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ reservations: [] }) })
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ reservations: [] }) })
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ id: 1 }) })
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ reservations: [] }) });
+    (global.fetch as jest.Mock) = jest.fn().mockImplementation((_url: string, options?: RequestInit) => {
+      if (options?.method === "PUT") {
+        return Promise.resolve({ ok: true, json: async () => ({ id: 1 }) });
+      }
+      return Promise.resolve({ ok: true, json: async () => ({ reservations: [] }) });
+    });
 
     render(<BookingPage />);
     fireEvent.change(screen.getByLabelText(/Name/i), { target: { value: "Bob" } });
