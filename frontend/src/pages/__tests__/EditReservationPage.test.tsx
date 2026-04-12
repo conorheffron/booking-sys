@@ -181,7 +181,7 @@ describe("EditReservationPage", () => {
     await waitFor(() => expect(screen.getByLabelText(/Slot/i)).toHaveValue("10:00"));
   });
 
-  it("shows generic save error when update request throws", async () => {
+  it("shows thrown save error when update request throws", async () => {
     (global.fetch as jest.Mock) = jest.fn()
       .mockResolvedValueOnce({
         ok: true,
