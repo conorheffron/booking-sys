@@ -4,6 +4,9 @@
   "private": false,
   "license": "GPL-3.0-or-later",
   "description": "React + TypeScript frontend for Booking System",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
