@@ -167,7 +167,7 @@ describe("EditReservationPage", () => {
     expect(screen.getByText("Navbar")).toBeInTheDocument();
   });
 
-  it("keeps AM/PM slot when already normalized", async () => {
+  it("maps AM/PM reservation slot to normalized dropdown value", async () => {
     (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({
