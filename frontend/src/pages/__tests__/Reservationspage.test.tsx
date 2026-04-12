@@ -126,4 +126,40 @@ describe("ReservationsPage", () => {
     render(<ReservationsPage />);
     expect(screen.getByText("Navbar")).toBeInTheDocument();
   });
+
+  it("removes reservation row after successful delete", async () => {
+    (global.fetch as jest.Mock) = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          reservations: [{ id: 11, first_name: "DeleteMe", reservation_date: "2099-01-01", reservation_slot: "09:00" }],
+        }),
+      })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ success: true }) });
+
+    render(<ReservationsPage />);
+    await waitFor(() => expect(screen.getByText("DeleteMe")).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Delete reservation 11/i }));
+    await waitFor(() => expect(screen.queryByText("DeleteMe")).not.toBeInTheDocument());
+  });
+
+  it("shows error message when delete fails", async () => {
+    (global.fetch as jest.Mock) = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          reservations: [{ id: 12, first_name: "KeepMe", reservation_date: "2099-01-01", reservation_slot: "10:00" }],
+        }),
+      })
+      .mockResolvedValueOnce({ ok: false, json: async () => ({}) });
+
+    render(<ReservationsPage />);
+    await waitFor(() => expect(screen.getByText("KeepMe")).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Delete reservation 12/i }));
+    await waitFor(() =>
+      expect(screen.getByText(/Failed to delete reservation/i)).toBeInTheDocument()
+    );
+  });
 });
