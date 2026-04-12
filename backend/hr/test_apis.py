@@ -317,8 +317,11 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
-        with pytest.raises(Exception):
-            self.views.bookings_by_id(request, self.reservation.id)
+        response = self.views.bookings_by_id(request, self.reservation.id)
+        assert response.status_code == 400
+        assert "Invalid reservation_date or reservation_slot." in json.loads(
+            response.content.decode()
+        )["error"]
 
     def test_bookings_by_id_put_past_date_time_rejected(self):
         """HR Test case test_bookings_by_id_put_past_date_time_rejected"""
