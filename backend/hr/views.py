@@ -160,7 +160,7 @@ class Views:
                 parsed_reservation_date = datetime.strptime(
                     reservation_date, "%Y-%m-%d"
                 ).date()
-            except Exception:
+            except ValueError:
                 return JsonResponse(
                     {"error": "Invalid reservation_date or reservation_slot."},
                     status=400
