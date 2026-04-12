@@ -156,23 +156,25 @@ class Views:
                         },
                         status=400)
 
+            try:
+                parsed_reservation_date = datetime.strptime(
+                    reservation_date, "%Y-%m-%d"
+                ).date()
+            except Exception:
+                return JsonResponse(
+                    {"error": "Invalid reservation_date or reservation_slot."},
+                    status=400
+                )
+
             # Prevent double-booking (exclude current reservation)
             if Reservation.objects.filter(
-                reservation_date=reservation_date,
+                reservation_date=parsed_reservation_date,
                 reservation_slot=slot_time
             ).exclude(pk=reservation_id).exists():
                 return JsonResponse({"error": "Booking Failed: Already Reserved."}, status=400)
 
             # Prevent updating reservation to a past date/time
-            try:
-                new_datetime = datetime.combine(
-                    datetime.strptime(reservation_date, "%Y-%m-%d").date(),
-                    slot_time
-                )
-            except Exception:
-                return JsonResponse({
-                    "error": "Invalid reservation_date or reservation_slot."
-                    }, status=400)
+            new_datetime = datetime.combine(parsed_reservation_date, slot_time)
             if new_datetime < now:
                 return JsonResponse({
                     "error": "Cannot update reservation to a past date/time."
