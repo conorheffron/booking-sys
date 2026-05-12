@@ -44,7 +44,7 @@ pytz==2026.1.post1
 PyYAML==6.0.3
 rcssmin==1.2.1
 referencing==0.37.0
-requests==2.33.1
+requests==2.34.0
 rjsmin==1.2.4
 rpds-py==0.30.0
 setuptools==82.0.1
