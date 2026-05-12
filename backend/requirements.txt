@@ -49,7 +49,7 @@ rjsmin==1.2.4
 rpds-py==0.30.0
 setuptools==82.0.1
 sqlparse==0.5.5
-tomlkit==0.14.0
+tomlkit==0.15.0
 typing_extensions==4.15.0
 uritemplate==4.2.0
 urllib3==2.6.3
