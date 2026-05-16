@@ -13,15 +13,20 @@ jest.mock("../../components/Utils", () => ({
 }));
 
 describe("BookingPage (basic smoke tests)", () => {
+  const isWeatherRequest = (url: string): boolean => {
+    const parsedUrl = new URL(String(url), "http://localhost");
+    return parsedUrl.hostname === "api.open-meteo.com";
+  };
+
   beforeEach(() => {
     (global.fetch as jest.Mock) = jest.fn().mockImplementation((url: string) => {
-      if (String(url).includes("open-meteo.com")) {
+      if (isWeatherRequest(url)) {
         return Promise.resolve({
           ok: true,
           json: async () => ({
             current: {
-              temperature_2m: 12.7,
-              wind_speed_10m: 18.4,
+              temperature_2m: 13.0,
+              wind_speed_10m: 18.0,
               weather_code: 2,
               time: "2026-01-01T10:00",
             },
@@ -63,7 +68,7 @@ describe("BookingPage (basic smoke tests)", () => {
 
   it("shows weather unavailable fallback when weather API fails", async () => {
     (global.fetch as jest.Mock) = jest.fn().mockImplementation((url: string) => {
-      if (String(url).includes("open-meteo.com")) {
+      if (isWeatherRequest(url)) {
         return Promise.resolve({ ok: false, json: async () => ({}) });
       }
       return Promise.resolve({
