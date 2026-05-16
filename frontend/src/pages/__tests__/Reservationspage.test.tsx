@@ -6,11 +6,17 @@ import { ReservationsPage } from "../ReservationsPage";
 jest.mock("../../components/Navbar", () => ({
   Navbar: () => <nav>Navbar</nav>,
 }));
+jest.mock("../../components/auth", () => ({
+  getAuthStatus: jest.fn().mockResolvedValue({ authenticated: true }),
+}));
 jest.mock("bootstrap/dist/css/bootstrap.min.css", () => ({}));
+
+import { getAuthStatus } from "../../components/auth";
 
 describe("ReservationsPage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: true });
     if (global.fetch) {
       (global.fetch as any).mockClear?.();
     }
@@ -142,6 +148,21 @@ describe("ReservationsPage", () => {
     await waitFor(() => expect(screen.getByText("DeleteMe")).toBeInTheDocument());
     fireEvent.click(screen.getByRole("button", { name: /Delete reservation 11/i }));
     await waitFor(() => expect(screen.queryByText("DeleteMe")).not.toBeInTheDocument());
+  });
+
+  it("shows login prompt and blocks delete for unauthenticated users", async () => {
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: false });
+    (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        reservations: [{ id: 13, first_name: "AuthCheck", reservation_date: "2099-01-01", reservation_slot: "10:00" }],
+      }),
+    });
+
+    render(<ReservationsPage />);
+    await waitFor(() => expect(screen.getByText("AuthCheck")).toBeInTheDocument());
+    expect(screen.getByRole("button", { name: /Delete reservation 13/i })).toBeDisabled();
+    expect(screen.getByRole("link", { name: /Login required for reservation 13/i })).toHaveAttribute("href", "/login");
   });
 
   it("shows error message when delete fails", async () => {
