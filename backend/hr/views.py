@@ -3,9 +3,10 @@
 import logging
 from datetime import datetime, date as dt_date, time as dt_time
 import json
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
+from django.contrib.auth.views import redirect_to_login
 
 from rest_framework.decorators import api_view
 from drf_spectacular.utils import (
@@ -25,6 +26,16 @@ logger = logging.getLogger(__name__)
 class Views:
     """Views class for Views Mapping & Logic
     """
+    @staticmethod
+    def _require_api_permission(request, permission_codename):
+        """Require authenticated user and specific model permission for mutating API requests."""
+        user = getattr(request, "user", None)
+        if not user or not user.is_authenticated:
+            return JsonResponse({"error": "Authentication required."}, status=401)
+        if not user.has_perm(f"hr.{permission_codename}"):
+            return JsonResponse({"error": "Permission denied."}, status=403)
+        return None
+
     @classmethod
     def csrf(cls, request:WSGIRequest):
         """GET CSRF Token / Cookie Value from incoming requests"""
@@ -50,6 +61,12 @@ class Views:
         Handle the editing of an existing reservation.
         Do not allow editing of past bookings.
         """
+        user = getattr(request, "user", None)
+        if not user or not user.is_authenticated:
+            return redirect_to_login(request.get_full_path())
+        if not user.has_perm("hr.change_reservation"):
+            return HttpResponseForbidden("Permission denied.")
+
         reservation = get_object_or_404(Reservation, pk=reservation_id)
 
         # Block editing of past bookings
@@ -126,6 +143,9 @@ class Views:
             }
             return JsonResponse(data, status=200)
         elif request.method == "PUT":
+            permission_error = cls._require_api_permission(request, "change_reservation")
+            if permission_error:
+                return permission_error
             now = datetime.now()
             # Block editing of past bookings
             original_datetime = datetime.combine(reservation.reservation_date,
@@ -194,6 +214,9 @@ class Views:
             }
             return JsonResponse(data, status=200)
         elif request.method == "DELETE":
+            permission_error = cls._require_api_permission(request, "delete_reservation")
+            if permission_error:
+                return permission_error
             reservation.delete()
             return JsonResponse({"success": True, "message": "Booking deleted."}, status=200)
         else:
@@ -207,6 +230,9 @@ class Views:
         """
         if request.method != "PUT":
             return JsonResponse({"error": "Method not allowed."}, status=405)
+        permission_error = cls._require_api_permission(request, "add_reservation")
+        if permission_error:
+            return permission_error
 
         try:
             body = json.loads(request.body.decode("utf-8"))
