@@ -476,3 +476,8 @@ class ApiTests(TestCase):
 
         save_response = save_reservation_view(self.factory.get("/api/reservations"))
         assert save_response.status_code == 405
+
+    def test_dashboard_route_available(self):
+        """HR Test case test_dashboard_route_available"""
+        response = self.client.get("/dashboard/")
+        self.assertIn(response.status_code, (200, 302))
