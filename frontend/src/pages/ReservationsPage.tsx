@@ -15,6 +15,7 @@ export const ReservationsPage: React.FC = () => {
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [clearingAll, setClearingAll] = useState(false);
 
   const fetchReservations = async () => {
     setLoading(true);
@@ -60,6 +61,25 @@ export const ReservationsPage: React.FC = () => {
       setError(err.message || "Failed to delete reservation");
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleClearAll = async () => {
+    setClearingAll(true);
+    setError("");
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to clear reservations");
+      }
+      setReservations([]);
+    } catch (err: any) {
+      setError(err.message || "Failed to clear reservations");
+    } finally {
+      setClearingAll(false);
     }
   };
 
@@ -142,9 +162,16 @@ export const ReservationsPage: React.FC = () => {
                 {/* Refresh button at the bottom and centered */}
                 <div className="d-flex justify-content-center mt-4">
                   <button
+                    className="btn btn-outline-danger me-2"
+                    onClick={handleClearAll}
+                    disabled={loading || refreshing || clearingAll || reservations.length === 0}
+                  >
+                    {clearingAll ? "Clearing..." : "Clear all"}
+                  </button>
+                  <button
                     className="btn btn-outline-primary"
                     onClick={handleRefresh}
-                    disabled={loading || refreshing}
+                    disabled={loading || refreshing || clearingAll}
                   >
                     Refresh
                   </button>
