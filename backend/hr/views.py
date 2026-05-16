@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
 
 from rest_framework.decorators import api_view
+from rest_framework import serializers
 from drf_spectacular.utils import (
     extend_schema,
     OpenApiParameter,
@@ -21,6 +22,32 @@ from .models import Reservation
 from .time_utils import TimeUtils
 
 logger = logging.getLogger(__name__)
+
+class ReservationItem(serializers.Serializer):
+    """Reservation item schema."""
+    id = serializers.IntegerField()
+    first_name = serializers.CharField()
+    reservation_date = serializers.DateField()
+    reservation_slot = serializers.TimeField(format="%H:%M:%S")
+
+
+class BookingsResponse(serializers.Serializer):
+    """Bookings response schema."""
+    message = serializers.CharField()
+    reservations = ReservationItem(many=True)
+
+
+class BookingByIdResponse(serializers.Serializer):
+    """Booking by id response schema."""
+    id = serializers.IntegerField()
+    first_name = serializers.CharField()
+    reservation_date = serializers.DateField()
+    reservation_slot = serializers.CharField()
+
+
+class NotFoundResponse(serializers.Serializer):
+    """Not found error response schema."""
+    detail = serializers.CharField()
 
 class Views:
     """Views class for Views Mapping & Logic
@@ -330,7 +357,7 @@ def version_view(request):
             description="Filter bookings by date (YYYY-MM-DD)"
         )
     ],
-    responses={200: OpenApiTypes.OBJECT}
+    responses={200: BookingsResponse}
 )
 @api_view(['GET'])
 def table_view(request):
@@ -347,7 +374,7 @@ def table_view(request):
                 description="Reservation ID"
             )
         ],
-        responses={200: OpenApiTypes.OBJECT, 404: OpenApiTypes.OBJECT}
+        responses={200: BookingByIdResponse, 404: NotFoundResponse}
     ),
     put=extend_schema(exclude=True),  # <--- this hides PUT in Swagger!
     delete=extend_schema(exclude=True)

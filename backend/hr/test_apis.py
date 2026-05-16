@@ -6,6 +6,7 @@ from unittest.mock import patch
 import pytest
 from django.http import HttpResponse
 from django.test import RequestFactory, TestCase
+from drf_spectacular.generators import SchemaGenerator
 from hr.models import Reservation
 from hr.views import Views, csrf_view, version_view, table_view, bookings_by_id_view, save_reservation_view
 
@@ -476,3 +477,17 @@ class ApiTests(TestCase):
 
         save_response = save_reservation_view(self.factory.get("/api/reservations"))
         assert save_response.status_code == 405
+
+    def test_openapi_uses_explicit_booking_models(self):
+        """HR Test case test_openapi_uses_explicit_booking_models"""
+        schema = SchemaGenerator().get_schema(request=None, public=True)
+        table_response = schema["paths"]["/api/bookings"]["get"]["responses"]["200"]
+        by_id_response = schema["paths"]["/api/bookingsById/{reservation_id}"]["get"]["responses"]
+
+        table_schema_ref = table_response["content"]["application/json"]["schema"]["$ref"]
+        by_id_schema_ref = by_id_response["200"]["content"]["application/json"]["schema"]["$ref"]
+        not_found_schema_ref = by_id_response["404"]["content"]["application/json"]["schema"]["$ref"]
+
+        assert table_schema_ref == "#/components/schemas/BookingsResponse"
+        assert by_id_schema_ref == "#/components/schemas/BookingByIdResponse"
+        assert not_found_schema_ref == "#/components/schemas/NotFoundResponse"
