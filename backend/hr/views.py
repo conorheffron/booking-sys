@@ -3,7 +3,7 @@
 import logging
 from datetime import datetime, date as dt_date, time as dt_time
 import json
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
 
@@ -113,7 +113,10 @@ class Views:
         - Do not allow editing of past bookings
         - Do not allow updating to a past date/time
         """
-        reservation = get_object_or_404(Reservation, pk=reservation_id)
+        try:
+            reservation = get_object_or_404(Reservation, pk=reservation_id)
+        except Http404:
+            return JsonResponse({"error": "Booking not found."}, status=404)
 
         if request.method == "GET":
             data = {
@@ -135,7 +138,7 @@ class Views:
                                     status=400)
             try:
                 body = json.loads(request.body.decode("utf-8"))
-            except Exception:
+            except (json.JSONDecodeError, UnicodeDecodeError, AttributeError):
                 return JsonResponse({"error": "Invalid JSON body"}, status=400)
 
             reservation_date = body.get("reservation_date")
@@ -149,7 +152,7 @@ class Views:
             # Convert "02:00 PM" to "14:00"
             try:
                 slot_time = datetime.strptime(reservation_slot, "%I:%M %p").time()
-            except Exception:
+            except ValueError:
                 return JsonResponse(
                     {
                         "error": "Invalid time format for reservation_slot."
@@ -210,7 +213,7 @@ class Views:
 
         try:
             body = json.loads(request.body.decode("utf-8"))
-        except Exception:
+        except (json.JSONDecodeError, UnicodeDecodeError, AttributeError):
             return JsonResponse({"error": "Invalid JSON body"}, status=400)
 
         first_name = body.get("first_name")
@@ -223,7 +226,7 @@ class Views:
         # Convert time string like "02:00 PM" to time object
         try:
             slot_time = datetime.strptime(reservation_slot, "%I:%M %p").time()
-        except Exception:
+        except ValueError:
             return JsonResponse({"error": "reservation_slot must be in format HH:MM AM/PM"},
                                 status=400)
 
@@ -233,7 +236,7 @@ class Views:
                 datetime.strptime(reservation_date, "%Y-%m-%d").date(),
                 slot_time
             )
-        except Exception:
+        except ValueError:
             return JsonResponse({"error": "Invalid reservation_date or reservation_slot."},
                                 status=400)
         now = datetime.now()
