@@ -119,6 +119,8 @@ export const ReservationsPage: React.FC = () => {
                                 className="btn btn-sm btn-outline-secondary me-2"
                                 role="link"
                                 aria-label={`Edit reservation ${r.id}`}
+                                aria-disabled={!isAuthenticated}
+                                tabIndex={isAuthenticated ? 0 : -1}
                                 style={{ pointerEvents: isAuthenticated ? "auto" : "none", opacity: isAuthenticated ? 1 : 0.5 }}
                               >
                                 Edit

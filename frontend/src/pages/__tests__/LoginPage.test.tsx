@@ -31,10 +31,10 @@ describe("LoginPage", () => {
     );
 
     fireEvent.change(screen.getByLabelText(/Username/i), { target: { value: "apiuser" } });
-    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: "safe-password-123" } });
+    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: "testpassword" } });
     fireEvent.click(screen.getByRole("button", { name: /Login/i }));
 
-    await waitFor(() => expect(loginUser).toHaveBeenCalledWith("apiuser", "safe-password-123", "csrf-token"));
+    await waitFor(() => expect(loginUser).toHaveBeenCalledWith("apiuser", "testpassword", "csrf-token"));
     await waitFor(() => expect(screen.getByText(/Reservations List/i)).toBeInTheDocument());
   });
 
