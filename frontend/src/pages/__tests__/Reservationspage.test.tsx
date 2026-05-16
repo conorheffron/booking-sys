@@ -162,4 +162,43 @@ describe("ReservationsPage", () => {
       expect(screen.getByText(/Failed to delete reservation/i)).toBeInTheDocument()
     );
   });
+
+  it("clears all reservations after successful clear all request", async () => {
+    (global.fetch as jest.Mock) = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          reservations: [{ id: 22, first_name: "ClearMe", reservation_date: "2099-01-01", reservation_slot: "09:00" }],
+        }),
+      })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ success: true, deleted_count: 1 }) });
+
+    render(<ReservationsPage />);
+    await waitFor(() => expect(screen.getByText("ClearMe")).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Clear all/i }));
+    await waitFor(() => expect(screen.queryByText("ClearMe")).not.toBeInTheDocument());
+  });
+
+  it("shows backend error when clear all is forbidden", async () => {
+    (global.fetch as jest.Mock) = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          reservations: [{ id: 23, first_name: "CannotClear", reservation_date: "2099-01-01", reservation_slot: "10:00" }],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ error: "Only staff or superuser accounts can clear all bookings." }),
+      });
+
+    render(<ReservationsPage />);
+    await waitFor(() => expect(screen.getByText("CannotClear")).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Clear all/i }));
+    await waitFor(() =>
+      expect(screen.getByText(/Only staff or superuser accounts can clear all bookings/i)).toBeInTheDocument()
+    );
+  });
 });
