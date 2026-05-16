@@ -135,6 +135,9 @@ python3 manage.py test hr.test_forms.TestReservationForm
 python3 manage.py runserver
 ```
 
+## django-dash POC (site customisation spike)
+- Start the backend and open `http://127.0.0.1:8000/dashboard/` to access the dashboard customisation proof of concept.
+
 ## Sample Logs from VS Code Console via `docker compose up`
 ```shell
 [+] Running 1/1
