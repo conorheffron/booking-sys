@@ -177,6 +177,12 @@ describe("ReservationsPage", () => {
     render(<ReservationsPage />);
     await waitFor(() => expect(screen.getByText("ClearMe")).toBeInTheDocument());
     fireEvent.click(screen.getByRole("button", { name: /Clear all/i }));
+    await waitFor(() =>
+      expect((global.fetch as jest.Mock)).toHaveBeenCalledWith(
+        "/api/bookings",
+        expect.objectContaining({ method: "DELETE" })
+      )
+    );
     await waitFor(() => expect(screen.queryByText("ClearMe")).not.toBeInTheDocument());
   });
 

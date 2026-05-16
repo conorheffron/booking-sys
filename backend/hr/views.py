@@ -40,7 +40,10 @@ class Views:
 
     @classmethod
     def table_view(cls, request):
-        """GET bookings by date request parameter or DELETE all upcoming bookings"""
+        """GET bookings by date request parameter.
+
+        DELETE clears all bookings from today onward and requires a staff/superuser account.
+        """
         if request.method == "DELETE":
             user = getattr(request, "user", None)
             if not (user and user.is_authenticated and (user.is_staff or user.is_superuser)):
@@ -50,7 +53,7 @@ class Views:
                 )
             today = dt_date.today()
             deleted_count, _ = Reservation.objects.filter(
-                reservation_date__gt=today
+                reservation_date__gte=today
             ).delete()
             return JsonResponse(
                 {"success": True, "deleted_count": deleted_count},
