@@ -4,6 +4,7 @@ import re
 from datetime import date, timedelta
 from unittest.mock import patch
 import pytest
+from django.contrib.auth.models import User, Permission, AnonymousUser
 from django.http import HttpResponse
 from django.test import RequestFactory, TestCase
 from hr.models import Reservation
@@ -26,6 +27,22 @@ class ApiTests(TestCase):
             reservation_date=date.today() + timedelta(days=1),
             reservation_slot="12:00:00"
         )
+        self.user_with_booking_perms = User.objects.create_user(
+            username="booking-admin",
+            password="testpass123"
+        )
+        self.user_without_booking_perms = User.objects.create_user(
+            username="booking-user",
+            password="testpass123"
+        )
+        booking_permissions = Permission.objects.filter(
+            codename__in=["add_reservation", "change_reservation", "delete_reservation"]
+        )
+        self.user_with_booking_perms.user_permissions.set(booking_permissions)
+
+    def _as_user(self, request, user=None):
+        request.user = user or self.user_with_booking_perms
+        return request
 
     def test_version_success(self):
         """HR Test case test_version_success"""
@@ -66,6 +83,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 200
         data = json.loads(response.content.decode())
@@ -84,6 +102,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
@@ -101,6 +120,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
@@ -123,6 +143,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
@@ -133,6 +154,7 @@ class ApiTests(TestCase):
         # Ensure the reservation exists
         assert Reservation.objects.filter(id=self.reservation.id).exists()
         request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
+        request = self._as_user(request)
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 200
         data = json.loads(response.content.decode())
@@ -164,9 +186,52 @@ class ApiTests(TestCase):
             data="not a json",
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         assert "Invalid JSON body" in json.loads(response.content.decode())["error"]
+
+    def test_bookings_by_id_put_requires_authentication(self):
+        """HR Test case test_bookings_by_id_put_requires_authentication"""
+        payload = {
+            "first_name": "NoAuth",
+            "reservation_date": str(self.reservation.reservation_date),
+            "reservation_slot": "01:30 PM"
+        }
+        request = self.factory.put(
+            f"/api/reservations/{self.reservation.id}/",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        request.user = AnonymousUser()
+        response = self.views.bookings_by_id(request, self.reservation.id)
+        assert response.status_code == 401
+        assert "Authentication required." in json.loads(response.content.decode())["error"]
+
+    def test_bookings_by_id_put_requires_change_permission(self):
+        """HR Test case test_bookings_by_id_put_requires_change_permission"""
+        payload = {
+            "first_name": "NoPerm",
+            "reservation_date": str(self.reservation.reservation_date),
+            "reservation_slot": "01:30 PM"
+        }
+        request = self.factory.put(
+            f"/api/reservations/{self.reservation.id}/",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        request = self._as_user(request, self.user_without_booking_perms)
+        response = self.views.bookings_by_id(request, self.reservation.id)
+        assert response.status_code == 403
+        assert "Permission denied." in json.loads(response.content.decode())["error"]
+
+    def test_bookings_by_id_delete_requires_delete_permission(self):
+        """HR Test case test_bookings_by_id_delete_requires_delete_permission"""
+        request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
+        request = self._as_user(request, self.user_without_booking_perms)
+        response = self.views.bookings_by_id(request, self.reservation.id)
+        assert response.status_code == 403
+        assert "Permission denied." in json.loads(response.content.decode())["error"]
 
     def test_save_reservation_success(self):
         """HR Test case test_save_reservation_success"""
@@ -180,6 +245,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.save_reservation(request)
         assert response.status_code == 201
         data = json.loads(response.content.decode())
@@ -205,6 +271,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.save_reservation(request)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
@@ -224,6 +291,7 @@ class ApiTests(TestCase):
             data="bad json",
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.save_reservation(request)
         assert response.status_code == 400
         assert "Invalid JSON body" in json.loads(response.content.decode())["error"]
@@ -239,6 +307,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.save_reservation(request)
         assert response.status_code == 400
         assert "All fields are required" in json.loads(response.content.decode())["error"]
@@ -255,6 +324,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.save_reservation(request)
         assert response.status_code == 400
         assert "reservation_slot must be in format" in json.loads(
@@ -317,6 +387,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         assert "Invalid reservation_date or reservation_slot." in json.loads(
@@ -335,6 +406,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         assert "Cannot update reservation to a past date/time." in json.loads(
@@ -353,6 +425,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.save_reservation(request)
         assert response.status_code == 400
         assert "Invalid reservation_date or reservation_slot." in json.loads(
@@ -371,17 +444,53 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request = self._as_user(request)
         response = self.views.save_reservation(request)
         assert response.status_code == 400
         assert "Cannot make a reservation for a past date/time." in json.loads(
             response.content.decode()
         )["error"]
 
+    def test_save_reservation_requires_authentication(self):
+        """HR Test case test_save_reservation_requires_authentication"""
+        payload = {
+            "first_name": "NoAuth",
+            "reservation_date": str(date.today() + timedelta(days=2)),
+            "reservation_slot": "10:30 AM"
+        }
+        request = self.factory.put(
+            "/api/save_reservation/",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        request.user = AnonymousUser()
+        response = self.views.save_reservation(request)
+        assert response.status_code == 401
+        assert "Authentication required." in json.loads(response.content.decode())["error"]
+
+    def test_save_reservation_requires_add_permission(self):
+        """HR Test case test_save_reservation_requires_add_permission"""
+        payload = {
+            "first_name": "NoPerm",
+            "reservation_date": str(date.today() + timedelta(days=2)),
+            "reservation_slot": "10:30 AM"
+        }
+        request = self.factory.put(
+            "/api/save_reservation/",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        request = self._as_user(request, self.user_without_booking_perms)
+        response = self.views.save_reservation(request)
+        assert response.status_code == 403
+        assert "Permission denied." in json.loads(response.content.decode())["error"]
+
     @patch("hr.views.render")
     def test_edit_reservation_get_initial_form(self, mock_render):
         """HR Test case test_edit_reservation_get_initial_form"""
         mock_render.return_value = HttpResponse("ok")
         request = self.factory.get(f"/api/reservations/edit/{self.reservation.id}/")
+        request = self._as_user(request)
         response = Views.edit_reservation(request, self.reservation.id)
         assert response.status_code == 200
         args, _ = mock_render.call_args
@@ -399,6 +508,7 @@ class ApiTests(TestCase):
             reservation_slot="09:00:00"
         )
         request = self.factory.get(f"/api/reservations/edit/{past_reservation.id}/")
+        request = self._as_user(request)
         response = Views.edit_reservation(request, past_reservation.id)
         assert response.status_code == 200
         args, _ = mock_render.call_args
@@ -419,6 +529,7 @@ class ApiTests(TestCase):
             f"/api/reservations/edit/{self.reservation.id}/",
             data={"reservation_date": str(future_date), "reservation_slot": "11:00"}
         )
+        request = self._as_user(request)
         response = Views.edit_reservation(request, self.reservation.id)
         assert response.status_code == 200
         args, _ = mock_render.call_args
@@ -435,6 +546,7 @@ class ApiTests(TestCase):
                 "reservation_slot": "09:00"
             }
         )
+        request = self._as_user(request)
         response = Views.edit_reservation(request, self.reservation.id)
         assert response.status_code == 200
         args, _ = mock_render.call_args
@@ -449,11 +561,27 @@ class ApiTests(TestCase):
             f"/api/reservations/edit/{self.reservation.id}/",
             data={"reservation_date": str(future_date), "reservation_slot": "12:30"}
         )
+        request = self._as_user(request)
         response = Views.edit_reservation(request, self.reservation.id)
         self.reservation.refresh_from_db()
         assert response.status_code == 200
         assert mock_redirect.call_args[0][0] == "reservations"
         assert self.reservation.reservation_date == future_date
+
+    def test_edit_reservation_requires_login(self):
+        """HR Test case test_edit_reservation_requires_login"""
+        request = self.factory.get(f"/api/reservations/edit/{self.reservation.id}/")
+        request.user = AnonymousUser()
+        response = Views.edit_reservation(request, self.reservation.id)
+        assert response.status_code == 302
+        assert "/accounts/login/" in response.url
+
+    def test_edit_reservation_requires_change_permission(self):
+        """HR Test case test_edit_reservation_requires_change_permission"""
+        request = self.factory.get(f"/api/reservations/edit/{self.reservation.id}/")
+        request = self._as_user(request, self.user_without_booking_perms)
+        response = Views.edit_reservation(request, self.reservation.id)
+        assert response.status_code == 403
 
     def test_wrapper_views(self):
         """HR Test case test_wrapper_views"""
