@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from "../components/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { getAuthStatus } from "../components/auth";
 
 interface Reservation {
   id: number;
@@ -15,6 +16,7 @@ export const ReservationsPage: React.FC = () => {
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const fetchReservations = async () => {
     setLoading(true);
@@ -36,6 +38,9 @@ export const ReservationsPage: React.FC = () => {
 
   useEffect(() => {
     fetchReservations();
+    getAuthStatus()
+      .then((status) => setIsAuthenticated(status.authenticated))
+      .catch(() => setIsAuthenticated(false));
   }, []);
 
   const handleRefresh = () => {
@@ -45,6 +50,10 @@ export const ReservationsPage: React.FC = () => {
 
   // Add delete by booking id functionality
   const handleDelete = async (id: number) => {
+    if (!isAuthenticated) {
+      setError("Login required to delete reservations");
+      return;
+    }
     // if (!window.confirm("Delete this reservation?")) return;
     setDeletingId(id);
     setError("");
@@ -110,6 +119,7 @@ export const ReservationsPage: React.FC = () => {
                                 className="btn btn-sm btn-outline-secondary me-2"
                                 role="link"
                                 aria-label={`Edit reservation ${r.id}`}
+                                style={{ pointerEvents: isAuthenticated ? "auto" : "none", opacity: isAuthenticated ? 1 : 0.5 }}
                               >
                                 Edit
                               </a>
@@ -119,7 +129,7 @@ export const ReservationsPage: React.FC = () => {
                                 aria-label={`Delete reservation ${r.id}`}
                                 style={{ color: "#dc3545", verticalAlign: "middle" }}
                                 onClick={() => handleDelete(r.id)}
-                                disabled={deletingId === r.id}
+                                disabled={deletingId === r.id || !isAuthenticated}
                               >
                                 {/* Trash SVG icon */}
                                 <svg
@@ -132,6 +142,15 @@ export const ReservationsPage: React.FC = () => {
                                   <path d="M5.5 5.5a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0v-6zm2 .5a.5.5 0 0 1 .5-.5.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6zm-7-2A.5.5 0 0 1 3 4V3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1a.5.5 0 0 1 .5.5H15a.5.5 0 0 1 0 1h-1.5V14A2 2 0 0 1 11 16H5a2 2 0 0 1-2-2V5.5H1.5a.5.5 0 0 1 0-1H3A.5.5 0 0 1 3.5 4zM5 3h4a1 1 0 0 1 1 1v1H4V4a1 1 0 0 1 1-1zm6 2v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5h8z"/>
                                 </svg>
                               </button>
+                              {!isAuthenticated && (
+                                <a
+                                  href="/login"
+                                  className="btn btn-sm btn-link p-0 ms-2 align-baseline"
+                                  aria-label={`Login required for reservation ${r.id}`}
+                                >
+                                  Login required
+                                </a>
+                              )}
                             </td>
                           </tr>
                         ))

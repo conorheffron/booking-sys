@@ -6,6 +6,7 @@ import json
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 
 from rest_framework.decorators import api_view
 from drf_spectacular.utils import (
@@ -37,6 +38,46 @@ class Views:
         app_version = VERSION
         logger.info('Application version (%s)', app_version)
         return HttpResponse(str(app_version))
+
+    @classmethod
+    def auth_status(cls, request: WSGIRequest):
+        """GET current authentication status"""
+        user = getattr(request, "user", None)
+        is_authenticated = bool(user and user.is_authenticated)
+        return JsonResponse({
+            "authenticated": is_authenticated,
+            "username": user.username if is_authenticated else None
+        }, status=200)
+
+    @classmethod
+    def login(cls, request: WSGIRequest):
+        """POST login to create an authenticated session"""
+        if request.method != "POST":
+            return JsonResponse({"error": "Method not allowed."}, status=405)
+        try:
+            body = json.loads(request.body.decode("utf-8"))
+        except Exception:
+            return JsonResponse({"error": "Invalid JSON body"}, status=400)
+
+        username = body.get("username")
+        password = body.get("password")
+        if not username or not password:
+            return JsonResponse({"error": "Username and password are required."}, status=400)
+
+        user = authenticate(request, username=username, password=password)
+        if user is None:
+            return JsonResponse({"error": "Invalid credentials."}, status=401)
+
+        auth_login(request, user)
+        return JsonResponse({"success": True, "username": user.username}, status=200)
+
+    @classmethod
+    def logout(cls, request: WSGIRequest):
+        """POST logout to clear authenticated session"""
+        if request.method != "POST":
+            return JsonResponse({"error": "Method not allowed."}, status=405)
+        auth_logout(request)
+        return JsonResponse({"success": True}, status=200)
 
     @classmethod
     def table_view(cls, request):
@@ -126,6 +167,9 @@ class Views:
             }
             return JsonResponse(data, status=200)
         elif request.method == "PUT":
+            user = getattr(request, "user", None)
+            if not (user and user.is_authenticated):
+                return JsonResponse({"error": "Authentication required."}, status=401)
             now = datetime.now()
             # Block editing of past bookings
             original_datetime = datetime.combine(reservation.reservation_date,
@@ -194,6 +238,9 @@ class Views:
             }
             return JsonResponse(data, status=200)
         elif request.method == "DELETE":
+            user = getattr(request, "user", None)
+            if not (user and user.is_authenticated):
+                return JsonResponse({"error": "Authentication required."}, status=401)
             reservation.delete()
             return JsonResponse({"success": True, "message": "Booking deleted."}, status=200)
         else:
@@ -308,6 +355,25 @@ class Views:
 @api_view(['GET'])
 def csrf_view(request):
     return Views.csrf(request)
+
+@extend_schema(
+    methods=["GET"],
+    description="GET current authentication status",
+    responses={200: OpenApiTypes.OBJECT}
+)
+@api_view(['GET'])
+def auth_status_view(request):
+    return Views.auth_status(request)
+
+@extend_schema(exclude=True)
+@api_view(['POST'])
+def login_view(request):
+    return Views.login(request)
+
+@extend_schema(exclude=True)
+@api_view(['POST'])
+def logout_view(request):
+    return Views.logout(request)
 
 @extend_schema(
     methods=["GET"],

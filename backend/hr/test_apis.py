@@ -2,10 +2,12 @@
 import json
 import re
 from datetime import date, timedelta
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 import pytest
 from django.http import HttpResponse
 from django.test import RequestFactory, TestCase
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import User
 from hr.models import Reservation
 from hr.views import Views, csrf_view, version_view, table_view, bookings_by_id_view, save_reservation_view
 
@@ -21,6 +23,11 @@ class ApiTests(TestCase):
         """HR Tests setUp"""
         self.views = Views()
         self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username="apiuser",
+            email="api@example.com",
+            password="safe-password-123"
+        )
         self.reservation = Reservation.objects.create(
             first_name="Taylor",
             reservation_date=date.today() + timedelta(days=1),
@@ -66,6 +73,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request.user = self.user
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 200
         data = json.loads(response.content.decode())
@@ -84,6 +92,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request.user = self.user
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
@@ -101,6 +110,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request.user = self.user
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
@@ -123,6 +133,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request.user = self.user
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         data = json.loads(response.content.decode())
@@ -133,6 +144,7 @@ class ApiTests(TestCase):
         # Ensure the reservation exists
         assert Reservation.objects.filter(id=self.reservation.id).exists()
         request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
+        request.user = self.user
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 200
         data = json.loads(response.content.decode())
@@ -164,9 +176,33 @@ class ApiTests(TestCase):
             data="not a json",
             content_type="application/json"
         )
+        request.user = self.user
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         assert "Invalid JSON body" in json.loads(response.content.decode())["error"]
+
+    def test_bookings_by_id_put_requires_auth(self):
+        """HR Test case test_bookings_by_id_put_requires_auth"""
+        payload = {
+            "first_name": "Bob",
+            "reservation_date": str(self.reservation.reservation_date),
+            "reservation_slot": "01:30 PM"
+        }
+        request = self.factory.put(
+            f"/api/reservations/{self.reservation.id}/",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        response = self.views.bookings_by_id(request, self.reservation.id)
+        assert response.status_code == 401
+        assert "Authentication required" in json.loads(response.content.decode())["error"]
+
+    def test_bookings_by_id_delete_requires_auth(self):
+        """HR Test case test_bookings_by_id_delete_requires_auth"""
+        request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
+        response = self.views.bookings_by_id(request, self.reservation.id)
+        assert response.status_code == 401
+        assert "Authentication required" in json.loads(response.content.decode())["error"]
 
     def test_save_reservation_success(self):
         """HR Test case test_save_reservation_success"""
@@ -317,6 +353,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request.user = self.user
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         assert "Invalid reservation_date or reservation_slot." in json.loads(
@@ -335,6 +372,7 @@ class ApiTests(TestCase):
             data=json.dumps(payload),
             content_type="application/json"
         )
+        request.user = self.user
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 400
         assert "Cannot update reservation to a past date/time." in json.loads(
@@ -476,3 +514,35 @@ class ApiTests(TestCase):
 
         save_response = save_reservation_view(self.factory.get("/api/reservations"))
         assert save_response.status_code == 405
+
+    def test_auth_status_success(self):
+        """HR Test case test_auth_status_success"""
+        request = self.factory.get("/api/auth/status")
+        request.user = AnonymousUser()
+        response = Views.auth_status(request)
+        assert response.status_code == 200
+        data = json.loads(response.content.decode())
+        assert data["authenticated"] is False
+        assert data["username"] is None
+
+    def test_login_invalid_credentials(self):
+        """HR Test case test_login_invalid_credentials"""
+        login_request = self.factory.post(
+            "/api/auth/login/",
+            data=json.dumps({"username": "apiuser", "password": "wrong-password"}),
+            content_type="application/json"
+        )
+        login_response = Views.login(login_request)
+        assert login_response.status_code == 401
+        login_data = json.loads(login_response.content.decode())
+        assert "Invalid credentials" in login_data["error"]
+
+    def test_logout_success(self):
+        """HR Test case test_logout_success"""
+        logout_request = self.factory.post("/api/auth/logout/")
+        logout_request.session = Mock()
+        logout_request.user = self.user
+        logout_response = Views.logout(logout_request)
+        assert logout_response.status_code == 200
+        logout_data = json.loads(logout_response.content.decode())
+        assert logout_data["success"] is True
