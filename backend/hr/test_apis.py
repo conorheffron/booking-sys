@@ -54,7 +54,7 @@ class ApiTests(TestCase):
         response = self.views.bookings_by_id(request, 9999)
         assert response.status_code == 404
         data = json.loads(response.content.decode())
-        assert data["error"] == "Booking not found."
+        assert data["error"] == "Reservation not found."
 
     def test_bookings_by_id_put_success(self):
         """HR Test case test_bookings_by_id_put_success"""
@@ -150,7 +150,7 @@ class ApiTests(TestCase):
         response = self.views.bookings_by_id(request, 9999)
         assert response.status_code == 404
         data = json.loads(response.content.decode())
-        assert data["error"] == "Booking not found."
+        assert data["error"] == "Reservation not found."
 
     def test_bookings_by_id_method_not_allowed(self):
         """HR Test case test_bookings_by_id_method_not_allowed"""

@@ -3,7 +3,7 @@
 import logging
 from datetime import datetime, date as dt_date, time as dt_time
 import json
-from django.http import JsonResponse, HttpResponse, Http404
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
 
@@ -113,10 +113,9 @@ class Views:
         - Do not allow editing of past bookings
         - Do not allow updating to a past date/time
         """
-        try:
-            reservation = get_object_or_404(Reservation, pk=reservation_id)
-        except Http404:
-            return JsonResponse({"error": "Booking not found."}, status=404)
+        reservation = Reservation.objects.filter(pk=reservation_id).first()
+        if not reservation:
+            return JsonResponse({"error": "Reservation not found."}, status=404)
 
         if request.method == "GET":
             data = {
