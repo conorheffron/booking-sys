@@ -12,10 +12,14 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 import django.conf.urls
+from django.core.exceptions import ImproperlyConfigured
 from django.urls import re_path
 from hr import VERSION
 
+# django-dash still imports django.conf.urls.url; provide a local compatibility alias
+# for Django versions where only re_path is available.
 if not hasattr(django.conf.urls, "url"):
     django.conf.urls.url = re_path
 
@@ -25,12 +29,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-local-dev-key")
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 TEMPLATE_DEBUG = False
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    if DEBUG or "test" in sys.argv:
+        SECRET_KEY = "django-insecure-dev-test-key"
+    else:
+        raise ImproperlyConfigured(
+            "DJANGO_SECRET_KEY must be set when DEBUG is False."
+        )
 
 if DEBUG is False:
     ALLOWED_HOSTS = [ '0.0.0.0:8000', '0.0.0.0', 'booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net' ]
