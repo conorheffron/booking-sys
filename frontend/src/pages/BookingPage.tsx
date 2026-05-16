@@ -10,8 +10,29 @@ interface BookingFormData {
 }
 
 const slots = getSlots();
+const DUBLIN_WEATHER_URL =
+  'https://api.open-meteo.com/v1/forecast?latitude=53.3498&longitude=-6.2603&current=temperature_2m,wind_speed_10m,weather_code&timezone=auto';
+const getWeatherDescription = (code: number): string => {
+  if (code === 0) return 'Clear sky';
+  if ([1, 2].includes(code)) return 'Partly cloudy';
+  if (code === 3) return 'Overcast';
+  if ([45, 48].includes(code)) return 'Foggy';
+  if ([51, 53, 55, 56, 57].includes(code)) return 'Drizzle';
+  if ([61, 63, 65, 66, 67].includes(code)) return 'Rain';
+  if ([71, 73, 75, 77].includes(code)) return 'Snow';
+  if ([80, 81, 82].includes(code)) return 'Rain showers';
+  if ([95, 96, 99].includes(code)) return 'Thunderstorm';
+  return 'Weather update';
+};
 
 interface Booking extends BookingFormData {}
+
+interface WeatherSnapshot {
+  temperature: number;
+  windSpeed: number;
+  weatherCode: number;
+  time: string;
+}
 
 export const BookingPage: React.FC = () => {
   // Get today's date in YYYY-MM-DD format
@@ -30,6 +51,8 @@ export const BookingPage: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchError, setFetchError] = useState<string>('');
+  const [weather, setWeather] = useState<WeatherSnapshot | null>(null);
+  const [weatherLoading, setWeatherLoading] = useState<boolean>(true);
 
   // NEW: Hide success message after a few seconds
   useEffect(() => {
@@ -79,6 +102,41 @@ export const BookingPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const fetchWeather = async () => {
+      setWeatherLoading(true);
+      try {
+        const response = await fetch(DUBLIN_WEATHER_URL);
+        if (!response.ok) {
+          throw new Error('Failed to fetch weather');
+        }
+        const data = await response.json();
+        const current = data?.current;
+        if (
+          typeof current?.temperature_2m === 'number' &&
+          typeof current?.wind_speed_10m === 'number' &&
+          typeof current?.weather_code === 'number' &&
+          typeof current?.time === 'string'
+        ) {
+          setWeather({
+            temperature: current.temperature_2m,
+            windSpeed: current.wind_speed_10m,
+            weatherCode: current.weather_code,
+            time: current.time,
+          });
+        } else {
+          setWeather(null);
+        }
+      } catch {
+        setWeather(null);
+      } finally {
+        setWeatherLoading(false);
+      }
+    };
+
+    fetchWeather();
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -115,6 +173,35 @@ export const BookingPage: React.FC = () => {
     <div className="bg-light min-vh-100">
       <div className="container pt-4">
         <Navbar />
+      </div>
+
+      <div className="container">
+        <div
+          className="rounded-4 p-4 mb-3 text-white shadow"
+          style={{
+            background: 'linear-gradient(120deg, #7f5af0 0%, #2cb67d 100%)',
+          }}
+        >
+          <h5 className="mb-2">Dublin Weather Snapshot</h5>
+          {weatherLoading ? (
+            <p className="mb-0 text-white" role="status" aria-live="polite">
+              Loading weather...
+            </p>
+          ) : weather ? (
+            <div className="d-flex flex-wrap gap-3 align-items-center">
+              <span className="badge text-bg-light fs-6">{Math.round(weather.temperature)}°C</span>
+              <span className="badge text-bg-light fs-6">{Math.round(weather.windSpeed)} km/h wind</span>
+              <span className="badge text-bg-light fs-6">{getWeatherDescription(weather.weatherCode)}</span>
+              <small className="ms-auto">
+                <time dateTime={weather.time}>Updated: {weather.time}</time>
+              </small>
+            </div>
+          ) : (
+            <p className="mb-0 text-white" role="status" aria-live="polite">
+              Weather unavailable right now.
+            </p>
+          )}
+        </div>
       </div>
 
       <div id="bookings" className="container pt-5">

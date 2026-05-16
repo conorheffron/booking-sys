@@ -13,10 +13,31 @@ jest.mock("../../components/Utils", () => ({
 }));
 
 describe("BookingPage (basic smoke tests)", () => {
+  const isWeatherRequest = (url: string): boolean => {
+    const parsedUrl = new URL(String(url), "http://localhost");
+    return parsedUrl.hostname === "api.open-meteo.com";
+  };
+
   beforeEach(() => {
-    if (global.fetch) {
-      (global.fetch as any).mockClear?.();
-    }
+    (global.fetch as jest.Mock) = jest.fn().mockImplementation((url: string) => {
+      if (isWeatherRequest(url)) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({
+            current: {
+              temperature_2m: 13.0,
+              wind_speed_10m: 18.0,
+              weather_code: 2,
+              time: "2026-01-01T10:00",
+            },
+          }),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({ reservations: [] }),
+      });
+    });
   });
 
   it("renders booking form and table", () => {
@@ -31,10 +52,35 @@ describe("BookingPage (basic smoke tests)", () => {
 
   it("shows loading state for bookings (with real fetch, may error)", async () => {
     render(<BookingPage />);
-    expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Loading.../i).length).toBeGreaterThan(0);
     await waitFor(() => {
       expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
     });
+  });
+
+  it("renders weather snapshot from API data", async () => {
+    render(<BookingPage />);
+    expect(screen.getByText(/Dublin Weather Snapshot/i)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText(/13°C/i)).toBeInTheDocument());
+    expect(screen.getByText(/18 km\/h wind/i)).toBeInTheDocument();
+    expect(screen.getByText(/Partly cloudy/i)).toBeInTheDocument();
+  });
+
+  it("shows weather unavailable fallback when weather API fails", async () => {
+    (global.fetch as jest.Mock) = jest.fn().mockImplementation((url: string) => {
+      if (isWeatherRequest(url)) {
+        return Promise.resolve({ ok: false, json: async () => ({}) });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({ reservations: [] }),
+      });
+    });
+
+    render(<BookingPage />);
+    await waitFor(() =>
+      expect(screen.getByText(/Weather unavailable right now/i)).toBeInTheDocument()
+    );
   });
 
   it("can fill the form fields", () => {
