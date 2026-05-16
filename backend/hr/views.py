@@ -42,7 +42,7 @@ class BookingByIdResponse(serializers.Serializer):
     id = serializers.IntegerField()
     first_name = serializers.CharField()
     reservation_date = serializers.DateField()
-    reservation_slot = serializers.CharField()
+    reservation_slot = serializers.TimeField(format="%I:%M %p")
 
 
 class NotFoundResponse(serializers.Serializer):
