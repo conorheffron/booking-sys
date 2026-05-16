@@ -113,7 +113,9 @@ class Views:
         - Do not allow editing of past bookings
         - Do not allow updating to a past date/time
         """
-        reservation = get_object_or_404(Reservation, pk=reservation_id)
+        reservation = Reservation.objects.filter(pk=reservation_id).first()
+        if not reservation:
+            return JsonResponse({"error": "Reservation not found."}, status=404)
 
         if request.method == "GET":
             data = {
@@ -135,7 +137,7 @@ class Views:
                                     status=400)
             try:
                 body = json.loads(request.body.decode("utf-8"))
-            except Exception:
+            except (json.JSONDecodeError, UnicodeDecodeError, AttributeError):
                 return JsonResponse({"error": "Invalid JSON body"}, status=400)
 
             reservation_date = body.get("reservation_date")
@@ -149,7 +151,7 @@ class Views:
             # Convert "02:00 PM" to "14:00"
             try:
                 slot_time = datetime.strptime(reservation_slot, "%I:%M %p").time()
-            except Exception:
+            except ValueError:
                 return JsonResponse(
                     {
                         "error": "Invalid time format for reservation_slot."
@@ -210,7 +212,7 @@ class Views:
 
         try:
             body = json.loads(request.body.decode("utf-8"))
-        except Exception:
+        except (json.JSONDecodeError, UnicodeDecodeError, AttributeError):
             return JsonResponse({"error": "Invalid JSON body"}, status=400)
 
         first_name = body.get("first_name")
@@ -223,7 +225,7 @@ class Views:
         # Convert time string like "02:00 PM" to time object
         try:
             slot_time = datetime.strptime(reservation_slot, "%I:%M %p").time()
-        except Exception:
+        except ValueError:
             return JsonResponse({"error": "reservation_slot must be in format HH:MM AM/PM"},
                                 status=400)
 
@@ -233,7 +235,7 @@ class Views:
                 datetime.strptime(reservation_date, "%Y-%m-%d").date(),
                 slot_time
             )
-        except Exception:
+        except ValueError:
             return JsonResponse({"error": "Invalid reservation_date or reservation_slot."},
                                 status=400)
         now = datetime.now()

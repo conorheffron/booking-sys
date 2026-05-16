@@ -51,8 +51,10 @@ class ApiTests(TestCase):
     def test_bookings_by_id_get_404(self):
         """HR Test case test_bookings_by_id_get_404"""
         request = self.factory.get("/api/reservations/9999/")
-        with pytest.raises(Exception):
-            self.views.bookings_by_id(request, 9999)
+        response = self.views.bookings_by_id(request, 9999)
+        assert response.status_code == 404
+        data = json.loads(response.content.decode())
+        assert data["error"] == "Reservation not found."
 
     def test_bookings_by_id_put_success(self):
         """HR Test case test_bookings_by_id_put_success"""
@@ -145,8 +147,10 @@ class ApiTests(TestCase):
         """HR Test case test_bookings_by_id_delete_404"""
         # Attempt to delete a reservation that does not exist
         request = self.factory.delete("/api/reservations/9999/")
-        with pytest.raises(Exception):
-            self.views.bookings_by_id(request, 9999)
+        response = self.views.bookings_by_id(request, 9999)
+        assert response.status_code == 404
+        data = json.loads(response.content.decode())
+        assert data["error"] == "Reservation not found."
 
     def test_bookings_by_id_method_not_allowed(self):
         """HR Test case test_bookings_by_id_method_not_allowed"""
