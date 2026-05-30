@@ -130,13 +130,18 @@ export const BookingPage: React.FC = () => {
           setWeather(null);
         }
       } catch {
-        setWeather(null);
+        if (!controller.signal.aborted) {
+          setWeather(null);
+        }
       } finally {
-        setWeatherLoading(false);
+        if (!controller.signal.aborted) {
+          setWeatherLoading(false);
+        }
       }
     };
 
     fetchWeather();
+    return () => controller.abort();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
