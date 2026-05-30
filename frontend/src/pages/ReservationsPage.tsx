@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from "../components/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { getCSRFToken } from '../components/Utils';
 
 interface Reservation {
   id: number;
@@ -51,6 +52,10 @@ export const ReservationsPage: React.FC = () => {
     try {
       const response = await fetch(`/api/bookingsById/${id}`, {
         method: "DELETE",
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': await getCSRFToken(),
+        },
       });
       if (!response.ok) {
         throw new Error("Failed to delete reservation");
