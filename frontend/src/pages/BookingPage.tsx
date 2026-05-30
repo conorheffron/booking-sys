@@ -103,10 +103,12 @@ export const BookingPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchWeather = async () => {
       setWeatherLoading(true);
       try {
-        const response = await fetch(DUBLIN_WEATHER_URL);
+        const response = await fetch(DUBLIN_WEATHER_URL, { signal: controller.signal });
         if (!response.ok) {
           throw new Error('Failed to fetch weather');
         }
