@@ -233,6 +233,13 @@ class ApiTests(TestCase):
         assert response.status_code == 403
         assert "Permission denied." in json.loads(response.content.decode())["error"]
 
+    def test_bookings_by_id_delete_requires_authentication(self):
+        """HR Test case test_bookings_by_id_delete_requires_authentication"""
+        request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
+        request.user = AnonymousUser()
+        response = self.views.bookings_by_id(request, self.reservation.id)
+        assert response.status_code == 401
+        assert "Authentication required." in json.loads(response.content.decode())["error"]
     def test_save_reservation_success(self):
         """HR Test case test_save_reservation_success"""
         payload = {
