@@ -145,13 +145,14 @@ export const ReservationsPage: React.FC = () => {
                                 </svg>
                               </button>
                               {!isAuthenticated && (
-                                <a
-                                  href="/login"
+                                <Link
+                                  to="/login"
+                                  state={{ from: { pathname: `/reservations/edit/${r.id}` } }}
                                   className="btn btn-sm btn-link p-0 ms-2 align-baseline"
                                   aria-label={`Login required for reservation ${r.id}`}
                                 >
                                   Login required
-                                </a>
+                                </Link>
                               )}
                             </td>
                           </tr>
