@@ -42,7 +42,10 @@ class BookingByIdResponse(serializers.Serializer):
     id = serializers.IntegerField()
     first_name = serializers.CharField()
     reservation_date = serializers.DateField()
-    reservation_slot = serializers.TimeField(format="%I:%M %p")
+    reservation_slot = serializers.RegexField(
+        regex=r"^(0[1-9]|1[0-2]):[0-5][0-9] [AP]M$",
+        help_text='Reservation time as a 12-hour AM/PM string, for example "01:45 PM".'
+    )
 
 
 class NotFoundResponse(serializers.Serializer):
