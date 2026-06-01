@@ -264,18 +264,9 @@ class Views:
             }
             return JsonResponse(data, status=200)
         elif request.method == "DELETE":
-<<<<<<< HEAD
-            user = getattr(request, "user", None)
-            if not (user and user.is_authenticated):
-                return JsonResponse(
-                    {"error": "You must be signed in to delete a booking."},
-                    status=403
-                )
-=======
             permission_error = cls._require_api_permission(request, "delete_reservation")
             if permission_error:
                 return permission_error
->>>>>>> origin/main
             reservation.delete()
             return JsonResponse({"success": True, "message": "Booking deleted."}, status=200)
         else:

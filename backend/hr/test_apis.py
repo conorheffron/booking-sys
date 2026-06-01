@@ -4,11 +4,7 @@ import re
 from datetime import date, timedelta
 from unittest.mock import patch
 import pytest
-<<<<<<< HEAD
-from django.contrib.auth.models import AnonymousUser, User
-=======
 from django.contrib.auth.models import User, Permission, AnonymousUser
->>>>>>> origin/main
 from django.http import HttpResponse
 from django.test import RequestFactory, TestCase
 from drf_spectacular.generators import SchemaGenerator
@@ -175,11 +171,7 @@ class ApiTests(TestCase):
         # Ensure the reservation exists
         assert Reservation.objects.filter(id=self.reservation.id).exists()
         request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
-<<<<<<< HEAD
-        request.user = self.auth_user
-=======
         request = self._as_user(request)
->>>>>>> origin/main
         response = self.views.bookings_by_id(request, self.reservation.id)
         assert response.status_code == 200
         data = json.loads(response.content.decode())

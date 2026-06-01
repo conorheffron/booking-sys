@@ -54,15 +54,10 @@ export const ReservationsPage: React.FC = () => {
     try {
       const response = await fetch(`/api/bookingsById/${id}`, {
         method: "DELETE",
-<<<<<<< HEAD
         credentials: "include",
         headers: {
-          "X-CSRFToken": await getCSRFToken(),
-=======
-        headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': await getCSRFToken(),
->>>>>>> origin/main
+          "X-CSRFToken": await getCSRFToken(),
         },
       });
       if (!response.ok) {
