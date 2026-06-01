@@ -93,7 +93,25 @@ class Views:
 
     @classmethod
     def table_view(cls, request):
-        """GET bookings by date request parameter"""
+        """GET bookings by date request parameter.
+
+        DELETE clears all bookings from today onward and requires a staff/superuser account.
+        """
+        if request.method == "DELETE":
+            user = getattr(request, "user", None)
+            if not (user and user.is_authenticated and (user.is_staff or user.is_superuser)):
+                return JsonResponse(
+                    {"error": "Only staff or superuser accounts can clear all bookings."},
+                    status=403
+                )
+            today = dt_date.today()
+            deleted_count, _ = Reservation.objects.filter(
+                reservation_date__gte=today
+            ).delete()
+            return JsonResponse(
+                {"success": True, "deleted_count": deleted_count},
+                status=200
+            )
         date = request.GET.get("date", TimeUtils.get_current_date_time().date())
         return cls._find_bookings_by_date(cls, date)
 
@@ -411,7 +429,15 @@ def current_user_view(request):
     ],
     responses={200: BookingsResponse}
 )
-@api_view(['GET'])
+@extend_schema(
+    methods=["DELETE"],
+    description="DELETE: Clear all bookings from today onward. Requires staff or superuser account.",
+    responses={
+        200: OpenApiTypes.OBJECT,
+        403: OpenApiTypes.OBJECT
+    }
+)
+@api_view(['GET', 'DELETE'])
 def table_view(request):
     return Views.table_view(request)
 

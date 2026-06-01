@@ -23,6 +23,20 @@ class ApiTests(TestCase):
         """HR Tests setUp"""
         self.views = Views()
         self.factory = RequestFactory()
+        self.auth_user = User.objects.create_user(
+            username="clear-all-auth-user",
+            password="booking-pass-123"
+        )
+        self.staff_user = User.objects.create_user(
+            username="clear-all-staff",
+            password="booking-pass-123",
+            is_staff=True
+        )
+        self.superuser = User.objects.create_superuser(
+            username="clear-all-super",
+            password="booking-pass-123",
+            email="super@example.com"
+        )
         self.reservation = Reservation.objects.create(
             first_name="Taylor",
             reservation_date=date.today() + timedelta(days=1),
@@ -165,6 +179,15 @@ class ApiTests(TestCase):
         assert "deleted" in data["message"].lower()
         # Confirm it's deleted from the database
         assert not Reservation.objects.filter(id=self.reservation.id).exists()
+
+    def test_bookings_by_id_delete_forbidden_when_anonymous(self):
+        """HR Test case test_bookings_by_id_delete_forbidden_when_anonymous"""
+        request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
+        request.user = AnonymousUser()
+        response = self.views.bookings_by_id(request, self.reservation.id)
+        assert response.status_code == 401
+        assert "Authentication required" in json.loads(response.content.decode())["error"]
+        assert Reservation.objects.filter(id=self.reservation.id).exists()
 
     def test_bookings_by_id_delete_404(self):
         """HR Test case test_bookings_by_id_delete_404"""
@@ -386,6 +409,66 @@ class ApiTests(TestCase):
         first_names = [booking["first_name"] for booking in data["reservations"]]
         assert "Future" in first_names
         assert "Past" not in first_names
+
+    def test_table_view_delete_clear_all_for_staff(self):
+        """HR Test case test_table_view_delete_clear_all_for_staff"""
+        Reservation.objects.create(
+            first_name="TodayA",
+            reservation_date=date.today(),
+            reservation_slot="09:30:00"
+        )
+        Reservation.objects.create(
+            first_name="FutureA",
+            reservation_date=date.today() + timedelta(days=3),
+            reservation_slot="10:00:00"
+        )
+        Reservation.objects.create(
+            first_name="FutureB",
+            reservation_date=date.today() + timedelta(days=4),
+            reservation_slot="11:00:00"
+        )
+        Reservation.objects.create(
+            first_name="PastA",
+            reservation_date=date.today() - timedelta(days=2),
+            reservation_slot="09:00:00"
+        )
+        upcoming_count = Reservation.objects.filter(
+            reservation_date__gte=date.today()
+        ).count()
+        request = self.factory.delete('/api/bookings')
+        request.user = self.staff_user
+        response = Views.table_view(request)
+        data = json.loads(response.content.decode())
+        assert response.status_code == 200
+        assert data["success"] is True
+        assert data["deleted_count"] == upcoming_count
+        assert Reservation.objects.filter(reservation_date__gte=date.today()).count() == 0
+        assert Reservation.objects.filter(first_name="PastA").exists()
+
+    def test_table_view_delete_clear_all_forbidden_for_non_staff(self):
+        """HR Test case test_table_view_delete_clear_all_forbidden_for_non_staff"""
+        initial_count = Reservation.objects.count()
+        request = self.factory.delete('/api/bookings')
+        request.user = self.auth_user
+        response = Views.table_view(request)
+        data = json.loads(response.content.decode())
+        assert response.status_code == 403
+        assert "staff or superuser" in data["error"]
+        assert Reservation.objects.count() == initial_count
+
+    def test_table_view_delete_clear_all_for_superuser(self):
+        """HR Test case test_table_view_delete_clear_all_for_superuser"""
+        Reservation.objects.create(
+            first_name="FutureSuper",
+            reservation_date=date.today() + timedelta(days=5),
+            reservation_slot="11:30:00"
+        )
+        request = self.factory.delete('/api/bookings')
+        request.user = self.superuser
+        response = Views.table_view(request)
+        data = json.loads(response.content.decode())
+        assert response.status_code == 200
+        assert data["success"] is True
 
     def test_bookings_by_id_put_invalid_reservation_date(self):
         """HR Test case test_bookings_by_id_put_invalid_reservation_date"""
