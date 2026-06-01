@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Navbar } from "../components/Navbar";
 import { getCSRFToken } from "../components/Utils";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { getCSRFToken } from '../components/Utils';
 
 interface Reservation {
   id: number;
@@ -53,9 +54,15 @@ export const ReservationsPage: React.FC = () => {
     try {
       const response = await fetch(`/api/bookingsById/${id}`, {
         method: "DELETE",
+<<<<<<< HEAD
         credentials: "include",
         headers: {
           "X-CSRFToken": await getCSRFToken(),
+=======
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': await getCSRFToken(),
+>>>>>>> origin/main
         },
       });
       if (!response.ok) {
