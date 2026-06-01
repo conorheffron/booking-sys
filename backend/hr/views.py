@@ -343,7 +343,7 @@ def version_view(request):
     return Views.version(request)
 
 @extend_schema(
-    methods=["GET", "DELETE"],
+    methods=["GET"],
     description="GET bookings by date request parameter",
     parameters=[
         OpenApiParameter(
@@ -355,6 +355,14 @@ def version_view(request):
         )
     ],
     responses={200: OpenApiTypes.OBJECT}
+)
+@extend_schema(
+    methods=["DELETE"],
+    description="DELETE: Clear all bookings from today onward. Requires staff or superuser account.",
+    responses={
+        200: OpenApiTypes.OBJECT,
+        403: OpenApiTypes.OBJECT
+    }
 )
 @api_view(['GET', 'DELETE'])
 def table_view(request):
