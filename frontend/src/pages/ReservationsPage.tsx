@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Navbar } from "../components/Navbar";
 import { getCSRFToken } from "../components/Utils";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { getCSRFToken } from '../components/Utils';
 
 interface Reservation {
   id: number;
