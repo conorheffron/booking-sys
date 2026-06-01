@@ -5,15 +5,25 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../css/style.css';
 import { getAppVersion } from '../components/appVersionCache';
+import { getCurrentUser } from '../components/currentUserCache';
 
 export const Navbar: React.FC = () => {
   const [appVersion, setAppVersion] = useState<string>('…');
+  const [currentUser, setCurrentUser] = useState<string>('…');
 
   useEffect(() => {
     let mounted = true;
     getAppVersion()
       .then(version => { if (mounted) setAppVersion(version); })
       .catch(() => { if (mounted) setAppVersion('unknown'); });
+    return () => { mounted = false; };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    getCurrentUser()
+      .then(user => { if (mounted) setCurrentUser(user); })
+      .catch(() => { if (mounted) setCurrentUser('unknown'); });
     return () => { mounted = false; };
   }, []);
 
@@ -69,6 +79,25 @@ export const Navbar: React.FC = () => {
             >
               Version: {appVersion}
             </a>
+            <div className="dropdown" style={{ marginLeft: '1.5em' }}>
+              <button
+                className="btn btn-sm dropdown-toggle"
+                type="button"
+                id="userDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style={{ backgroundColor: '#9370DB', color: '#fff', border: 'none' }}
+              >
+                User: {currentUser}
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li>
+                  <span className="dropdown-item-text" id="currentUserId">
+                    {currentUser}
+                  </span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
