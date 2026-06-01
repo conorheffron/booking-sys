@@ -213,6 +213,18 @@ describe("ReservationsPage", () => {
     await waitFor(() => expect(screen.getByText("CannotClear")).toBeInTheDocument());
     fireEvent.click(screen.getByRole("button", { name: /Clear all/i }));
     await waitFor(() =>
+      expect((global.fetch as jest.Mock)).toHaveBeenCalledWith(
+        "/api/bookings",
+        expect.objectContaining({
+          method: "DELETE",
+          credentials: "include",
+          headers: expect.objectContaining({
+            "X-CSRFToken": "csrf-token",
+          }),
+        })
+      )
+    );
+    await waitFor(() =>
       expect(screen.getByText(/Only staff or superuser accounts can clear all bookings/i)).toBeInTheDocument()
     );
   });
