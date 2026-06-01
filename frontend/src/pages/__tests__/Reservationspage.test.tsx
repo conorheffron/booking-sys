@@ -23,16 +23,16 @@ describe("ReservationsPage", () => {
   });
 
   it("renders loading state initially", () => {
-    (global.fetch as jest.Mock) = jest.fn(() => new Promise(() => {}));
+    global.fetch = jest.fn(() => new Promise(() => {})) as any;
     render(<ReservationsPage />);
     expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
   });
 
   it("shows error if fetching reservations fails", async () => {
-    (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
+    global.fetch = jest.fn().mockResolvedValueOnce({
       ok: false,
       json: async () => ({}),
-    });
+    }) as any;
     render(<ReservationsPage />);
     await waitFor(() =>
       expect(screen.getByText(/Failed to fetch reservations/i)).toBeInTheDocument()
@@ -40,10 +40,10 @@ describe("ReservationsPage", () => {
   });
 
   it("renders empty table message if no reservations", async () => {
-    (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
+    global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({ reservations: [] }),
-    });
+    }) as any;
     render(<ReservationsPage />);
     await waitFor(() =>
       expect(screen.getByText(/No reservations found/i)).toBeInTheDocument()
@@ -65,10 +65,10 @@ describe("ReservationsPage", () => {
         reservation_slot: "11:00",
       },
     ];
-    (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
+    global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({ reservations }),
-    });
+    }) as any;
     render(<ReservationsPage />);
     await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
     expect(screen.getByText("Bob")).toBeInTheDocument();
@@ -80,10 +80,10 @@ describe("ReservationsPage", () => {
   });
 
   it("renders correct table headers", async () => {
-    (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
+    global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({ reservations: [] }),
-    });
+    }) as any;
     const { container } = render(<ReservationsPage />);
     await waitFor(() => expect(container.querySelector("table")).toBeInTheDocument());
     const table = container.querySelector("table")!;
@@ -98,7 +98,7 @@ describe("ReservationsPage", () => {
   });
 
   it("renders and disables Refresh button while loading", () => {
-    (global.fetch as jest.Mock) = jest.fn(() => new Promise(() => {}));
+    global.fetch = jest.fn(() => new Promise(() => {})) as any;
     render(<ReservationsPage />);
     const refreshButton = screen.getByRole("button", { name: /Refresh/i });
     expect(refreshButton).toBeInTheDocument();
@@ -107,12 +107,12 @@ describe("ReservationsPage", () => {
 
   it("calls fetchReservations again when Refresh button is clicked", async () => {
     // Always resolve (handle multiple calls)
-    (global.fetch as jest.Mock) = jest
+    global.fetch = jest
         .fn()
         .mockResolvedValue({
         ok: true,
         json: async () => ({ reservations: [] }),
-        });
+        }) as any;
 
     render(<ReservationsPage />);
     // Wait for the table to appear (first fetch completes)
@@ -128,13 +128,13 @@ describe("ReservationsPage", () => {
   });
 
   it("always renders the Navbar", () => {
-    (global.fetch as jest.Mock) = jest.fn(() => new Promise(() => {}));
+    global.fetch = jest.fn(() => new Promise(() => {})) as any;
     render(<ReservationsPage />);
     expect(screen.getByText("Navbar")).toBeInTheDocument();
   });
 
   it("removes reservation row after successful delete", async () => {
-    (global.fetch as jest.Mock) = jest
+    global.fetch = jest
       .fn()
       .mockResolvedValueOnce({
         ok: true,
@@ -142,7 +142,7 @@ describe("ReservationsPage", () => {
           reservations: [{ id: 11, first_name: "DeleteMe", reservation_date: "2099-01-01", reservation_slot: "09:00" }],
         }),
       })
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ success: true }) });
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ success: true }) }) as any;
 
     render(<ReservationsPage />);
     await waitFor(() => expect(screen.getByText("DeleteMe")).toBeInTheDocument());
@@ -152,12 +152,12 @@ describe("ReservationsPage", () => {
 
   it("shows login prompt and blocks delete for unauthenticated users", async () => {
     (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: false });
-    (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
+    global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         reservations: [{ id: 13, first_name: "AuthCheck", reservation_date: "2099-01-01", reservation_slot: "10:00" }],
       }),
-    });
+    }) as any;
 
     render(<ReservationsPage />);
     await waitFor(() => expect(screen.getByText("AuthCheck")).toBeInTheDocument());
@@ -166,7 +166,7 @@ describe("ReservationsPage", () => {
   });
 
   it("shows error message when delete fails", async () => {
-    (global.fetch as jest.Mock) = jest
+    global.fetch = jest
       .fn()
       .mockResolvedValueOnce({
         ok: true,
@@ -174,7 +174,7 @@ describe("ReservationsPage", () => {
           reservations: [{ id: 12, first_name: "KeepMe", reservation_date: "2099-01-01", reservation_slot: "10:00" }],
         }),
       })
-      .mockResolvedValueOnce({ ok: false, json: async () => ({}) });
+      .mockResolvedValueOnce({ ok: false, json: async () => ({}) }) as any;
 
     render(<ReservationsPage />);
     await waitFor(() => expect(screen.getByText("KeepMe")).toBeInTheDocument());
