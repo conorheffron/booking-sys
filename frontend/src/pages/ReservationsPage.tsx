@@ -53,6 +53,10 @@ export const ReservationsPage: React.FC = () => {
     try {
       const response = await fetch(`/api/bookingsById/${id}`, {
         method: "DELETE",
+        credentials: "include",
+        headers: {
+          "X-CSRFToken": await getCSRFToken(),
+        },
       });
       if (!response.ok) {
         throw new Error("Failed to delete reservation");
