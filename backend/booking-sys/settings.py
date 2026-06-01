@@ -36,7 +36,7 @@ TEMPLATE_DEBUG = False
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 if not SECRET_KEY:
-    if DEBUG or "test" in sys.argv:
+    if DEBUG or "test" in sys.argv or any("pytest" in arg for arg in sys.argv):
         SECRET_KEY = "django-insecure-dev-test-key"
     else:
         raise ImproperlyConfigured(
