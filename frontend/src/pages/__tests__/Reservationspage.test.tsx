@@ -6,6 +6,9 @@ import { ReservationsPage } from "../ReservationsPage";
 jest.mock("../../components/Navbar", () => ({
   Navbar: () => <nav>Navbar</nav>,
 }));
+jest.mock("../../components/Utils", () => ({
+  getCSRFToken: jest.fn().mockResolvedValue("csrf-token"),
+}));
 jest.mock("bootstrap/dist/css/bootstrap.min.css", () => ({}));
 
 describe("ReservationsPage", () => {
@@ -180,7 +183,13 @@ describe("ReservationsPage", () => {
     await waitFor(() =>
       expect((global.fetch as jest.Mock)).toHaveBeenCalledWith(
         "/api/bookings",
-        expect.objectContaining({ method: "DELETE" })
+        expect.objectContaining({
+          method: "DELETE",
+          credentials: "include",
+          headers: expect.objectContaining({
+            "X-CSRFToken": "csrf-token",
+          }),
+        })
       )
     );
     await waitFor(() => expect(screen.queryByText("ClearMe")).not.toBeInTheDocument());

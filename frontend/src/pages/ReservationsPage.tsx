@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from "../components/Navbar";
+import { getCSRFToken } from "../components/Utils";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 interface Reservation {
@@ -68,8 +69,13 @@ export const ReservationsPage: React.FC = () => {
     setClearingAll(true);
     setError("");
     try {
+      const csrfToken = await getCSRFToken();
       const response = await fetch("/api/bookings", {
         method: "DELETE",
+        credentials: "include",
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
       });
       if (!response.ok) {
         const body = await response.json().catch(() => ({}));
