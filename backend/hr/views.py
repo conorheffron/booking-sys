@@ -80,6 +80,18 @@ class Views:
         return HttpResponse(str(app_version))
 
     @classmethod
+    def current_user(cls, request:WSGIRequest):
+        """GET current logged-in user ID or 'unknown' if not authenticated"""
+        logger.info('Request information (%s)', request)
+        user = getattr(request, 'user', None)
+        if user and user.is_authenticated:
+            username = user.get_username()
+        else:
+            username = 'unknown'
+        logger.info('Current user (%s)', username)
+        return HttpResponse(str(username))
+
+    @classmethod
     def table_view(cls, request):
         """GET bookings by date request parameter"""
         date = request.GET.get("date", TimeUtils.get_current_date_time().date())
@@ -375,6 +387,15 @@ def csrf_view(request):
 @api_view(['GET'])
 def version_view(request):
     return Views.version(request)
+
+@extend_schema(
+    methods=["GET"],
+    description="GET current logged-in user ID or 'unknown' if not authenticated",
+    responses={200: OpenApiTypes.STR}
+)
+@api_view(['GET'])
+def current_user_view(request):
+    return Views.current_user(request)
 
 @extend_schema(
     methods=["GET"],

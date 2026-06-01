@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.test import RequestFactory, TestCase
 from drf_spectacular.generators import SchemaGenerator
 from hr.models import Reservation
-from hr.views import Views, csrf_view, version_view, table_view, bookings_by_id_view, save_reservation_view
+from hr.views import Views, csrf_view, version_view, current_user_view, table_view, bookings_by_id_view, save_reservation_view
 
 @pytest.mark.django_db
 class ApiTests(TestCase):
@@ -616,6 +616,27 @@ class ApiTests(TestCase):
 
         save_response = save_reservation_view(self.factory.get("/api/reservations"))
         assert save_response.status_code == 405
+
+        user_request = self.factory.get('/api/user/')
+        user_request.user = AnonymousUser()
+        user_response = current_user_view(user_request)
+        assert user_response.status_code == 200
+
+    def test_current_user_authenticated(self):
+        """HR Test case test_current_user_authenticated"""
+        request = self.factory.get('/api/user/')
+        request.user = self.user_with_booking_perms
+        response = Views.current_user(request)
+        assert response.status_code == 200
+        assert response.content.decode() == 'booking-admin'
+
+    def test_current_user_anonymous(self):
+        """HR Test case test_current_user_anonymous"""
+        request = self.factory.get('/api/user/')
+        request.user = AnonymousUser()
+        response = Views.current_user(request)
+        assert response.status_code == 200
+        assert response.content.decode() == 'unknown'
 
     def test_openapi_uses_explicit_booking_models(self):
         """HR Test case test_openapi_uses_explicit_booking_models"""

@@ -6,6 +6,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from hr.views import (
     csrf_view,
     version_view,
+    current_user_view,
     table_view,
     bookings_by_id_view,
     save_reservation_view,
@@ -19,6 +20,8 @@ urlpatterns = [
     path('csrf/', csrf_view),
 
     path('version/', version_view, name='version'),
+
+    path('user/', current_user_view, name='current_user'),
 
     path('bookings', table_view, name='bookings_by_date'),
 
