@@ -617,12 +617,11 @@ class ApiTests(TestCase):
         save_response = save_reservation_view(self.factory.get("/api/reservations"))
         assert save_response.status_code == 405
 
-<<<<<<< HEAD
     def test_dashboard_route_available(self):
         """HR Test case test_dashboard_route_available"""
         response = self.client.get("/dashboard/")
         self.assertIn(response.status_code, (200, 302))
-=======
+
         user_request = self.factory.get('/api/user/')
         user_request.user = AnonymousUser()
         user_response = current_user_view(user_request)
@@ -657,4 +656,4 @@ class ApiTests(TestCase):
         assert table_schema_ref == "#/components/schemas/BookingsResponse"
         assert by_id_schema_ref == "#/components/schemas/BookingByIdResponse"
         assert not_found_schema_ref == "#/components/schemas/NotFoundResponse"
->>>>>>> origin/main
+
