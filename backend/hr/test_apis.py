@@ -24,18 +24,18 @@ class ApiTests(TestCase):
         self.views = Views()
         self.factory = RequestFactory()
         self.auth_user = User.objects.create_user(
-            username="booking-user",
+            username="clear-all-auth-user",
             password="booking-pass-123"
         )
         self.staff_user = User.objects.create_user(
-            username="booking-staff",
+            username="clear-all-staff",
             password="booking-pass-123",
             is_staff=True
         )
         self.superuser = User.objects.create_superuser(
-            username="booking-admin",
+            username="clear-all-super",
             password="booking-pass-123",
-            email="booking-admin@example.com"
+            email="super@example.com"
         )
         self.reservation = Reservation.objects.create(
             first_name="Taylor",
@@ -185,8 +185,8 @@ class ApiTests(TestCase):
         request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
         request.user = AnonymousUser()
         response = self.views.bookings_by_id(request, self.reservation.id)
-        assert response.status_code == 403
-        assert "signed in" in json.loads(response.content.decode())["error"]
+        assert response.status_code == 401
+        assert "Authentication required" in json.loads(response.content.decode())["error"]
         assert Reservation.objects.filter(id=self.reservation.id).exists()
 
     def test_bookings_by_id_delete_404(self):
