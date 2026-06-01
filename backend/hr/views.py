@@ -6,11 +6,8 @@ import json
 from django.http import JsonResponse, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
-<<<<<<< HEAD
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-=======
 from django.contrib.auth.views import redirect_to_login
->>>>>>> origin/main
 
 from rest_framework.decorators import api_view
 from rest_framework import serializers
@@ -219,15 +216,9 @@ class Views:
             }
             return JsonResponse(data, status=200)
         elif request.method == "PUT":
-<<<<<<< HEAD
-            user = getattr(request, "user", None)
-            if not (user and user.is_authenticated):
-                return JsonResponse({"error": "Authentication required."}, status=401)
-=======
             permission_error = cls._require_api_permission(request, "change_reservation")
             if permission_error:
                 return permission_error
->>>>>>> origin/main
             now = datetime.now()
             # Block editing of past bookings
             original_datetime = datetime.combine(reservation.reservation_date,
@@ -296,15 +287,9 @@ class Views:
             }
             return JsonResponse(data, status=200)
         elif request.method == "DELETE":
-<<<<<<< HEAD
-            user = getattr(request, "user", None)
-            if not (user and user.is_authenticated):
-                return JsonResponse({"error": "Authentication required."}, status=401)
-=======
             permission_error = cls._require_api_permission(request, "delete_reservation")
             if permission_error:
                 return permission_error
->>>>>>> origin/main
             reservation.delete()
             return JsonResponse({"success": True, "message": "Booking deleted."}, status=200)
         else:

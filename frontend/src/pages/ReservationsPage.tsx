@@ -2,12 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
-<<<<<<< HEAD
 import { getAuthStatus } from "../components/auth";
-import { getCSRFToken } from "../components/Utils";
-=======
 import { getCSRFToken } from '../components/Utils';
->>>>>>> origin/main
 
 interface Reservation {
   id: number;
@@ -67,15 +63,10 @@ export const ReservationsPage: React.FC = () => {
       const response = await fetch(`/api/bookingsById/${id}`, {
         method: "DELETE",
         headers: {
-<<<<<<< HEAD
+          'Content-Type': 'application/json',
           "X-CSRFToken": await getCSRFToken(),
         },
         credentials: "include",
-=======
-          'Content-Type': 'application/json',
-          'X-CSRFToken': await getCSRFToken(),
-        },
->>>>>>> origin/main
       });
       if (!response.ok) {
         throw new Error("Failed to delete reservation");
