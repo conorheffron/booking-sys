@@ -20,8 +20,9 @@ describe("ReservationsPage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: true });
-    if (global.fetch) {
-      (global.fetch as any).mockClear?.();
+    if (global.fetch && "mockClear" in global.fetch) {
+      const fetchMock = global.fetch as jest.Mock;
+      fetchMock.mockClear();
     }
   });
 
@@ -125,8 +126,9 @@ describe("ReservationsPage", () => {
     fireEvent.click(refreshButton);
 
     // Wait for the second fetch call
+    const fetchMock = global.fetch as jest.Mock;
     await waitFor(() => {
-        expect((global.fetch as jest.Mock).mock.calls.length).toBeGreaterThan(1);
+        expect(fetchMock.mock.calls.length).toBeGreaterThan(1);
     });
   });
 
