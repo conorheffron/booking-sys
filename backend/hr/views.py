@@ -3,12 +3,17 @@
 import logging
 from datetime import datetime, date as dt_date, time as dt_time
 import json
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
+<<<<<<< HEAD
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+=======
+from django.contrib.auth.views import redirect_to_login
+>>>>>>> origin/main
 
 from rest_framework.decorators import api_view
+from rest_framework import serializers
 from drf_spectacular.utils import (
     extend_schema,
     OpenApiParameter,
@@ -23,9 +28,48 @@ from .time_utils import TimeUtils
 
 logger = logging.getLogger(__name__)
 
+class ReservationItem(serializers.Serializer):
+    """Reservation item schema."""
+    id = serializers.IntegerField()
+    first_name = serializers.CharField()
+    reservation_date = serializers.DateField()
+    reservation_slot = serializers.TimeField(format="%H:%M:%S")
+
+
+class BookingsResponse(serializers.Serializer):
+    """Bookings response schema."""
+    message = serializers.CharField()
+    reservations = ReservationItem(many=True)
+
+
+class BookingByIdResponse(serializers.Serializer):
+    """Booking by id response schema."""
+    id = serializers.IntegerField()
+    first_name = serializers.CharField()
+    reservation_date = serializers.DateField()
+    reservation_slot = serializers.RegexField(
+        regex=r"^(0[1-9]|1[0-2]):[0-5][0-9] [AP]M$",
+        help_text='Reservation time as a 12-hour AM/PM string, for example "01:45 PM".'
+    )
+
+
+class NotFoundResponse(serializers.Serializer):
+    """Not found error response schema."""
+    detail = serializers.CharField()
+
 class Views:
     """Views class for Views Mapping & Logic
     """
+    @staticmethod
+    def _require_api_permission(request, permission_codename):
+        """Require authenticated user and specific model permission for mutating API requests."""
+        user = getattr(request, "user", None)
+        if not user or not user.is_authenticated:
+            return JsonResponse({"error": "Authentication required."}, status=401)
+        if not user.has_perm(f"hr.{permission_codename}"):
+            return JsonResponse({"error": "Permission denied."}, status=403)
+        return None
+
     @classmethod
     def csrf(cls, request:WSGIRequest):
         """GET CSRF Token / Cookie Value from incoming requests"""
@@ -91,6 +135,12 @@ class Views:
         Handle the editing of an existing reservation.
         Do not allow editing of past bookings.
         """
+        user = getattr(request, "user", None)
+        if not user or not user.is_authenticated:
+            return redirect_to_login(request.get_full_path())
+        if not user.has_perm("hr.change_reservation"):
+            return HttpResponseForbidden("Permission denied.")
+
         reservation = get_object_or_404(Reservation, pk=reservation_id)
 
         # Block editing of past bookings
@@ -154,7 +204,9 @@ class Views:
         - Do not allow editing of past bookings
         - Do not allow updating to a past date/time
         """
-        reservation = get_object_or_404(Reservation, pk=reservation_id)
+        reservation = Reservation.objects.filter(pk=reservation_id).first()
+        if not reservation:
+            return JsonResponse({"error": "Reservation not found."}, status=404)
 
         if request.method == "GET":
             data = {
@@ -167,9 +219,15 @@ class Views:
             }
             return JsonResponse(data, status=200)
         elif request.method == "PUT":
+<<<<<<< HEAD
             user = getattr(request, "user", None)
             if not (user and user.is_authenticated):
                 return JsonResponse({"error": "Authentication required."}, status=401)
+=======
+            permission_error = cls._require_api_permission(request, "change_reservation")
+            if permission_error:
+                return permission_error
+>>>>>>> origin/main
             now = datetime.now()
             # Block editing of past bookings
             original_datetime = datetime.combine(reservation.reservation_date,
@@ -179,7 +237,7 @@ class Views:
                                     status=400)
             try:
                 body = json.loads(request.body.decode("utf-8"))
-            except Exception:
+            except (json.JSONDecodeError, UnicodeDecodeError, AttributeError):
                 return JsonResponse({"error": "Invalid JSON body"}, status=400)
 
             reservation_date = body.get("reservation_date")
@@ -193,7 +251,7 @@ class Views:
             # Convert "02:00 PM" to "14:00"
             try:
                 slot_time = datetime.strptime(reservation_slot, "%I:%M %p").time()
-            except Exception:
+            except ValueError:
                 return JsonResponse(
                     {
                         "error": "Invalid time format for reservation_slot."
@@ -238,9 +296,15 @@ class Views:
             }
             return JsonResponse(data, status=200)
         elif request.method == "DELETE":
+<<<<<<< HEAD
             user = getattr(request, "user", None)
             if not (user and user.is_authenticated):
                 return JsonResponse({"error": "Authentication required."}, status=401)
+=======
+            permission_error = cls._require_api_permission(request, "delete_reservation")
+            if permission_error:
+                return permission_error
+>>>>>>> origin/main
             reservation.delete()
             return JsonResponse({"success": True, "message": "Booking deleted."}, status=200)
         else:
@@ -254,10 +318,13 @@ class Views:
         """
         if request.method != "PUT":
             return JsonResponse({"error": "Method not allowed."}, status=405)
+        permission_error = cls._require_api_permission(request, "add_reservation")
+        if permission_error:
+            return permission_error
 
         try:
             body = json.loads(request.body.decode("utf-8"))
-        except Exception:
+        except (json.JSONDecodeError, UnicodeDecodeError, AttributeError):
             return JsonResponse({"error": "Invalid JSON body"}, status=400)
 
         first_name = body.get("first_name")
@@ -270,7 +337,7 @@ class Views:
         # Convert time string like "02:00 PM" to time object
         try:
             slot_time = datetime.strptime(reservation_slot, "%I:%M %p").time()
-        except Exception:
+        except ValueError:
             return JsonResponse({"error": "reservation_slot must be in format HH:MM AM/PM"},
                                 status=400)
 
@@ -280,7 +347,7 @@ class Views:
                 datetime.strptime(reservation_date, "%Y-%m-%d").date(),
                 slot_time
             )
-        except Exception:
+        except ValueError:
             return JsonResponse({"error": "Invalid reservation_date or reservation_slot."},
                                 status=400)
         now = datetime.now()
@@ -396,7 +463,7 @@ def version_view(request):
             description="Filter bookings by date (YYYY-MM-DD)"
         )
     ],
-    responses={200: OpenApiTypes.OBJECT}
+    responses={200: BookingsResponse}
 )
 @api_view(['GET'])
 def table_view(request):
@@ -413,7 +480,7 @@ def table_view(request):
                 description="Reservation ID"
             )
         ],
-        responses={200: OpenApiTypes.OBJECT, 404: OpenApiTypes.OBJECT}
+        responses={200: BookingByIdResponse, 404: NotFoundResponse}
     ),
     put=extend_schema(exclude=True),  # <--- this hides PUT in Swagger!
     delete=extend_schema(exclude=True)

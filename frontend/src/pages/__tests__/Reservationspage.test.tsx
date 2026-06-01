@@ -6,8 +6,13 @@ import { ReservationsPage } from "../ReservationsPage";
 jest.mock("../../components/Navbar", () => ({
   Navbar: () => <nav>Navbar</nav>,
 }));
+<<<<<<< HEAD
 jest.mock("../../components/auth", () => ({
   getAuthStatus: jest.fn().mockResolvedValue({ authenticated: true }),
+=======
+jest.mock("../../components/Utils", () => ({
+  getCSRFToken: jest.fn().mockResolvedValue("csrf-token"),
+>>>>>>> origin/main
 }));
 jest.mock("bootstrap/dist/css/bootstrap.min.css", () => ({}));
 
