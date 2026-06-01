@@ -6,10 +6,12 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../css/style.css';
 import { getAppVersion } from '../components/appVersionCache';
 import { getAuthStatus } from '../components/auth';
+import { getCurrentUser } from '../components/currentUserCache';
 
 export const Navbar: React.FC = () => {
-  const [appVersion, setAppVersion] = useState<string>('…');
+  const [appVersion, setAppVersion] = useState<string>('\u2026');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<string>('\u2026');
 
   useEffect(() => {
     let mounted = true;
@@ -19,6 +21,14 @@ export const Navbar: React.FC = () => {
     getAuthStatus()
       .then(status => { if (mounted) setIsAuthenticated(status.authenticated); })
       .catch(() => { if (mounted) setIsAuthenticated(false); });
+    return () => { mounted = false; };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    getCurrentUser()
+      .then(user => { if (mounted) setCurrentUser(user); })
+      .catch(() => { if (mounted) setCurrentUser('unknown'); });
     return () => { mounted = false; };
   }, []);
 
@@ -83,6 +93,25 @@ export const Navbar: React.FC = () => {
             >
               Version: {appVersion}
             </a>
+            <div className="dropdown" style={{ marginLeft: '1.5em' }}>
+              <button
+                className="btn btn-sm dropdown-toggle"
+                type="button"
+                id="userDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style={{ backgroundColor: '#9370DB', color: '#fff', border: 'none' }}
+              >
+                User: {currentUser}
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li>
+                  <span className="dropdown-item-text" id="currentUserId">
+                    {currentUser}
+                  </span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

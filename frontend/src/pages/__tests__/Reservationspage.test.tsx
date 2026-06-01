@@ -1,5 +1,6 @@
 import React from "react";
 import { within, render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { ReservationsPage } from "../ReservationsPage";
 
 // Minimal mocks for dependencies
@@ -164,7 +165,7 @@ describe("ReservationsPage", () => {
       }),
     }) as any;
 
-    render(<ReservationsPage />);
+    render(<MemoryRouter><ReservationsPage /></MemoryRouter>);
     await waitFor(() => expect(screen.getByText("AuthCheck")).toBeInTheDocument());
     expect(screen.getByRole("button", { name: /Delete reservation 13/i })).toBeDisabled();
     expect(screen.getByRole("link", { name: /Login required for reservation 13/i })).toHaveAttribute("href", "/login");

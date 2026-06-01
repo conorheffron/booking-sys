@@ -9,6 +9,7 @@ from hr.views import (
     login_view,
     logout_view,
     version_view,
+    current_user_view,
     table_view,
     bookings_by_id_view,
     save_reservation_view,
@@ -25,6 +26,8 @@ urlpatterns = [
     path('auth/logout', logout_view, name='logout'),
 
     path('version/', version_view, name='version'),
+
+    path('user/', current_user_view, name='current_user'),
 
     path('bookings', table_view, name='bookings_by_date'),
 
