@@ -5,17 +5,22 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../css/style.css';
 import { getAppVersion } from '../components/appVersionCache';
+import { getAuthStatus } from '../components/auth';
 import { getCurrentUser } from '../components/currentUserCache';
 
 export const Navbar: React.FC = () => {
-  const [appVersion, setAppVersion] = useState<string>('…');
-  const [currentUser, setCurrentUser] = useState<string>('…');
+  const [appVersion, setAppVersion] = useState<string>('\u2026');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<string>('\u2026');
 
   useEffect(() => {
     let mounted = true;
     getAppVersion()
       .then(version => { if (mounted) setAppVersion(version); })
       .catch(() => { if (mounted) setAppVersion('unknown'); });
+    getAuthStatus()
+      .then(status => { if (mounted) setIsAuthenticated(status.authenticated); })
+      .catch(() => { if (mounted) setIsAuthenticated(false); });
     return () => { mounted = false; };
   }, []);
 
@@ -70,6 +75,15 @@ export const Navbar: React.FC = () => {
             <a className="nav-link text-white" target="_blank" rel="noopener noreferrer" href="/admin">
               Django-Admin
             </a>
+            {isAuthenticated ? (
+              <Link className="nav-link text-white" to="/logout">
+                Logout
+              </Link>
+            ) : (
+              <Link className="nav-link text-white" to="/login">
+                Login
+              </Link>
+            )}
             <a
               href="https://github.com/conorheffron/booking-sys"
               id="appVersion"

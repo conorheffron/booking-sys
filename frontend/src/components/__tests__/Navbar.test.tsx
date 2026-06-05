@@ -10,6 +10,9 @@ jest.mock('../img/robot-logo.png', () => 'robot-logo.png');
 jest.mock('../../components/appVersionCache', () => ({
   getAppVersion: jest.fn(),
 }));
+jest.mock('../../components/auth', () => ({
+  getAuthStatus: jest.fn(),
+}));
 
 // Mock currentUserCache
 jest.mock('../../components/currentUserCache', () => ({
@@ -17,6 +20,7 @@ jest.mock('../../components/currentUserCache', () => ({
 }));
 
 import { getAppVersion } from '../../components/appVersionCache';
+import { getAuthStatus } from '../../components/auth';
 import { getCurrentUser } from '../../components/currentUserCache';
 
 // Helper to render with router context
@@ -32,6 +36,7 @@ describe('Navbar', () => {
 
   it('renders logo, brand, and navigation links', () => {
     (getAppVersion as jest.Mock).mockResolvedValue('1.2.3');
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: false });
     (getCurrentUser as jest.Mock).mockResolvedValue('test-user');
     renderWithRouter(<Navbar />);
     expect(screen.getByAltText('Logo')).toBeInTheDocument();
@@ -40,17 +45,20 @@ describe('Navbar', () => {
     expect(screen.getByRole('link', { name: 'Bookings' })).toHaveAttribute('href', '/reservations');
     expect(screen.getByRole('link', { name: 'Django-Admin' })).toHaveAttribute('href', '/admin');
     expect(screen.getByRole('link', { name: 'Swagger' })).toHaveAttribute('href', '/api/docs/');
+    expect(screen.getByRole('link', { name: 'Login' })).toHaveAttribute('href', '/login');
   });
 
   it('renders initial version as ellipsis', () => {
     (getAppVersion as jest.Mock).mockImplementation(() => new Promise(() => {}));
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: false });
     (getCurrentUser as jest.Mock).mockImplementation(() => new Promise(() => {}));
     renderWithRouter(<Navbar />);
-    expect(screen.getByText(/Version: …/)).toBeInTheDocument();
+    expect(screen.getByText(/Version: \u2026/)).toBeInTheDocument();
   });
 
   it('fetches and displays the app version on success', async () => {
     (getAppVersion as jest.Mock).mockResolvedValue('1.2.3');
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: false });
     (getCurrentUser as jest.Mock).mockResolvedValue('test-user');
     renderWithRouter(<Navbar />);
     await waitFor(() => {
@@ -60,6 +68,7 @@ describe('Navbar', () => {
 
   it('displays "unknown" if fetch fails', async () => {
     (getAppVersion as jest.Mock).mockRejectedValue(new Error('Network error'));
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: false });
     (getCurrentUser as jest.Mock).mockResolvedValue('unknown');
     renderWithRouter(<Navbar />);
     await waitFor(() => {
@@ -69,6 +78,7 @@ describe('Navbar', () => {
 
   it('has external link to the GitHub repo', () => {
     (getAppVersion as jest.Mock).mockResolvedValue('1.2.3');
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: false });
     (getCurrentUser as jest.Mock).mockResolvedValue('test-user');
     renderWithRouter(<Navbar />);
     const link = screen.getByRole('link', { name: /Version:/ });
@@ -77,15 +87,27 @@ describe('Navbar', () => {
     expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'));
   });
 
+  it('shows logout when user is authenticated', async () => {
+    (getAppVersion as jest.Mock).mockResolvedValue('1.2.3');
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: true });
+    (getCurrentUser as jest.Mock).mockResolvedValue('admin');
+    renderWithRouter(<Navbar />);
+    await waitFor(() => {
+      expect(screen.getByRole('link', { name: 'Logout' })).toHaveAttribute('href', '/logout');
+    });
+  });
+
   it('renders initial user state as ellipsis', () => {
     (getAppVersion as jest.Mock).mockImplementation(() => new Promise(() => {}));
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: false });
     (getCurrentUser as jest.Mock).mockImplementation(() => new Promise(() => {}));
     renderWithRouter(<Navbar />);
-    expect(screen.getByText(/User: …/)).toBeInTheDocument();
+    expect(screen.getByText(/User: \u2026/)).toBeInTheDocument();
   });
 
   it('fetches and displays the current user on success', async () => {
     (getAppVersion as jest.Mock).mockResolvedValue('1.2.3');
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: true });
     (getCurrentUser as jest.Mock).mockResolvedValue('admin');
     renderWithRouter(<Navbar />);
     await waitFor(() => {
@@ -95,6 +117,7 @@ describe('Navbar', () => {
 
   it('displays "unknown" for user if fetch fails', async () => {
     (getAppVersion as jest.Mock).mockResolvedValue('1.2.3');
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: false });
     (getCurrentUser as jest.Mock).mockRejectedValue(new Error('Network error'));
     renderWithRouter(<Navbar />);
     await waitFor(() => {
@@ -104,6 +127,7 @@ describe('Navbar', () => {
 
   it('displays user ID in dropdown item', async () => {
     (getAppVersion as jest.Mock).mockResolvedValue('1.2.3');
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: true });
     (getCurrentUser as jest.Mock).mockResolvedValue('johndoe');
     renderWithRouter(<Navbar />);
     await waitFor(() => {

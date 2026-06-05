@@ -2,7 +2,7 @@
 import json
 import re
 from datetime import date, timedelta
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 import pytest
 from django.contrib.auth.models import User, Permission, AnonymousUser
 from django.http import HttpResponse
@@ -23,6 +23,11 @@ class ApiTests(TestCase):
         """HR Tests setUp"""
         self.views = Views()
         self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username="apiuser",
+            email="api@example.com",
+            password="testpassword"
+        )
         self.auth_user = User.objects.create_user(
             username="clear-all-auth-user",
             password="booking-pass-123"
@@ -700,6 +705,38 @@ class ApiTests(TestCase):
         save_response = save_reservation_view(self.factory.get("/api/reservations"))
         assert save_response.status_code == 405
 
+    def test_auth_status_success(self):
+        """HR Test case test_auth_status_success"""
+        request = self.factory.get("/api/auth/status")
+        request.user = AnonymousUser()
+        response = Views.auth_status(request)
+        assert response.status_code == 200
+        data = json.loads(response.content.decode())
+        assert data["authenticated"] is False
+        assert data["username"] is None
+
+    def test_login_invalid_credentials(self):
+        """HR Test case test_login_invalid_credentials"""
+        login_request = self.factory.post(
+            "/api/auth/login/",
+            data=json.dumps({"username": "apiuser", "password": "wrong-password"}),
+            content_type="application/json"
+        )
+        login_response = Views.login(login_request)
+        assert login_response.status_code == 401
+        login_data = json.loads(login_response.content.decode())
+        assert "Invalid credentials" in login_data["error"]
+
+    def test_logout_success(self):
+        """HR Test case test_logout_success"""
+        logout_request = self.factory.post("/api/auth/logout/")
+        logout_request.session = Mock()
+        logout_request.user = self.user
+        logout_response = Views.logout(logout_request)
+        assert logout_response.status_code == 200
+        logout_data = json.loads(logout_response.content.decode())
+        assert logout_data["success"] is True
+
         user_request = self.factory.get('/api/user/')
         user_request.user = AnonymousUser()
         user_response = current_user_view(user_request)
@@ -734,3 +771,4 @@ class ApiTests(TestCase):
         assert table_schema_ref == "#/components/schemas/BookingsResponse"
         assert by_id_schema_ref == "#/components/schemas/BookingByIdResponse"
         assert not_found_schema_ref == "#/components/schemas/NotFoundResponse"
+

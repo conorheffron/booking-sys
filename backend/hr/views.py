@@ -6,6 +6,7 @@ import json
 from django.http import JsonResponse, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.views import redirect_to_login
 
 from rest_framework.decorators import api_view
@@ -78,6 +79,46 @@ class Views:
         app_version = VERSION
         logger.info('Application version (%s)', app_version)
         return HttpResponse(str(app_version))
+
+    @classmethod
+    def auth_status(cls, request: WSGIRequest):
+        """GET current authentication status"""
+        user = getattr(request, "user", None)
+        is_authenticated = bool(user and user.is_authenticated)
+        return JsonResponse({
+            "authenticated": is_authenticated,
+            "username": user.username if is_authenticated else None
+        }, status=200)
+
+    @classmethod
+    def login(cls, request: WSGIRequest):
+        """POST login to create an authenticated session"""
+        if request.method != "POST":
+            return JsonResponse({"error": "Method not allowed."}, status=405)
+        try:
+            body = json.loads(request.body.decode("utf-8"))
+        except Exception:
+            return JsonResponse({"error": "Invalid JSON body"}, status=400)
+
+        username = body.get("username")
+        password = body.get("password")
+        if not username or not password:
+            return JsonResponse({"error": "Username and password are required."}, status=400)
+
+        user = authenticate(request, username=username, password=password)
+        if user is None:
+            return JsonResponse({"error": "Invalid credentials."}, status=401)
+
+        auth_login(request, user)
+        return JsonResponse({"success": True, "username": user.username}, status=200)
+
+    @classmethod
+    def logout(cls, request: WSGIRequest):
+        """POST logout to clear authenticated session"""
+        if request.method != "POST":
+            return JsonResponse({"error": "Method not allowed."}, status=405)
+        auth_logout(request)
+        return JsonResponse({"success": True}, status=200)
 
     @classmethod
     def current_user(cls, request:WSGIRequest):
@@ -396,6 +437,25 @@ class Views:
 @api_view(['GET'])
 def csrf_view(request):
     return Views.csrf(request)
+
+@extend_schema(
+    methods=["GET"],
+    description="GET current authentication status",
+    responses={200: OpenApiTypes.OBJECT}
+)
+@api_view(['GET'])
+def auth_status_view(request):
+    return Views.auth_status(request)
+
+@extend_schema(exclude=True)
+@api_view(['POST'])
+def login_view(request):
+    return Views.login(request)
+
+@extend_schema(exclude=True)
+@api_view(['POST'])
+def logout_view(request):
+    return Views.logout(request)
 
 @extend_schema(
     methods=["GET"],
