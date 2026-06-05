@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
+import { getCSRFToken } from "../components/Utils";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { getAuthStatus } from "../components/auth";
-import { getCSRFToken } from '../components/Utils';
 
 interface Reservation {
   id: number;
@@ -19,6 +19,7 @@ export const ReservationsPage: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [clearingAll, setClearingAll] = useState(false);
 
   const fetchReservations = async () => {
     setLoading(true);
@@ -62,6 +63,7 @@ export const ReservationsPage: React.FC = () => {
     try {
       const response = await fetch(`/api/bookingsById/${id}`, {
         method: "DELETE",
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
           "X-CSRFToken": await getCSRFToken(),
@@ -76,6 +78,30 @@ export const ReservationsPage: React.FC = () => {
       setError(err.message || "Failed to delete reservation");
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleClearAll = async () => {
+    setClearingAll(true);
+    setError("");
+    try {
+      const csrfToken = await getCSRFToken();
+      const response = await fetch("/api/bookings", {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to clear reservations");
+      }
+      setReservations([]);
+    } catch (err: any) {
+      setError(err.message || "Failed to clear reservations");
+    } finally {
+      setClearingAll(false);
     }
   };
 
@@ -171,9 +197,16 @@ export const ReservationsPage: React.FC = () => {
                 {/* Refresh button at the bottom and centered */}
                 <div className="d-flex justify-content-center mt-4">
                   <button
+                    className="btn btn-outline-danger me-2"
+                    onClick={handleClearAll}
+                    disabled={loading || refreshing || clearingAll || reservations.length === 0 || !isAuthenticated}
+                  >
+                    {clearingAll ? "Clearing..." : "Clear all"}
+                  </button>
+                  <button
                     className="btn btn-outline-primary"
                     onClick={handleRefresh}
-                    disabled={loading || refreshing}
+                    disabled={loading || refreshing || clearingAll}
                   >
                     Refresh
                   </button>
