@@ -99,7 +99,7 @@ describe('Navbar', () => {
 
   it('renders initial user state as ellipsis', () => {
     (getAppVersion as jest.Mock).mockImplementation(() => new Promise(() => {}));
-    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: false });
+    (getAuthStatus as jest.Mock).mockImplementation(() => new Promise(() => {}));
     (getCurrentUser as jest.Mock).mockImplementation(() => new Promise(() => {}));
     renderWithRouter(<Navbar />);
     expect(screen.getByText(/User ID: \u2026/)).toBeInTheDocument();
