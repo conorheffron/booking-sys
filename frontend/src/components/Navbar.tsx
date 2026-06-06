@@ -10,8 +10,11 @@ import { getCurrentUser } from '../components/currentUserCache';
 
 export const Navbar: React.FC = () => {
   const [appVersion, setAppVersion] = useState<string>('\u2026');
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [currentUser, setCurrentUser] = useState<string>('\u2026');
+  const isAuthenticatedUser = isAuthenticated === true;
+  const isReadOnlyUser = isAuthenticated === false;
+  const userLabel = isAuthenticatedUser ? currentUser : isReadOnlyUser ? 'unknown' : '…';
 
   useEffect(() => {
     let mounted = true;
@@ -26,11 +29,15 @@ export const Navbar: React.FC = () => {
 
   useEffect(() => {
     let mounted = true;
+    if (!isAuthenticatedUser) {
+      setCurrentUser('…');
+      return () => { mounted = false; };
+    }
     getCurrentUser()
       .then(user => { if (mounted) setCurrentUser(user); })
       .catch(() => { if (mounted) setCurrentUser('unknown'); });
     return () => { mounted = false; };
-  }, []);
+  }, [isAuthenticatedUser]);
 
   return (
     <nav
@@ -75,7 +82,7 @@ export const Navbar: React.FC = () => {
             <a className="nav-link text-white" target="_blank" rel="noopener noreferrer" href="/admin">
               Django-Admin
             </a>
-            {isAuthenticated ? (
+            {isAuthenticatedUser ? (
               <Link className="nav-link text-white" to="/logout">
                 Logout
               </Link>
@@ -100,16 +107,36 @@ export const Navbar: React.FC = () => {
                 id="userDropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                style={{ backgroundColor: '#9370DB', color: '#fff', border: 'none' }}
+                style={{
+                  backgroundColor: isReadOnlyUser ? '#6c757d' : '#9370DB',
+                  color: '#fff',
+                  border: 'none',
+                }}
               >
-                User: {currentUser}
+                User ID: {userLabel}{isReadOnlyUser ? ' (read only)' : ''}
               </button>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li>
                   <span className="dropdown-item-text" id="currentUserId">
-                    {currentUser}
+                    {userLabel}
                   </span>
                 </li>
+                <li>
+                  <span className="dropdown-item-text">
+                    {isReadOnlyUser
+                      ? 'Status: read only'
+                      : isAuthenticatedUser
+                        ? 'Status: logged in'
+                        : 'Status: checking access'}
+                  </span>
+                </li>
+                {isReadOnlyUser && (
+                  <li>
+                    <Link className="dropdown-item" to="/login">
+                      Login to edit bookings
+                    </Link>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
