@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
-<<<<<<< HEAD
-import { Navbar } from "../components/Navbar";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { getCSRFToken } from '../components/Utils';
-=======
 import { Link } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { getCSRFToken } from "../components/Utils";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { getAuthStatus } from "../components/auth";
->>>>>>> origin/main
 
 interface Reservation {
   id: number;
@@ -24,11 +18,8 @@ export const ReservationsPage: React.FC = () => {
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
-<<<<<<< HEAD
-=======
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [clearingAll, setClearingAll] = useState(false);
->>>>>>> origin/main
 
   const fetchReservations = async () => {
     setLoading(true);
@@ -50,12 +41,9 @@ export const ReservationsPage: React.FC = () => {
 
   useEffect(() => {
     fetchReservations();
-<<<<<<< HEAD
-=======
     getAuthStatus()
       .then((status) => setIsAuthenticated(status.authenticated))
       .catch(() => setIsAuthenticated(false));
->>>>>>> origin/main
   }, []);
 
   const handleRefresh = () => {
@@ -65,41 +53,27 @@ export const ReservationsPage: React.FC = () => {
 
   // Add delete by booking id functionality
   const handleDelete = async (id: number) => {
-<<<<<<< HEAD
-=======
     if (!isAuthenticated) {
       setError("Login required to delete reservations");
       return;
     }
->>>>>>> origin/main
     // if (!window.confirm("Delete this reservation?")) return;
     setDeletingId(id);
     setError("");
     try {
       const response = await fetch(`/api/bookingsById/${id}`, {
         method: "DELETE",
-<<<<<<< HEAD
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': await getCSRFToken(),
-        },
-=======
         credentials: "include",
         headers: {
           'Content-Type': 'application/json',
           "X-CSRFToken": await getCSRFToken(),
         },
         credentials: "include",
->>>>>>> origin/main
       });
       if (!response.ok) {
         throw new Error("Failed to delete reservation");
       }
-<<<<<<< HEAD
-      setReservations(reservations.filter(r => r.id !== id));
-=======
       setReservations(prev => prev.filter(r => r.id !== id));
->>>>>>> origin/main
     } catch (err: any) {
       setError(err.message || "Failed to delete reservation");
     } finally {
@@ -107,8 +81,6 @@ export const ReservationsPage: React.FC = () => {
     }
   };
 
-<<<<<<< HEAD
-=======
   const handleClearAll = async () => {
     setClearingAll(true);
     setError("");
@@ -133,7 +105,6 @@ export const ReservationsPage: React.FC = () => {
     }
   };
 
->>>>>>> origin/main
   return (
     <div className="bg-light min-vh-100">
       <div className="container pt-4">
@@ -181,12 +152,9 @@ export const ReservationsPage: React.FC = () => {
                                 className="btn btn-sm btn-outline-secondary me-2"
                                 role="link"
                                 aria-label={`Edit reservation ${r.id}`}
-<<<<<<< HEAD
-=======
                                 aria-disabled={!isAuthenticated}
                                 tabIndex={isAuthenticated ? 0 : -1}
                                 style={{ pointerEvents: isAuthenticated ? "auto" : "none", opacity: isAuthenticated ? 1 : 0.5 }}
->>>>>>> origin/main
                               >
                                 Edit
                               </a>
@@ -196,11 +164,7 @@ export const ReservationsPage: React.FC = () => {
                                 aria-label={`Delete reservation ${r.id}`}
                                 style={{ color: "#dc3545", verticalAlign: "middle" }}
                                 onClick={() => handleDelete(r.id)}
-<<<<<<< HEAD
-                                disabled={deletingId === r.id}
-=======
                                 disabled={deletingId === r.id || !isAuthenticated}
->>>>>>> origin/main
                               >
                                 {/* Trash SVG icon */}
                                 <svg
@@ -213,8 +177,6 @@ export const ReservationsPage: React.FC = () => {
                                   <path d="M5.5 5.5a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0v-6zm2 .5a.5.5 0 0 1 .5-.5.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6zm-7-2A.5.5 0 0 1 3 4V3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1a.5.5 0 0 1 .5.5H15a.5.5 0 0 1 0 1h-1.5V14A2 2 0 0 1 11 16H5a2 2 0 0 1-2-2V5.5H1.5a.5.5 0 0 1 0-1H3A.5.5 0 0 1 3.5 4zM5 3h4a1 1 0 0 1 1 1v1H4V4a1 1 0 0 1 1-1zm6 2v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5h8z"/>
                                 </svg>
                               </button>
-<<<<<<< HEAD
-=======
                               {!isAuthenticated && (
                                 <Link
                                   to="/login"
@@ -225,7 +187,6 @@ export const ReservationsPage: React.FC = () => {
                                   Login required
                                 </Link>
                               )}
->>>>>>> origin/main
                             </td>
                           </tr>
                         ))
@@ -236,11 +197,6 @@ export const ReservationsPage: React.FC = () => {
                 {/* Refresh button at the bottom and centered */}
                 <div className="d-flex justify-content-center mt-4">
                   <button
-<<<<<<< HEAD
-                    className="btn btn-outline-primary"
-                    onClick={handleRefresh}
-                    disabled={loading || refreshing}
-=======
                     className="btn btn-outline-danger me-2"
                     onClick={handleClearAll}
                     disabled={loading || refreshing || clearingAll || reservations.length === 0 || !isAuthenticated}
@@ -251,7 +207,6 @@ export const ReservationsPage: React.FC = () => {
                     className="btn btn-outline-primary"
                     onClick={handleRefresh}
                     disabled={loading || refreshing || clearingAll}
->>>>>>> origin/main
                   >
                     Refresh
                   </button>
