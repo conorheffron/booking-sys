@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-<<<<<<< HEAD
 import sys
 import django.conf.urls
 from django.core.exceptions import ImproperlyConfigured
@@ -24,27 +23,16 @@ from hr import VERSION
 if not hasattr(django.conf.urls, "url"):
     django.conf.urls.url = re_path
 
-=======
-from hr import VERSION
-
->>>>>>> origin/main
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-<<<<<<< HEAD
-=======
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get( "DJANGO_SECRET_KEY")
-
->>>>>>> origin/main
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 TEMPLATE_DEBUG = False
 
-<<<<<<< HEAD
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 if not SECRET_KEY:
@@ -55,8 +43,6 @@ if not SECRET_KEY:
             "DJANGO_SECRET_KEY must be set when DEBUG is False."
         )
 
-=======
->>>>>>> origin/main
 if DEBUG is False:
     ALLOWED_HOSTS = [ '0.0.0.0:8000', '0.0.0.0', 'booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net' ]
     CSRF_TRUSTED_ORIGINS = [ 'https://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://booking-sys-ebgefrdmh3afbhee.northeurope-01.azurewebsites.net', 'http://0.0.0.0:5173' ]
@@ -77,7 +63,6 @@ else:
 # Application definition
 INSTALLED_APPS = [
     "compressor",
-<<<<<<< HEAD
     "dash",
     "dash.contrib.layouts.bootstrap3",
     "dash.contrib.plugins.memo",
@@ -85,8 +70,6 @@ INSTALLED_APPS = [
     "dash.contrib.plugins.url",
     "dash.contrib.plugins.video",
     "dash.contrib.plugins.weather",
-=======
->>>>>>> origin/main
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

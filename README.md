@@ -135,13 +135,10 @@ python3 manage.py test hr.test_forms.TestReservationForm
 python3 manage.py runserver
 ```
 
-<<<<<<< HEAD
 ## django-dash POC (site customisation spike)
 - **Note:** The backend requires a `DJANGO_SECRET_KEY` environment variable to be set, or `DEBUG=True`, to start successfully. Without it, Django will raise `ImproperlyConfigured`. For local testing you can run `export DJANGO_SECRET_KEY=<your-secret>` or set `DEBUG=True` before starting the server.
 - Start the backend and open `http://127.0.0.1:8000/dashboard/` to access the dashboard customisation proof of concept.
 
-=======
->>>>>>> origin/main
 ## Sample Logs from VS Code Console via `docker compose up`
 ```shell
 [+] Running 1/1

@@ -2,11 +2,7 @@
 import json
 import re
 from datetime import date, timedelta
-<<<<<<< HEAD
-from unittest.mock import patch
-=======
 from unittest.mock import patch, Mock
->>>>>>> origin/main
 import pytest
 from django.contrib.auth.models import User, Permission, AnonymousUser
 from django.http import HttpResponse
@@ -27,8 +23,6 @@ class ApiTests(TestCase):
         """HR Tests setUp"""
         self.views = Views()
         self.factory = RequestFactory()
-<<<<<<< HEAD
-=======
         self.user = User.objects.create_user(
             username="apiuser",
             email="api@example.com",
@@ -48,7 +42,6 @@ class ApiTests(TestCase):
             password="booking-pass-123",
             email="super@example.com"
         )
->>>>>>> origin/main
         self.reservation = Reservation.objects.create(
             first_name="Taylor",
             reservation_date=date.today() + timedelta(days=1),
@@ -192,8 +185,6 @@ class ApiTests(TestCase):
         # Confirm it's deleted from the database
         assert not Reservation.objects.filter(id=self.reservation.id).exists()
 
-<<<<<<< HEAD
-=======
     def test_bookings_by_id_delete_forbidden_when_anonymous(self):
         """HR Test case test_bookings_by_id_delete_forbidden_when_anonymous"""
         request = self.factory.delete(f"/api/reservations/{self.reservation.id}/")
@@ -203,7 +194,6 @@ class ApiTests(TestCase):
         assert "Authentication required" in json.loads(response.content.decode())["error"]
         assert Reservation.objects.filter(id=self.reservation.id).exists()
 
->>>>>>> origin/main
     def test_bookings_by_id_delete_404(self):
         """HR Test case test_bookings_by_id_delete_404"""
         # Attempt to delete a reservation that does not exist
@@ -425,8 +415,6 @@ class ApiTests(TestCase):
         assert "Future" in first_names
         assert "Past" not in first_names
 
-<<<<<<< HEAD
-=======
     def test_table_view_delete_clear_all_for_staff(self):
         """HR Test case test_table_view_delete_clear_all_for_staff"""
         Reservation.objects.create(
@@ -487,7 +475,6 @@ class ApiTests(TestCase):
         assert response.status_code == 200
         assert data["success"] is True
 
->>>>>>> origin/main
     def test_bookings_by_id_put_invalid_reservation_date(self):
         """HR Test case test_bookings_by_id_put_invalid_reservation_date"""
         payload = {
@@ -718,12 +705,6 @@ class ApiTests(TestCase):
         save_response = save_reservation_view(self.factory.get("/api/reservations"))
         assert save_response.status_code == 405
 
-<<<<<<< HEAD
-    def test_dashboard_route_available(self):
-        """HR Test case test_dashboard_route_available"""
-        response = self.client.get("/dashboard/")
-        self.assertIn(response.status_code, (200, 302))
-=======
     def test_auth_status_success(self):
         """HR Test case test_auth_status_success"""
         request = self.factory.get("/api/auth/status")
@@ -755,7 +736,6 @@ class ApiTests(TestCase):
         assert logout_response.status_code == 200
         logout_data = json.loads(logout_response.content.decode())
         assert logout_data["success"] is True
->>>>>>> origin/main
 
         user_request = self.factory.get('/api/user/')
         user_request.user = AnonymousUser()
@@ -791,4 +771,9 @@ class ApiTests(TestCase):
         assert table_schema_ref == "#/components/schemas/BookingsResponse"
         assert by_id_schema_ref == "#/components/schemas/BookingByIdResponse"
         assert not_found_schema_ref == "#/components/schemas/NotFoundResponse"
+
+    def test_dashboard_route_available(self):
+        """HR Test case test_dashboard_route_available"""
+        response = self.client.get("/dashboard/")
+        self.assertIn(response.status_code, (200, 302))
 
