@@ -6,10 +6,7 @@ import json
 from django.http import JsonResponse, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
-<<<<<<< HEAD
-=======
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
->>>>>>> origin/main
 from django.contrib.auth.views import redirect_to_login
 
 from rest_framework.decorators import api_view
@@ -84,8 +81,6 @@ class Views:
         return HttpResponse(str(app_version))
 
     @classmethod
-<<<<<<< HEAD
-=======
     def auth_status(cls, request: WSGIRequest):
         """GET current authentication status"""
         user = getattr(request, "user", None)
@@ -126,7 +121,6 @@ class Views:
         return JsonResponse({"success": True}, status=200)
 
     @classmethod
->>>>>>> origin/main
     def current_user(cls, request:WSGIRequest):
         """GET current logged-in user ID or 'unknown' if not authenticated"""
         logger.info('Request information (%s)', request)
@@ -140,9 +134,6 @@ class Views:
 
     @classmethod
     def table_view(cls, request):
-<<<<<<< HEAD
-        """GET bookings by date request parameter"""
-=======
         """GET bookings by date request parameter.
 
         DELETE clears all bookings from today onward and requires a staff/superuser account.
@@ -162,7 +153,6 @@ class Views:
                 {"success": True, "deleted_count": deleted_count},
                 status=200
             )
->>>>>>> origin/main
         date = request.GET.get("date", TimeUtils.get_current_date_time().date())
         return cls._find_bookings_by_date(cls, date)
 
@@ -450,8 +440,6 @@ def csrf_view(request):
 
 @extend_schema(
     methods=["GET"],
-<<<<<<< HEAD
-=======
     description="GET current authentication status",
     responses={200: OpenApiTypes.OBJECT}
 )
@@ -471,7 +459,6 @@ def logout_view(request):
 
 @extend_schema(
     methods=["GET"],
->>>>>>> origin/main
     description="GET Application Version for current deployment",
     responses={200: OpenApiTypes.STR}
 )
@@ -502,9 +489,6 @@ def current_user_view(request):
     ],
     responses={200: BookingsResponse}
 )
-<<<<<<< HEAD
-@api_view(['GET'])
-=======
 @extend_schema(
     methods=["DELETE"],
     description="DELETE: Clear all bookings from today onward. Requires staff or superuser account.",
@@ -514,7 +498,6 @@ def current_user_view(request):
     }
 )
 @api_view(['GET', 'DELETE'])
->>>>>>> origin/main
 def table_view(request):
     return Views.table_view(request)
 
