@@ -1,35 +1,68 @@
 import React from "react";
 import { within, render, screen, waitFor, fireEvent } from "@testing-library/react";
+<<<<<<< HEAD
+=======
+import { MemoryRouter } from "react-router-dom";
+>>>>>>> origin/main
 import { ReservationsPage } from "../ReservationsPage";
 
 // Minimal mocks for dependencies
 jest.mock("../../components/Navbar", () => ({
   Navbar: () => <nav>Navbar</nav>,
 }));
+<<<<<<< HEAD
+=======
+jest.mock("../../components/auth", () => ({
+  getAuthStatus: jest.fn().mockResolvedValue({ authenticated: true }),
+}));
+>>>>>>> origin/main
 jest.mock("../../components/Utils", () => ({
   getCSRFToken: jest.fn().mockResolvedValue("csrf-token"),
 }));
 jest.mock("bootstrap/dist/css/bootstrap.min.css", () => ({}));
 
+<<<<<<< HEAD
 describe("ReservationsPage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     if (global.fetch) {
       (global.fetch as any).mockClear?.();
+=======
+import { getAuthStatus } from "../../components/auth";
+
+describe("ReservationsPage", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: true });
+    if (global.fetch && "mockClear" in global.fetch) {
+      const fetchMock = global.fetch as jest.Mock;
+      fetchMock.mockClear();
+>>>>>>> origin/main
     }
   });
 
   it("renders loading state initially", () => {
+<<<<<<< HEAD
     (global.fetch as jest.Mock) = jest.fn(() => new Promise(() => {}));
+=======
+    global.fetch = jest.fn(() => new Promise(() => {})) as any;
+>>>>>>> origin/main
     render(<ReservationsPage />);
     expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
   });
 
   it("shows error if fetching reservations fails", async () => {
+<<<<<<< HEAD
     (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
       ok: false,
       json: async () => ({}),
     });
+=======
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({}),
+    }) as any;
+>>>>>>> origin/main
     render(<ReservationsPage />);
     await waitFor(() =>
       expect(screen.getByText(/Failed to fetch reservations/i)).toBeInTheDocument()
@@ -37,10 +70,17 @@ describe("ReservationsPage", () => {
   });
 
   it("renders empty table message if no reservations", async () => {
+<<<<<<< HEAD
     (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({ reservations: [] }),
     });
+=======
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ reservations: [] }),
+    }) as any;
+>>>>>>> origin/main
     render(<ReservationsPage />);
     await waitFor(() =>
       expect(screen.getByText(/No reservations found/i)).toBeInTheDocument()
@@ -62,10 +102,17 @@ describe("ReservationsPage", () => {
         reservation_slot: "11:00",
       },
     ];
+<<<<<<< HEAD
     (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({ reservations }),
     });
+=======
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ reservations }),
+    }) as any;
+>>>>>>> origin/main
     render(<ReservationsPage />);
     await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
     expect(screen.getByText("Bob")).toBeInTheDocument();
@@ -77,10 +124,17 @@ describe("ReservationsPage", () => {
   });
 
   it("renders correct table headers", async () => {
+<<<<<<< HEAD
     (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({ reservations: [] }),
     });
+=======
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ reservations: [] }),
+    }) as any;
+>>>>>>> origin/main
     const { container } = render(<ReservationsPage />);
     await waitFor(() => expect(container.querySelector("table")).toBeInTheDocument());
     const table = container.querySelector("table")!;
@@ -95,7 +149,11 @@ describe("ReservationsPage", () => {
   });
 
   it("renders and disables Refresh button while loading", () => {
+<<<<<<< HEAD
     (global.fetch as jest.Mock) = jest.fn(() => new Promise(() => {}));
+=======
+    global.fetch = jest.fn(() => new Promise(() => {})) as any;
+>>>>>>> origin/main
     render(<ReservationsPage />);
     const refreshButton = screen.getByRole("button", { name: /Refresh/i });
     expect(refreshButton).toBeInTheDocument();
@@ -104,12 +162,20 @@ describe("ReservationsPage", () => {
 
   it("calls fetchReservations again when Refresh button is clicked", async () => {
     // Always resolve (handle multiple calls)
+<<<<<<< HEAD
     (global.fetch as jest.Mock) = jest
+=======
+    global.fetch = jest
+>>>>>>> origin/main
         .fn()
         .mockResolvedValue({
         ok: true,
         json: async () => ({ reservations: [] }),
+<<<<<<< HEAD
         });
+=======
+        }) as any;
+>>>>>>> origin/main
 
     render(<ReservationsPage />);
     // Wait for the table to appear (first fetch completes)
@@ -119,19 +185,33 @@ describe("ReservationsPage", () => {
     fireEvent.click(refreshButton);
 
     // Wait for the second fetch call
+<<<<<<< HEAD
     await waitFor(() => {
         expect((global.fetch as jest.Mock).mock.calls.length).toBeGreaterThan(1);
+=======
+    const fetchMock = global.fetch as jest.Mock;
+    await waitFor(() => {
+        expect(fetchMock.mock.calls.length).toBeGreaterThan(1);
+>>>>>>> origin/main
     });
   });
 
   it("always renders the Navbar", () => {
+<<<<<<< HEAD
     (global.fetch as jest.Mock) = jest.fn(() => new Promise(() => {}));
+=======
+    global.fetch = jest.fn(() => new Promise(() => {})) as any;
+>>>>>>> origin/main
     render(<ReservationsPage />);
     expect(screen.getByText("Navbar")).toBeInTheDocument();
   });
 
   it("removes reservation row after successful delete", async () => {
+<<<<<<< HEAD
     (global.fetch as jest.Mock) = jest
+=======
+    global.fetch = jest
+>>>>>>> origin/main
       .fn()
       .mockResolvedValueOnce({
         ok: true,
@@ -139,7 +219,11 @@ describe("ReservationsPage", () => {
           reservations: [{ id: 11, first_name: "DeleteMe", reservation_date: "2099-01-01", reservation_slot: "09:00" }],
         }),
       })
+<<<<<<< HEAD
       .mockResolvedValueOnce({ ok: true, json: async () => ({ success: true }) });
+=======
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ success: true }) }) as any;
+>>>>>>> origin/main
 
     render(<ReservationsPage />);
     await waitFor(() => expect(screen.getByText("DeleteMe")).toBeInTheDocument());
@@ -147,8 +231,28 @@ describe("ReservationsPage", () => {
     await waitFor(() => expect(screen.queryByText("DeleteMe")).not.toBeInTheDocument());
   });
 
+<<<<<<< HEAD
   it("shows error message when delete fails", async () => {
     (global.fetch as jest.Mock) = jest
+=======
+  it("shows login prompt and blocks delete for unauthenticated users", async () => {
+    (getAuthStatus as jest.Mock).mockResolvedValue({ authenticated: false });
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        reservations: [{ id: 13, first_name: "AuthCheck", reservation_date: "2099-01-01", reservation_slot: "10:00" }],
+      }),
+    }) as any;
+
+    render(<MemoryRouter><ReservationsPage /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByText("AuthCheck")).toBeInTheDocument());
+    expect(screen.getByRole("button", { name: /Delete reservation 13/i })).toBeDisabled();
+    expect(screen.getByRole("link", { name: /Login required for reservation 13/i })).toHaveAttribute("href", "/login");
+  });
+
+  it("shows error message when delete fails", async () => {
+    global.fetch = jest
+>>>>>>> origin/main
       .fn()
       .mockResolvedValueOnce({
         ok: true,
@@ -156,7 +260,11 @@ describe("ReservationsPage", () => {
           reservations: [{ id: 12, first_name: "KeepMe", reservation_date: "2099-01-01", reservation_slot: "10:00" }],
         }),
       })
+<<<<<<< HEAD
       .mockResolvedValueOnce({ ok: false, json: async () => ({}) });
+=======
+      .mockResolvedValueOnce({ ok: false, json: async () => ({}) }) as any;
+>>>>>>> origin/main
 
     render(<ReservationsPage />);
     await waitFor(() => expect(screen.getByText("KeepMe")).toBeInTheDocument());
@@ -165,4 +273,70 @@ describe("ReservationsPage", () => {
       expect(screen.getByText(/Failed to delete reservation/i)).toBeInTheDocument()
     );
   });
+<<<<<<< HEAD
+=======
+
+  it("clears all reservations after successful clear all request", async () => {
+    (global.fetch as jest.Mock) = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          reservations: [{ id: 22, first_name: "ClearMe", reservation_date: "2099-01-01", reservation_slot: "09:00" }],
+        }),
+      })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ success: true, deleted_count: 1 }) });
+
+    render(<ReservationsPage />);
+    await waitFor(() => expect(screen.getByText("ClearMe")).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Clear all/i }));
+    await waitFor(() =>
+      expect((global.fetch as jest.Mock)).toHaveBeenCalledWith(
+        "/api/bookings",
+        expect.objectContaining({
+          method: "DELETE",
+          credentials: "include",
+          headers: expect.objectContaining({
+            "X-CSRFToken": "csrf-token",
+          }),
+        })
+      )
+    );
+    await waitFor(() => expect(screen.queryByText("ClearMe")).not.toBeInTheDocument());
+  });
+
+  it("shows backend error when clear all is forbidden", async () => {
+    (global.fetch as jest.Mock) = jest
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          reservations: [{ id: 23, first_name: "CannotClear", reservation_date: "2099-01-01", reservation_slot: "10:00" }],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ error: "Only staff or superuser accounts can clear all bookings." }),
+      });
+
+    render(<ReservationsPage />);
+    await waitFor(() => expect(screen.getByText("CannotClear")).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Clear all/i }));
+    await waitFor(() =>
+      expect((global.fetch as jest.Mock)).toHaveBeenCalledWith(
+        "/api/bookings",
+        expect.objectContaining({
+          method: "DELETE",
+          credentials: "include",
+          headers: expect.objectContaining({
+            "X-CSRFToken": "csrf-token",
+          }),
+        })
+      )
+    );
+    await waitFor(() =>
+      expect(screen.getByText(/Only staff or superuser accounts can clear all bookings/i)).toBeInTheDocument()
+    );
+  });
+>>>>>>> origin/main
 });

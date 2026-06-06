@@ -5,27 +5,57 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../css/style.css';
 import { getAppVersion } from '../components/appVersionCache';
+<<<<<<< HEAD
 import { getCurrentUser } from '../components/currentUserCache';
 
 export const Navbar: React.FC = () => {
   const [appVersion, setAppVersion] = useState<string>('…');
   const [currentUser, setCurrentUser] = useState<string>('…');
+=======
+import { getAuthStatus } from '../components/auth';
+import { getCurrentUser } from '../components/currentUserCache';
+
+export const Navbar: React.FC = () => {
+  const [appVersion, setAppVersion] = useState<string>('\u2026');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [currentUser, setCurrentUser] = useState<string>('\u2026');
+  const isAuthenticatedUser = isAuthenticated === true;
+  const isReadOnlyUser = isAuthenticated === false;
+  const userLabel = isAuthenticatedUser ? currentUser : isReadOnlyUser ? 'unknown' : '…';
+>>>>>>> origin/main
 
   useEffect(() => {
     let mounted = true;
     getAppVersion()
       .then(version => { if (mounted) setAppVersion(version); })
       .catch(() => { if (mounted) setAppVersion('unknown'); });
+<<<<<<< HEAD
+=======
+    getAuthStatus()
+      .then(status => { if (mounted) setIsAuthenticated(status.authenticated); })
+      .catch(() => { if (mounted) setIsAuthenticated(false); });
+>>>>>>> origin/main
     return () => { mounted = false; };
   }, []);
 
   useEffect(() => {
     let mounted = true;
+<<<<<<< HEAD
+=======
+    if (!isAuthenticatedUser) {
+      setCurrentUser('…');
+      return () => { mounted = false; };
+    }
+>>>>>>> origin/main
     getCurrentUser()
       .then(user => { if (mounted) setCurrentUser(user); })
       .catch(() => { if (mounted) setCurrentUser('unknown'); });
     return () => { mounted = false; };
+<<<<<<< HEAD
   }, []);
+=======
+  }, [isAuthenticatedUser]);
+>>>>>>> origin/main
 
   return (
     <nav
@@ -70,6 +100,18 @@ export const Navbar: React.FC = () => {
             <a className="nav-link text-white" target="_blank" rel="noopener noreferrer" href="/admin">
               Django-Admin
             </a>
+<<<<<<< HEAD
+=======
+            {isAuthenticatedUser ? (
+              <Link className="nav-link text-white" to="/logout">
+                Logout
+              </Link>
+            ) : (
+              <Link className="nav-link text-white" to="/login">
+                Login
+              </Link>
+            )}
+>>>>>>> origin/main
             <a
               href="https://github.com/conorheffron/booking-sys"
               id="appVersion"
@@ -86,16 +128,48 @@ export const Navbar: React.FC = () => {
                 id="userDropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
+<<<<<<< HEAD
                 style={{ backgroundColor: '#9370DB', color: '#fff', border: 'none' }}
               >
                 User: {currentUser}
+=======
+                style={{
+                  backgroundColor: isReadOnlyUser ? '#6c757d' : '#9370DB',
+                  color: '#fff',
+                  border: 'none',
+                }}
+              >
+                User ID: {userLabel}{isReadOnlyUser ? ' (read only)' : ''}
+>>>>>>> origin/main
               </button>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li>
                   <span className="dropdown-item-text" id="currentUserId">
+<<<<<<< HEAD
                     {currentUser}
                   </span>
                 </li>
+=======
+                    {userLabel}
+                  </span>
+                </li>
+                <li>
+                  <span className="dropdown-item-text">
+                    {isReadOnlyUser
+                      ? 'Status: read only'
+                      : isAuthenticatedUser
+                        ? 'Status: logged in'
+                        : 'Status: checking access'}
+                  </span>
+                </li>
+                {isReadOnlyUser && (
+                  <li>
+                    <Link className="dropdown-item" to="/login">
+                      Login to edit bookings
+                    </Link>
+                  </li>
+                )}
+>>>>>>> origin/main
               </ul>
             </div>
           </div>

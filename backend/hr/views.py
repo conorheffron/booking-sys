@@ -6,6 +6,10 @@ import json
 from django.http import JsonResponse, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.handlers.wsgi import WSGIRequest
+<<<<<<< HEAD
+=======
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+>>>>>>> origin/main
 from django.contrib.auth.views import redirect_to_login
 
 from rest_framework.decorators import api_view
@@ -80,6 +84,49 @@ class Views:
         return HttpResponse(str(app_version))
 
     @classmethod
+<<<<<<< HEAD
+=======
+    def auth_status(cls, request: WSGIRequest):
+        """GET current authentication status"""
+        user = getattr(request, "user", None)
+        is_authenticated = bool(user and user.is_authenticated)
+        return JsonResponse({
+            "authenticated": is_authenticated,
+            "username": user.username if is_authenticated else None
+        }, status=200)
+
+    @classmethod
+    def login(cls, request: WSGIRequest):
+        """POST login to create an authenticated session"""
+        if request.method != "POST":
+            return JsonResponse({"error": "Method not allowed."}, status=405)
+        try:
+            body = json.loads(request.body.decode("utf-8"))
+        except Exception:
+            return JsonResponse({"error": "Invalid JSON body"}, status=400)
+
+        username = body.get("username")
+        password = body.get("password")
+        if not username or not password:
+            return JsonResponse({"error": "Username and password are required."}, status=400)
+
+        user = authenticate(request, username=username, password=password)
+        if user is None:
+            return JsonResponse({"error": "Invalid credentials."}, status=401)
+
+        auth_login(request, user)
+        return JsonResponse({"success": True, "username": user.username}, status=200)
+
+    @classmethod
+    def logout(cls, request: WSGIRequest):
+        """POST logout to clear authenticated session"""
+        if request.method != "POST":
+            return JsonResponse({"error": "Method not allowed."}, status=405)
+        auth_logout(request)
+        return JsonResponse({"success": True}, status=200)
+
+    @classmethod
+>>>>>>> origin/main
     def current_user(cls, request:WSGIRequest):
         """GET current logged-in user ID or 'unknown' if not authenticated"""
         logger.info('Request information (%s)', request)
@@ -93,7 +140,29 @@ class Views:
 
     @classmethod
     def table_view(cls, request):
+<<<<<<< HEAD
         """GET bookings by date request parameter"""
+=======
+        """GET bookings by date request parameter.
+
+        DELETE clears all bookings from today onward and requires a staff/superuser account.
+        """
+        if request.method == "DELETE":
+            user = getattr(request, "user", None)
+            if not (user and user.is_authenticated and (user.is_staff or user.is_superuser)):
+                return JsonResponse(
+                    {"error": "Only staff or superuser accounts can clear all bookings."},
+                    status=403
+                )
+            today = dt_date.today()
+            deleted_count, _ = Reservation.objects.filter(
+                reservation_date__gte=today
+            ).delete()
+            return JsonResponse(
+                {"success": True, "deleted_count": deleted_count},
+                status=200
+            )
+>>>>>>> origin/main
         date = request.GET.get("date", TimeUtils.get_current_date_time().date())
         return cls._find_bookings_by_date(cls, date)
 
@@ -381,6 +450,28 @@ def csrf_view(request):
 
 @extend_schema(
     methods=["GET"],
+<<<<<<< HEAD
+=======
+    description="GET current authentication status",
+    responses={200: OpenApiTypes.OBJECT}
+)
+@api_view(['GET'])
+def auth_status_view(request):
+    return Views.auth_status(request)
+
+@extend_schema(exclude=True)
+@api_view(['POST'])
+def login_view(request):
+    return Views.login(request)
+
+@extend_schema(exclude=True)
+@api_view(['POST'])
+def logout_view(request):
+    return Views.logout(request)
+
+@extend_schema(
+    methods=["GET"],
+>>>>>>> origin/main
     description="GET Application Version for current deployment",
     responses={200: OpenApiTypes.STR}
 )
@@ -411,7 +502,19 @@ def current_user_view(request):
     ],
     responses={200: BookingsResponse}
 )
+<<<<<<< HEAD
 @api_view(['GET'])
+=======
+@extend_schema(
+    methods=["DELETE"],
+    description="DELETE: Clear all bookings from today onward. Requires staff or superuser account.",
+    responses={
+        200: OpenApiTypes.OBJECT,
+        403: OpenApiTypes.OBJECT
+    }
+)
+@api_view(['GET', 'DELETE'])
+>>>>>>> origin/main
 def table_view(request):
     return Views.table_view(request)
 
