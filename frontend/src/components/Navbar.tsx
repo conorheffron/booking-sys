@@ -14,7 +14,7 @@ export const Navbar: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<string>('\u2026');
   const isAuthenticatedUser = isAuthenticated === true;
   const isReadOnlyUser = isAuthenticated === false;
-  const userLabel = isReadOnlyUser ? 'unknown' : currentUser;
+  const userLabel = isAuthenticatedUser ? currentUser : isReadOnlyUser ? 'unknown' : '…';
 
   useEffect(() => {
     let mounted = true;
@@ -29,11 +29,15 @@ export const Navbar: React.FC = () => {
 
   useEffect(() => {
     let mounted = true;
+    if (!isAuthenticatedUser) {
+      setCurrentUser('…');
+      return () => { mounted = false; };
+    }
     getCurrentUser()
       .then(user => { if (mounted) setCurrentUser(user); })
       .catch(() => { if (mounted) setCurrentUser('unknown'); });
     return () => { mounted = false; };
-  }, []);
+  }, [isAuthenticatedUser]);
 
   return (
     <nav
