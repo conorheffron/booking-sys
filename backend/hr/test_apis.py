@@ -772,3 +772,8 @@ class ApiTests(TestCase):
         assert by_id_schema_ref == "#/components/schemas/BookingByIdResponse"
         assert not_found_schema_ref == "#/components/schemas/NotFoundResponse"
 
+    def test_dashboard_route_available(self):
+        """HR Test case test_dashboard_route_available"""
+        response = self.client.get("/dashboard/")
+        self.assertIn(response.status_code, (200, 302))
+
