@@ -8,7 +8,7 @@ coverage==7.14.0
 defusedxml==0.7.1
 dill==0.4.1
 distlib==0.4.1
-Django==6.0.5
+Django==6.0.6
 django-appconf==1.2.0
 django-cors-headers==4.9.0
 django_compressor==4.6.0
@@ -16,7 +16,7 @@ djangorestframework==3.17.1
 djangorestframework-xml==2.0.0
 drf-spectacular==0.29.0
 drf-yasg==1.21.15
-filelock==3.29.0
+filelock==3.29.1
 idna==3.18
 inflection==0.5.1
 iniconfig==2.3.0
@@ -30,7 +30,7 @@ mccabe==0.7.0
 mysqlclient==2.2.8
 packaging==26.2
 pipenv==2026.6.2
-platformdirs==4.9.6
+platformdirs==4.10.0
 pluggy==1.6.0
 Pygments==2.20.0
 pylint==3.3.9
