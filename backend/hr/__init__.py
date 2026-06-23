@@ -9,7 +9,7 @@ r"""
 """
 
 __title__ = 'booking-sys'
-__version__ = '3.6.2'
+__version__ = '3.6.3'
 __author__ = 'Conor Heffron'
 
 # Version synonym
