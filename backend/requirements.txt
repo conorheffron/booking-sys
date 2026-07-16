@@ -46,7 +46,7 @@ rcssmin==1.2.1
 referencing==0.37.0
 requests==2.34.2
 rjsmin==1.2.4
-rpds-py==2026.5.1
+rpds-py==2026.6.3
 setuptools==83.0.0
 sqlparse==0.5.5
 tomlkit==0.15.0
