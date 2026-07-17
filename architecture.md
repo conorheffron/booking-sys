@@ -13,7 +13,7 @@ The Booking System is designed as a decoupled client-server architecture. It con
 ```mermaid
 graph TD
     %% Client Tier
-    subgraph Client Tier (Single Page Application)
+    subgraph Client Tier: Single Page Application
         Browser[Web Browser]
         ReactApp[React 19 SPA / TypeScript]
         style ReactApp fill:#61dafb,stroke:#333,stroke-width:2px,color:#000
@@ -26,7 +26,7 @@ graph TD
     end
 
     %% Application Tier
-    subgraph Service Tier (Django Backend)
+    subgraph Service Tier: Django Backend
         Django[Django 5.1 Web Application]
         DRF[Django REST Framework / API Layers]
         Spectacular[DRF Spectacular / OpenAPI Doc Generator]
@@ -48,7 +48,7 @@ graph TD
 
     %% Interactions
     Browser -->|Serves Assets / Interacts| ReactApp
-    ReactApp -->|1. Weather Fetch (Direct HTTPS)| OpenMeteo
+    ReactApp -->|1. Weather Fetch: Direct HTTPS| OpenMeteo
     ReactApp -->|2. Local API Calls /api/*| ViteProxy
     ViteProxy -->|3. Proxy to Port 8000| DRF
     DRF -->|ORM Calls| SQLite
