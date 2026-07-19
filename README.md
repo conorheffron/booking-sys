@@ -26,6 +26,16 @@
 
 [Sonar Cloud Overall Code Summary](https://sonarcloud.io/summary/overall?id=conorheffron_booking-sys&branch=main)
 
+---
+
+## 🏛️ System Architecture & Design
+
+For an in-depth breakdown of the system design, detailed UML/Mermaid diagrams, component blueprints, end-to-end data flows, and user experience (UX) state machines, see our dedicated guide:
+
+👉 **[System Architecture Documentation (architecture.md)](./architecture.md)**
+
+---
+
 ## Technologies
  - python3, django 6 admin/framework, django.test, React 18, TypeScipt, & MySQL Server / Sqlite2
 
