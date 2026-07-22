@@ -1,10 +1,10 @@
-asgiref==3.11.1
+asgiref==3.12.1
 astroid==3.3.11
 attrs==26.1.0
 certifi==2026.6.17
 charset-normalizer==3.4.8
 coreschema==0.0.4
-coverage==7.14.3
+coverage==7.15.2
 defusedxml==0.7.1
 dill==0.4.1
 distlib==0.4.3
@@ -14,7 +14,7 @@ django-cors-headers==4.9.0
 django_compressor==4.6.0
 djangorestframework==3.17.1
 djangorestframework-xml==2.0.0
-drf-spectacular==0.29.0
+drf-spectacular==0.30.0
 drf-yasg==1.21.15
 filelock==3.29.4
 idna==3.18
@@ -39,7 +39,7 @@ pylint-plugin-utils==0.9.0
 pytest==9.1.1
 pytest-cov==7.1.0
 pytest-django==4.12.0
-python-discovery==1.4.2
+python-discovery==1.4.4
 pytz==2026.2
 PyYAML==6.0.3
 rcssmin==1.2.1
@@ -53,5 +53,5 @@ tomlkit==0.15.0
 typing_extensions==4.16.0
 uritemplate==4.2.0
 urllib3==2.7.0
-virtualenv==21.5.2
+virtualenv==21.6.1
 whitenoise==6.12.0

@@ -30,7 +30,7 @@
 
 ## 🏛️ System Architecture & Design
 
-For an in-depth breakdown of the system design, detailed UML/Mermaid diagrams, component blueprints, end-to-end data flows, and user experience (UX) state machines, see our dedicated guide:
+For an in-depth breakdown of the system design, detailed UML & Sequence diagrams, component blueprints, end-to-end data flows, and user experience (UX) state machines, see dedicated guide:
 
 👉 **[System Architecture Documentation (architecture.md)](./architecture.md)**
 

@@ -122,7 +122,7 @@ graph TB
                                v
 +------------------------------------------------------------+
 |                  VITE DEVELOPMENT SERVER                   |
-|  - Acts as a local reverse proxy for development          |
+|  - Acts as a local reverse proxy for development           |
 |  - Forwards /api/* and /admin/* requests to backend        |
 +------------------------------|-----------------------------+
                                | (Proxied TCP to Port 8000)
