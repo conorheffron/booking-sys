@@ -82,7 +82,7 @@ describe('Navbar', () => {
     (getCurrentUser as jest.Mock).mockResolvedValue('test-user');
     renderWithRouter(<Navbar />);
     const link = screen.getByRole('link', { name: /Version:/ });
-    expect(link).toHaveAttribute('href', 'https://github.com/conorheffron/booking-sys');
+    expect(link).toHaveAttribute('href', 'https://github.com/conorheffron/booking-sys/releases/tag/v…');
     expect(link).toHaveAttribute('target', '_blank');
     expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'));
   });

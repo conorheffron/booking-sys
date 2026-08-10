@@ -92,7 +92,7 @@ export const Navbar: React.FC = () => {
               </Link>
             )}
             <a
-              href="https://github.com/conorheffron/booking-sys"
+              href={`https://github.com/conorheffron/booking-sys/releases/tag/v${appVersion}`}
               id="appVersion"
               style={{ marginLeft: '1.5em', textDecoration: 'none' }}
               target="_blank"
