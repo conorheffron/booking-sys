@@ -28,7 +28,7 @@ jsonschema-specifications==2025.9.1
 MarkupSafe==3.0.3
 mccabe==0.7.0
 mysqlclient==2.2.8
-packaging==26.2
+packaging==26.3
 pipenv==2026.7.1
 platformdirs==4.11.0
 pluggy==1.6.0
